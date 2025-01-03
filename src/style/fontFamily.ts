@@ -1,0 +1,35 @@
+export const fontFamily = {
+    nunito: {
+      extraLight: 'Nunito_200ExtraLight',
+      light: 'Nunito_300Light',
+      regular: 'Nunito_400Regular',
+      medium: 'Nunito_500Medium',
+      semiBold: 'Nunito_600SemiBold',
+      bold: 'Nunito_700Bold',
+      extraBold: 'Nunito_800ExtraBold',
+      black: 'Nunito_900Black',
+      extraLightItalic: 'Nunito_200ExtraLight_Italic',
+      lightItalic: 'Nunito_300Light_Italic',
+      regularItalic: 'Nunito_400Regular_Italic',
+      mediumItalic: 'Nunito_500Medium_Italic',
+      semiBoldItalic: 'Nunito_600SemiBold_Italic',
+      boldItalic: 'Nunito_700Bold_Italic',
+      extraBoldItalic: 'Nunito_800ExtraBold_Italic',
+      blackItalic: 'Nunito_900Black_Italic',
+    },
+    inter: {
+      regular: 'Inter_400Regular',
+      medium: 'Inter_500Medium',
+      semiBold: 'Inter_600SemiBold',
+      bold: 'Inter_700Bold',
+      extraBold: 'Inter_800ExtraBold',
+      black: 'Inter_900Black',
+      regularItalic: 'Inter_400Regular_Italic',
+      mediumItalic: 'Inter_500Medium_Italic',
+      semiBoldItalic: 'Inter_600SemiBold_Italic',
+      boldItalic: 'Inter_700Bold_Italic',
+      extraBoldItalic: 'Inter_800ExtraBold_Italic',
+      blackItalic: 'Inter_900Black_Italic',
+    }
+  };
+  
