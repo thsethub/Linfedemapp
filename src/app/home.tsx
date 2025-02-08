@@ -31,10 +31,10 @@ export default function Home() {
             source={require("../assets/image 8.png")}
             style={{
               position: "absolute",
-              top: height * -0.05,
-              left: width * 0.5,
-              width: width * 0.35,
-              height: width * 0.45,
+              top: -20,
+              left: 220,
+              width: 100,
+              height: 150,
               zIndex: 1,
             }}
           />
@@ -71,7 +71,7 @@ export default function Home() {
                   width: 50,
                   height: 50,
                   borderRadius: 40,
-                  backgroundColor: "#F4F4F4", // bg-white-600
+                  backgroundColor: "#f8e8f1", // bg-white-600
                   justifyContent: "center",
                   alignItems: "center",
                   marginTop: 10,
@@ -90,14 +90,14 @@ export default function Home() {
               <Text className="font-semibold text-primary-500"> Exame</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-              router.navigate("/calculadora");
+              router.navigate("/bracoRef");
             }}>
               <View
                 style={{
                   width: 50,
                   height: 50,
                   borderRadius: 40,
-                  backgroundColor: "#F4F4F4",
+                  backgroundColor: "#f8e8f1",
                   justifyContent: "center",
                   alignItems: "center",
                   marginTop: 10,
@@ -149,7 +149,7 @@ export default function Home() {
                   width: 50,
                   height: 50,
                   borderRadius: 40,
-                  backgroundColor: "#F4F4F4",
+                  backgroundColor: "#f8e8f1",
                   justifyContent: "center",
                   alignItems: "center",
                   marginTop: 10,
