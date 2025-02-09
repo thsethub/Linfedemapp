@@ -13,6 +13,8 @@ interface MeasurementContextProps {
   setAffectedInputs: (value: string[]) => void;
   affectedComprimentoRef: string;
   setAffectedComprimentoRef: (value: string) => void;
+  differences: number[];
+  setDifferences: (value: number[]) => void;
 }
 
 const MeasurementContext = createContext<MeasurementContextProps | undefined>(undefined);
@@ -24,9 +26,10 @@ export const MeasurementProvider: React.FC<{ children: ReactNode }> = ({ childre
   const [inputs, setInputs] = useState<string[]>(Array(9).fill(""));
   const [affectedInputs, setAffectedInputs] = useState<string[]>(Array(9).fill(""));
   const [affectedComprimentoRef, setAffectedComprimentoRef] = useState("0");
+  const [differences, setDifferences] = useState<number[]>([]);
 
   return (
-    <MeasurementContext.Provider value={{ pontosRef, setPontosRef, comprimentoRef, setComprimentoRef, selectedValue, setSelectedValue, inputs, setInputs, affectedInputs, setAffectedInputs, affectedComprimentoRef, setAffectedComprimentoRef }}>
+    <MeasurementContext.Provider value={{ pontosRef, setPontosRef, comprimentoRef, setComprimentoRef, selectedValue, setSelectedValue, inputs, setInputs, affectedInputs, setAffectedInputs, affectedComprimentoRef, setAffectedComprimentoRef, differences, setDifferences }}>
       {children}
     </MeasurementContext.Provider>
   );

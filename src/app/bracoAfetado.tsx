@@ -23,6 +23,7 @@ export default function bracoAfetado() {
     setAffectedInputs,
     affectedComprimentoRef,
     setAffectedComprimentoRef,
+    setDifferences
   } = useMeasurementContext();
 
   const handleAffectedInputChange = (index: number, value: string) => {
@@ -41,7 +42,10 @@ export default function bracoAfetado() {
       const affectedValue = parseFloat(affectedInputs[index]) || 0;
       return affectedValue - refValue;
     });
-    return differences;
+
+    const comprimentoDifference = parseFloat(affectedComprimentoRef) - parseFloat(comprimentoRef);
+    setDifferences([comprimentoDifference, ...differences]);
+    return [comprimentoDifference, ...differences];
   };
 
   const getReferenceName = () => {
@@ -70,10 +74,13 @@ export default function bracoAfetado() {
     if (selectedValue === "opcao1") {
       if (pontosRef === "5cm") {
         numInputs = 9;
+        label = "Pontos acima da referência";
       } else if (pontosRef === "7cm") {
         numInputs = 7;
+        label = "Pontos acima da referência";
       } else if (pontosRef === "10cm") {
         numInputs = 4;
+        label = "Pontos acima da referência";
       }
     } else if (selectedValue === "opcao2") {
       if (pontosRef === "5cm") {
@@ -86,10 +93,13 @@ export default function bracoAfetado() {
     } else if (selectedValue === "opcao3") {
       if (pontosRef === "5cm") {
         numInputs = 9;
+        label = "Pontos abaixo da referência";
       } else if (pontosRef === "7cm") {
         numInputs = 7;
+        label = "Pontos abaixo da referência";
       } else if (pontosRef === "10cm") {
         numInputs = 4;
+        label = "Pontos abaixo da referência";
       }
     }
 
@@ -131,7 +141,7 @@ export default function bracoAfetado() {
                       height: 56,
                       fontSize: 16,
                     }}
-                    value={inputs[index]}
+                    value={affectedInputs[index]}
                     onChangeText={(value) =>
                       handleAffectedInputChange(index, value)
                     }
@@ -176,7 +186,7 @@ export default function bracoAfetado() {
                       height: 56,
                       fontSize: 16,
                     }}
-                    value={inputs[index + numInputs / 2]}
+                    value={affectedInputs[index + numInputs / 2]}
                     onChangeText={(value) =>
                       handleAffectedInputChange(index + numInputs / 2, value)
                     }
@@ -221,8 +231,8 @@ export default function bracoAfetado() {
                     height: 56,
                     fontSize: 16,
                   }}
-                  value={inputs[index]}
-                  onChangeText={(value) => handleInputChange(index, value)}
+                  value={affectedInputs[index]}
+                  onChangeText={(value) => handleAffectedInputChange(index, value)}
                 />
               </View>
               <Text
