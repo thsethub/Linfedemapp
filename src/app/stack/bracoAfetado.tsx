@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { useMeasurementContext } from "../context/context";
+import { useMeasurementContext } from "../../context/context";
 import { router } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function bracoAfetado() {
   const {
@@ -23,7 +24,7 @@ export default function bracoAfetado() {
     setAffectedInputs,
     affectedComprimentoRef,
     setAffectedComprimentoRef,
-    setDifferences
+    setDifferences,
   } = useMeasurementContext();
 
   const handleAffectedInputChange = (index: number, value: string) => {
@@ -43,7 +44,8 @@ export default function bracoAfetado() {
       return affectedValue - refValue;
     });
 
-    const comprimentoDifference = parseFloat(affectedComprimentoRef) - parseFloat(comprimentoRef);
+    const comprimentoDifference =
+      parseFloat(affectedComprimentoRef) - parseFloat(comprimentoRef);
     setDifferences([comprimentoDifference, ...differences]);
     return [comprimentoDifference, ...differences];
   };
@@ -232,7 +234,9 @@ export default function bracoAfetado() {
                     fontSize: 16,
                   }}
                   value={affectedInputs[index]}
-                  onChangeText={(value) => handleAffectedInputChange(index, value)}
+                  onChangeText={(value) =>
+                    handleAffectedInputChange(index, value)
+                  }
                 />
               </View>
               <Text
@@ -254,15 +258,16 @@ export default function bracoAfetado() {
         backgroundColor="transparent"
         translucent
       />
+
       <Image
-        source={require("../assets/direito.png")}
+        source={require("../../assets/busto-fem-direito.png")}
         style={{ width: 250, height: 250, marginTop: 30, alignSelf: "center" }}
       />
       {/* Barra de navegação */}
       <View className="flex-row justify-center items-center bg-white-500">
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/bracoRef")}
+          onPress={() => router.navigate("/stack/bracoRef")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -278,7 +283,7 @@ export default function bracoAfetado() {
 
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/bracoAfetado")}
+          onPress={() => router.navigate("/stack/bracoAfetado")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -303,7 +308,7 @@ export default function bracoAfetado() {
           >
             <View className="flex-row mb-4">
               <Image
-                source={require("../assets/plus-circle.png")}
+                source={require("../../assets/plus-circle.png")}
                 style={{
                   width: 18,
                   height: 18,
@@ -442,7 +447,7 @@ export default function bracoAfetado() {
           >
             <View className="flex-row mb-4">
               <Image
-                source={require("../assets/maximize.png")}
+                source={require("../../assets/maximize.png")}
                 style={{
                   width: 18,
                   height: 18,
@@ -455,7 +460,7 @@ export default function bracoAfetado() {
               </Text>
               <TouchableOpacity>
                 <Image
-                  source={require("../assets/help-circle.png")}
+                  source={require("../../assets/help-circle.png")}
                   style={{
                     width: 18,
                     height: 18,

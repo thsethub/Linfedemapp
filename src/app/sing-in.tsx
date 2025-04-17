@@ -50,7 +50,7 @@ export default function SingIn() {
         <TouchableOpacity
           className="bg-primary-500 px-4 py-2 mt-10 rounded-lg justify-center items-center w-full"
           onPress={() => {
-            router.navigate("/home");
+            router.navigate("/stack/home");
           }}
         >
           <Text className="text-white-500 font-bold text-center text-xl">

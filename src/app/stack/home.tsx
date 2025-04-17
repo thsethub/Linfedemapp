@@ -16,7 +16,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function Home() {
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 bg-white-500" >
       <StatusBar style="dark" backgroundColor="transparent" translucent />
       <View className="justify-center items-center">
         <View
@@ -28,7 +28,7 @@ export default function Home() {
           }}
         >
           <Image
-            source={require("../assets/image 8.png")}
+            source={require("../../assets/image 8.png")}
             style={{
               position: "absolute",
               top: -20,
@@ -79,7 +79,7 @@ export default function Home() {
                 }}
               >
                 <Image
-                  source={require("../assets/file-text.png")}
+                  source={require("../../assets/file-text.png")}
                   style={{
                     width: 24,
                     height: 24,
@@ -90,7 +90,7 @@ export default function Home() {
               <Text className="font-semibold text-primary-500"> Exame</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => {
-              router.navigate("/bracoRef");
+              router.navigate("/stack/calculadora");
             }}>
               <View
                 style={{
@@ -105,7 +105,7 @@ export default function Home() {
                 }}
               >
                 <Image
-                  source={require("../assets/Group.png")}
+                  source={require("../../assets/Group.png")}
                   style={{
                     width: 23,
                     height: 23,
@@ -157,7 +157,7 @@ export default function Home() {
                 }}
               >
                 <Image
-                  source={require("../assets/file-text.png")}
+                  source={require("../../assets/file-text.png")}
                   style={{
                     width: 24,
                     height: 24,

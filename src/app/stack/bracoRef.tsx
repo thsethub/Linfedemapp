@@ -11,10 +11,11 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
-import Dropdown1 from "./../components/dropdown1";
-import { useMeasurementContext } from "../context/context";
+import Dropdown1 from "../../components/dropdown1";
+import { useMeasurementContext } from "../../context/context";
 
-export default function bracoAfetado() {
+
+export default function bracoRef() {
   const {
     pontosRef,
     setPontosRef,
@@ -218,17 +219,16 @@ export default function bracoAfetado() {
   return (
     <SafeAreaView className="flex-1 bg-white-600">
       <StatusBar style="dark" backgroundColor="transparent" translucent />
-
       <Image
-        source={require("../assets/esquerdo.png")}
-        style={{ width: 250, height: 250, alignSelf: "center" }}
+        source={require("../../assets/busto-fem-esquerdo.png")}
+        style={{ width: 200, height: 200, alignSelf: "center" }}
       />
 
       {/* Barra de navegação */}
       <View className="flex-row justify-center items-center bg-white-500">
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/bracoRef")}
+          onPress={() => router.navigate("/stack/bracoRef")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -237,14 +237,12 @@ export default function bracoAfetado() {
             borderBottomColor: "#b41976",
           }}
         >
-          <Text className="text-lg font-medium text-primary-500">
-            Referência
-          </Text>
+          <Text className="text-lg font-medium text-primary-500">Direito</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/bracoAfetado")}
+          onPress={() => router.navigate("/stack/bracoAfetado")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -253,7 +251,7 @@ export default function bracoAfetado() {
             borderBottomColor: "transparent",
           }}
         >
-          <Text className="text-lg font-medium text-black-400">Afetado</Text>
+          <Text className="text-lg font-medium text-black-400">Esquerdo</Text>
         </TouchableOpacity>
       </View>
       {/* Fim da barra de navegação */}
@@ -275,7 +273,7 @@ export default function bracoAfetado() {
             >
               <View className="flex-row mb-4">
                 <Image
-                  source={require("../assets/plus-circle.png")}
+                  source={require("../../assets/plus-circle.png")}
                   style={{
                     width: 18,
                     height: 18,
@@ -363,7 +361,7 @@ export default function bracoAfetado() {
                 </Text>
               </View>
               {/* Dropdown */}
-              <Dropdown1/>
+              <Dropdown1 />
 
               {/* Perímetro do Membro para Referência */}
               <Text className="text-lg font-medium mb-4">
@@ -427,7 +425,7 @@ export default function bracoAfetado() {
             >
               <View className="flex-row mb-4">
                 <Image
-                  source={require("../assets/maximize.png")}
+                  source={require("../../assets/maximize.png")}
                   style={{
                     width: 18,
                     height: 18,
@@ -440,7 +438,7 @@ export default function bracoAfetado() {
                 </Text>
                 <TouchableOpacity>
                   <Image
-                    source={require("../assets/help-circle.png")}
+                    source={require("../../assets/help-circle.png")}
                     style={{
                       width: 18,
                       height: 18,
@@ -453,7 +451,7 @@ export default function bracoAfetado() {
               {renderInputs()}
             </View>
             <TouchableOpacity
-              onPress={() => router.navigate("/bracoAfetado")}
+              onPress={() => router.navigate("/stack/bracoAfetado")}
               style={{
                 width: 300,
                 marginTop: 20,
