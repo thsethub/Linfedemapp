@@ -14,22 +14,37 @@
       "backgroundColor": "#B41976"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "O aplicativo precisa salvar relatórios na sua galeria.",
+        "NSPhotoLibraryUsageDescription": "O aplicativo precisa acessar sua galeria para salvar relatórios."
+      }
     },
     "android": {
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#B41976"
       }
     },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permita que o Linfedemapp acesse suas fotos.",
+          "savePhotosPermission": "Permita que o Linfedemapp salve relatórios na galeria.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ],
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router"
-    ],
     "experiments": {
       "typedRoutes": true
     }

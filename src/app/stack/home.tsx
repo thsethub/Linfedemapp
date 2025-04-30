@@ -16,7 +16,7 @@ const { width, height } = Dimensions.get("window");
 
 export default function Home() {
   return (
-    <SafeAreaView className="flex-1 bg-white-500" >
+    <SafeAreaView className="flex-1 bg-white-500">
       <StatusBar style="dark" backgroundColor="transparent" translucent />
       <View className="justify-center items-center">
         <View
@@ -65,7 +65,11 @@ export default function Home() {
           }}
         >
           <View className="flex-row bg-white-500 rounded-lg items-center">
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                router.navigate("/fichaExame");
+              }}
+            >
               <View
                 style={{
                   width: 50,
@@ -89,9 +93,11 @@ export default function Home() {
               <Text className="font-semibold text-primary-500">Ficha de</Text>
               <Text className="font-semibold text-primary-500"> Exame</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {
-              router.navigate("/stack/calculadora");
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                router.navigate("/stack/calculadora");
+              }}
+            >
               <View
                 style={{
                   width: 50,
@@ -143,7 +149,11 @@ export default function Home() {
           }}
         >
           <View className="flex-row bg-white-500 rounded-lg items-center">
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={() => {
+              router.navigate("/historicoExames");
+            }}
+            >
               <View
                 style={{
                   width: 50,
@@ -205,16 +215,16 @@ export default function Home() {
           right: 30,
           width: 50,
           height: 50,
-          backgroundColor: "#b41976", 
+          backgroundColor: "#b41976",
           borderRadius: 30,
           justifyContent: "center",
           alignItems: "center",
           // Adicionando sombra
-          shadowColor: "#000", 
-          shadowOffset: { width: 0, height: 2 }, 
-          shadowOpacity: 0.1, 
-          shadowRadius: 6, 
-          elevation: 5, 
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 5,
         }}
         onPress={() => {
           // router.navigate("/faq");

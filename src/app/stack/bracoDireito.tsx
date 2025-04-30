@@ -17,35 +17,52 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 export default function bracoAfetado() {
   const {
     pontosRef,
-    comprimentoRef,
+    affectedArm,
+    referenceArm,
+    leftArmComprimento,
     selectedValue,
-    inputs,
-    affectedInputs,
-    setAffectedInputs,
-    affectedComprimentoRef,
-    setAffectedComprimentoRef,
+    leftArmInputs,
+    rightArmInputs,
+    setRightArmInputs,
+    rightArmComprimento,
+    setRightArmComprimento,
     setDifferences,
   } = useMeasurementContext();
 
   const handleAffectedInputChange = (index: number, value: string) => {
-    const newInputs = [...affectedInputs];
+    const newInputs = [...rightArmInputs];
     newInputs[index] = value;
-    setAffectedInputs(newInputs);
+    setRightArmInputs(newInputs);
   };
 
   const handleAffectedComprimentoRefChange = (value: string) => {
-    setAffectedComprimentoRef(value);
+    setRightArmComprimento(value);
   };
 
   const calculateDifference = () => {
-    const differences = inputs.map((input, index) => {
-      const refValue = parseFloat(input) || 0;
-      const affectedValue = parseFloat(affectedInputs[index]) || 0;
-      return affectedValue - refValue;
+    // Determine os valores do membro acometido e do membro de referência com base no contexto
+    const acometidoInputs =
+      affectedArm === "left" ? leftArmInputs : rightArmInputs;
+    const referenciaInputs =
+      referenceArm === "left" ? leftArmInputs : rightArmInputs;
+
+    const acometidoComprimento =
+      affectedArm === "left" ? leftArmComprimento : rightArmComprimento;
+    const referenciaComprimento =
+      referenceArm === "left" ? leftArmComprimento : rightArmComprimento;
+
+    // Calcule as diferenças ponto a ponto
+    const differences = acometidoInputs.map((acometidoValue, index) => {
+      const refValue = parseFloat(referenciaInputs[index]) || 0;
+      const parsedAcometidoValue = parseFloat(acometidoValue) || 0;
+      return parsedAcometidoValue - refValue; // Sempre membro acometido - membro de referência
     });
 
+    // Calcule a diferença de comprimento
     const comprimentoDifference =
-      parseFloat(affectedComprimentoRef) - parseFloat(comprimentoRef);
+      parseFloat(acometidoComprimento) - parseFloat(referenciaComprimento);
+
+    // Atualize o contexto com as diferenças calculadas
     setDifferences([comprimentoDifference, ...differences]);
     return [comprimentoDifference, ...differences];
   };
@@ -64,9 +81,9 @@ export default function bracoAfetado() {
   };
 
   const handleInputChange = (index: number, value: string) => {
-    const newInputs = [...inputs];
+    const newInputs = [...rightArmInputs];
     newInputs[index] = value;
-    setAffectedInputs(newInputs);
+    setRightArmInputs(newInputs);
   };
 
   const renderAffectedInputs = () => {
@@ -143,7 +160,7 @@ export default function bracoAfetado() {
                       height: 56,
                       fontSize: 16,
                     }}
-                    value={affectedInputs[index]}
+                    value={rightArmInputs[index]}
                     onChangeText={(value) =>
                       handleAffectedInputChange(index, value)
                     }
@@ -188,7 +205,7 @@ export default function bracoAfetado() {
                       height: 56,
                       fontSize: 16,
                     }}
-                    value={affectedInputs[index + numInputs / 2]}
+                    value={rightArmInputs[index + numInputs / 2]}
                     onChangeText={(value) =>
                       handleAffectedInputChange(index + numInputs / 2, value)
                     }
@@ -233,7 +250,7 @@ export default function bracoAfetado() {
                     height: 56,
                     fontSize: 16,
                   }}
-                  value={affectedInputs[index]}
+                  value={rightArmInputs[index]}
                   onChangeText={(value) =>
                     handleAffectedInputChange(index, value)
                   }
@@ -260,14 +277,14 @@ export default function bracoAfetado() {
       />
 
       <Image
-        source={require("../../assets/busto-fem-direito.png")}
-        style={{ width: 250, height: 250, marginTop: 30, alignSelf: "center" }}
+        source={require("../../assets/busto-fem-esquerdo.png")}
+        style={{ width: 200, height: 200, marginTop: 30, alignSelf: "center" }}
       />
       {/* Barra de navegação */}
       <View className="flex-row justify-center items-center bg-white-500">
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/stack/bracoRef")}
+          onPress={() => router.navigate("/stack/bracoEsquerdo")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -276,14 +293,12 @@ export default function bracoAfetado() {
             borderBottomColor: "transparent",
           }}
         >
-          <Text className=" text-lg font-medium text-black-400">
-            Referência
-          </Text>
+          <Text className=" text-lg font-medium text-black-400">Esquerdo</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/stack/bracoAfetado")}
+          onPress={() => router.navigate("/stack/bracoDireito")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -292,7 +307,7 @@ export default function bracoAfetado() {
             borderBottomColor: "#b41976",
           }}
         >
-          <Text className="text-lg font-medium text-primary-500">Afetado</Text>
+          <Text className="text-lg font-medium text-primary-500">Direito</Text>
         </TouchableOpacity>
       </View>
       {/* Fim da barra de navegação */}
@@ -411,8 +426,8 @@ export default function bracoAfetado() {
                     fontWeight: "bold",
                   }}
                   keyboardType="numeric"
-                  value={affectedComprimentoRef}
-                  onChangeText={setAffectedComprimentoRef}
+                  value={rightArmComprimento}
+                  onChangeText={handleAffectedComprimentoRefChange}
                 />
               </View>
               <Text className="font-bold text-black-500">cm</Text>

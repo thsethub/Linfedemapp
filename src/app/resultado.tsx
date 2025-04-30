@@ -7,29 +7,147 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { useMeasurementContext } from "@/context/context";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
+// import { generatePatientReport } from "@/utils/generateReport";
+import { generatePatientReport } from "../utils/generatePatientReport";
+
 
 export default function Resultado() {
   const {
     differences,
     pontosRef,
     selectedValue,
-    comprimentoRef,
-    affectedComprimentoRef,
-    inputs,
-    affectedInputs,
+    leftArmInputs,
+    rightArmInputs,
+    leftArmComprimento,
+    rightArmComprimento,
+    affectedArm,
+    referenceArm,
+    patientData,
+    setPatientData,
+    setDifferences,
+    setLeftArmInputs,
+    setRightArmInputs,
+    setLeftArmComprimento,
+    setRightArmComprimento,
+    setPontosRef,
+    setSelectedValue,
   } = useMeasurementContext();
 
-  useEffect(() => {
-    console.log("Comprimento de Referência:", comprimentoRef);
-    console.log("Comprimento do Membro Afetado:", affectedComprimentoRef);
-    console.log("Entradas de Referência:", inputs);
-    console.log("Entradas do Membro Afetado:", affectedInputs);
-  }, [comprimentoRef, affectedComprimentoRef, inputs, affectedInputs]);
+  const handleButtonPress = () => {
+    if (!hasPatientData) {
+      // Limpa os dados de medição
+      setDifferences([]);
+      setLeftArmInputs([]);
+      setRightArmInputs([]);
+      setLeftArmComprimento("0");
+      setRightArmComprimento("0");
+      setPontosRef("5cm");
+      setSelectedValue("opcao1");
+
+      console.log("Informações de medição foram limpas.");
+      router.push("/stack/home");
+    } else {
+      // Organiza todas as informações
+      const organizedData = `
+        Ficha de Exame 1:
+        Nome: ${patientData.fullName || "Não informado"}
+        Endereço: ${patientData.address || "Não informado"}
+        Telefone: ${patientData.phone || "Não informado"}
+        Data de Nascimento: ${patientData.birthDate || "Não informado"}
+  
+        Ficha de Exame 2:
+        Data do Diagnóstico do Câncer: ${
+          patientData.cancerDiagnosisDate || "Não informado"
+        }
+        Procedimentos Realizados: ${
+          patientData.procedures?.length
+            ? patientData.procedures.join(", ")
+            : "Não informado"
+        }
+        Alterações Cutâneas: ${
+          patientData.skinChanges?.length
+            ? patientData.skinChanges.join(", ")
+            : "Não informado"
+        }
+        Radioterapia: ${patientData.radiotherapy?.type || "Não informado"} (${
+        patientData.radiotherapy?.duration || "0"
+      } meses)
+        Cirurgia: ${patientData.surgery?.type || "Não informado"} (${
+        patientData.surgery?.duration || "0"
+      } meses)
+        Esvaziamento Axilar: ${
+          patientData.axillaryDissection?.type || "Não informado"
+        } (${patientData.axillaryDissection?.duration || "0"} meses)
+  
+        Dados Complementares:
+        Queixas Musculoesqueléticas: ${
+          patientData.musculoskeletalComplaints || "Não informado"
+        }
+        Sintomas de Linfedema: ${
+          patientData.lymphedemaSymptoms || "Não informado"
+        }
+        Sinal de Cacifo: ${patientData.cacifoSign || "Não informado"}
+        Sinal da Casca de Laranja: ${
+          patientData.orangePeelSign || "Não informado"
+        }
+        Sinal de Stemmer: ${patientData.stemmerSign || "Não informado"}
+        Nota: ${patientData.note || "Não informado"}
+  
+        Dados de Medição:
+        Volume de Referência Total: ${volumeReferenciaTotal.toFixed(2)} mL
+        Volume do Membro Afetado Total: ${volumeAfetadoTotal.toFixed(2)} mL
+        Diferença de Volume (%): ${volumeDifferencePercentage.toFixed(2)}%
+  
+        Volumes por Seção:
+        Referência: ${
+          volumesReferencia
+            .map((v: number, i: number) => `V${i + 1}: ${v.toFixed(2)} mL`)
+            .join(", ") || "Não calculado"
+        }
+        Afetado: ${
+          volumesAfetado
+            .map((v: number, i: number) => `V${i + 1}: ${v.toFixed(2)} mL`)
+            .join(", ") || "Não calculado"
+        }
+  
+        Perimetria:
+        Medições do Braço de Referência: ${
+          referenceArm === "left"
+            ? leftArmInputs.join(", ") || "Não informado"
+            : rightArmInputs.join(", ") || "Não informado"
+        }
+        Medições do Braço Afetado: ${
+          affectedArm === "left"
+            ? leftArmInputs.join(", ") || "Não informado"
+            : rightArmInputs.join(", ") || "Não informado"
+        }
+        Diferenças de Perímetro: ${
+          differences
+            .map((diff: number, i: number) => `P${i + 1}: ${diff.toFixed(2)} cm`)
+            .join(", ") || "Não calculado"
+        }
+      `;
+
+      // Exibe no console
+      console.log(organizedData);
+
+      // Exibe um alerta com as informações organizadas
+      alert(organizedData);
+    }
+  };
+
+  // Verifica se a ficha de exame foi preenchida
+  const hasPatientData = !!(
+    patientData.fullName ||
+    patientData.address ||
+    patientData.phone ||
+    patientData.birthDate
+  );
 
   const getClassNames = (difference: number) => {
     if (difference < 0) {
@@ -83,13 +201,13 @@ export default function Resultado() {
 
   const getVolumeDifferenceText2 = (percentage: number) => {
     if (percentage < 5) {
-      return "Muito Bom";
+      return "Alerta!";
     } else if (percentage >= 5 && percentage < 10) {
-      return "Bom";
+      return "Alerta!";
     } else if (percentage >= 10 && percentage < 20) {
-      return "Atenção!";
+      return "Alerta!";
     } else if (percentage >= 20 && percentage < 40) {
-      return "Cuidado!";
+      return "Alerta!";
     } else {
       return "Alerta!";
     }
@@ -99,17 +217,20 @@ export default function Resultado() {
     return difference >= 0 ? `+${difference}` : `${difference}`;
   };
 
-  const calculateVolume = (comprimentoRef: string, inputs: string[]) => {
+  const calculateVolume = (
+    comprimentoRef: string,
+    inputs: string[]
+  ): number[] => {
     const h = parseFloat(pontosRef); // distância entre os pontos
     if (isNaN(h)) {
       console.error("Invalid pontosRef value:", pontosRef);
-      return NaN;
+      return [];
     }
 
     const CA = parseFloat(comprimentoRef);
     if (isNaN(CA)) {
       console.error("Invalid comprimentoRef value:", comprimentoRef);
-      return NaN;
+      return [];
     }
 
     const validInputs = inputs.filter(
@@ -119,7 +240,7 @@ export default function Resultado() {
       const Ci = parseFloat(input);
       if (isNaN(Ci)) {
         console.error(`Invalid input value at index ${index}:`, input);
-        return NaN;
+        return 0;
       }
       const previousCA = index === 0 ? CA : parseFloat(validInputs[index - 1]);
       return (
@@ -127,19 +248,18 @@ export default function Resultado() {
       );
     });
 
-    if (volumes.some((volume) => isNaN(volume))) {
-      console.error("One or more volumes are NaN");
-      return NaN;
-    }
-
     return volumes;
   };
 
-  const volumesReferencia = calculateVolume(comprimentoRef, inputs);
-  const volumesAfetado = calculateVolume(
-    affectedComprimentoRef,
-    affectedInputs
-  );
+  const volumesReferencia =
+    referenceArm === "left"
+      ? calculateVolume(leftArmComprimento, leftArmInputs)
+      : calculateVolume(rightArmComprimento, rightArmInputs);
+
+  const volumesAfetado =
+    affectedArm === "left"
+      ? calculateVolume(leftArmComprimento, leftArmInputs)
+      : calculateVolume(rightArmComprimento, rightArmInputs);
 
   const volumeReferenciaTotal = Array.isArray(volumesReferencia)
     ? volumesReferencia.reduce((acc, volume) => acc + volume, 0)
@@ -156,6 +276,25 @@ export default function Resultado() {
     100;
 
   console.log("Diferença de Volume em %:", volumeDifferencePercentage);
+
+  useEffect(() => {
+    const currentVolumesReferencia = patientData.volumesReferencia || [];
+    const currentVolumesAfetado = patientData.volumesAfetado || [];
+
+    // Verifica se os volumes mudaram antes de atualizar o contexto
+    const hasVolumesChanged =
+      JSON.stringify(currentVolumesReferencia) !==
+        JSON.stringify(volumesReferencia) ||
+      JSON.stringify(currentVolumesAfetado) !== JSON.stringify(volumesAfetado);
+
+    if (hasVolumesChanged) {
+      setPatientData({
+        ...patientData,
+        volumesReferencia,
+        volumesAfetado,
+      });
+    }
+  }, [volumesReferencia, volumesAfetado]);
 
   const volumeDifferenceText = getVolumeDifferenceText(
     volumeDifferencePercentage
@@ -273,6 +412,130 @@ export default function Resultado() {
     ));
   };
 
+  const hasComplementaryData = Object.keys(patientData).some(
+    (key) =>
+      key === "musculoskeletalComplaints" ||
+      key === "lymphedemaSymptoms" ||
+      key === "cacifoSign" ||
+      key === "orangePeelSign" ||
+      key === "stemmerSign"
+  );
+
+  const renderComplementaryData = () => {
+    return (
+      <View
+        className="p-6 bg-white-500 mt-4"
+        style={{
+          width: 360,
+          borderRadius: 40,
+          backgroundColor: "#FFF",
+        }}
+      >
+        <View className="flex-row mb-4">
+          <Image
+            source={require("../assets/folder-plus.png")}
+            className="w-6 h-6 mt-0.5"
+            style={{ marginBottom: 10, marginRight: 10 }}
+          />
+          <Text className="text-lg font-medium mb-2">Complementares</Text>
+        </View>
+
+        {/* Dados Complementares */}
+        {[
+          {
+            label: "Apresenta sintomas de linfedema?",
+            value: patientData.lymphedemaSymptoms,
+          },
+          { label: "Sinal de Cacifo", value: patientData.cacifoSign },
+          {
+            label: "Sinal da casca de laranja",
+            value: patientData.orangePeelSign,
+          },
+          { label: "Sinal de Stemmer", value: patientData.stemmerSign },
+        ].map(({ label, value }, index) => (
+          <View
+            key={index}
+            style={{
+              marginBottom: 8,
+              // alignItems: "center", // Centraliza o texto e o valor
+            }}
+          >
+            {/* Texto principal */}
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: "bold",
+                marginBottom: 8,
+              }}
+            >
+              {label}
+            </Text>
+
+            {/* Valor estilizado */}
+            <View
+              style={{
+                width: 100,
+                height: 35,
+                borderRadius: 10,
+                backgroundColor:
+                  value === "Sim" || value === "Positivo"
+                    ? "#fde9f0" // Rosa claro para positivo
+                    : "#fde9f0", // Rosa claro para negativo
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                style={{
+                  color: "#b41976", // Rosa escuro para o texto
+                  fontWeight: "bold",
+                }}
+              >
+                {value === "Sim"
+                  ? "Positivo"
+                  : value === "Não"
+                  ? "Negativo"
+                  : "Não informado"}
+              </Text>
+            </View>
+          </View>
+        ))}
+
+        {/* Seção para Nota */}
+        <View style={{ marginTop: 16 }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "bold",
+              marginBottom: 8,
+            }}
+          >
+            Nota
+          </Text>
+          <TextInput
+            placeholder="Deixe um comentário"
+            value={patientData.note || ""}
+            onChangeText={(text) =>
+              setPatientData({ ...patientData, note: text })
+            }
+            style={{
+              width: "100%",
+              height: 40,
+              backgroundColor: "#f8f8f8",
+              borderRadius: 10,
+              padding: 10,
+              textAlignVertical: "top",
+              fontWeight: "400",
+              // borderWidth: 1,
+              // borderColor: "#ccc",
+            }}
+            multiline
+          />
+        </View>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white-600">
       <StatusBar barStyle="dark-content" backgroundColor="transparent" />
@@ -283,7 +546,7 @@ export default function Resultado() {
         }}
       >
         <View className="flex-row justify-center mt-12">
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={{ width: 25, height: 25 }}
             onPress={() => router.navigate("/stack/bracoAfetado")}
           >
@@ -293,7 +556,7 @@ export default function Resultado() {
               color="#b41976"
               style={{ position: "absolute", right: 100}}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Image
             source={require("../assets/file-text2.png")}
             className="w-7 h-7"
@@ -358,7 +621,7 @@ export default function Resultado() {
               className="mt-1.5"
               style={{ marginRight: 10 }}
             />
-            <Text className="text-lg font-medium text-black-500">
+            <Text className="text-lg font-medium text-black-500 mt-1">
               Volumetria
             </Text>
             <TouchableOpacity>
@@ -373,8 +636,14 @@ export default function Resultado() {
               />
             </TouchableOpacity>
           </View>
-          <View className="flex-row items-center mt-4">
-            <Text className="text-lg font-medium">Volume de Referência</Text>
+          <View
+            className="flex-row items-center mt-4"
+            style={{ justifyContent: "space-between" }}
+          >
+            <Text className="text-lg font-medium">
+              Vol.{" "}
+              {referenceArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
+            </Text>
             <View
               className="items-center justify-center"
               style={{
@@ -382,7 +651,6 @@ export default function Resultado() {
                 height: 35,
                 borderRadius: 10,
                 backgroundColor: "#f8e8f1",
-                left: 57,
               }}
             >
               <Text
@@ -393,17 +661,21 @@ export default function Resultado() {
               </Text>
             </View>
           </View>
-          <View>
+          {/* <View>
             {Array.isArray(volumesReferencia) &&
               renderVolumes(volumesReferencia)}
-          </View>
+          </View> */}
           <View
             className="flex-row justify-center items-center bg-white-600"
             style={{ width: 300, borderRadius: 40 }}
           ></View>
-          <View className="flex-row items-center mt-4">
+          <View
+            className="flex-row items-center mt-4"
+            style={{ justifyContent: "space-between" }}
+          >
             <Text className="text-lg font-medium">
-              Volume do Membro Afetado
+              Vol.{" "}
+              {affectedArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
             </Text>
             <View
               className="items-center justify-center"
@@ -412,7 +684,6 @@ export default function Resultado() {
                 height: 35,
                 borderRadius: 10,
                 backgroundColor: "#f8e8f1",
-                left: 7,
               }}
             >
               <Text
@@ -424,13 +695,16 @@ export default function Resultado() {
             </View>
           </View>
           <View>
-            {Array.isArray(volumesAfetado) && renderVolumes(volumesAfetado)}
+            {/* {Array.isArray(volumesAfetado) && renderVolumes(volumesAfetado)} */}
           </View>
           <View
             className="flex-row justify-center items-center bg-white-600"
             style={{ width: 300, borderRadius: 40 }}
           ></View>
-          <View className="flex-row items-center mt-4 mb-4">
+          <View
+            className="flex-row items-center mt-4 mb-4"
+            style={{ justifyContent: "space-between" }} // Adicionado para separar os itens
+          >
             <Text className="text-lg font-medium">Diferença de Volume</Text>
             <View
               className={`items-center justify-center ${bgClass}`}
@@ -438,7 +712,6 @@ export default function Resultado() {
                 width: 75,
                 height: 35,
                 borderRadius: 10,
-                left: 90,
               }}
             >
               <Text
@@ -483,6 +756,44 @@ export default function Resultado() {
             </Text>
           </View>
         </View>
+        {hasPatientData ? renderComplementaryData() : null}
+        <TouchableOpacity
+          onPress={() =>
+            generatePatientReport(
+              patientData,
+              {
+                volumesReferencia,
+                volumesAfetado,
+                volumeReferenciaTotal,
+                volumeAfetadoTotal,
+                volumeDifferencePercentage,
+              },
+              {
+                leftArmInputs,
+                rightArmInputs,
+                affectedArm,
+                referenceArm,
+                differences,
+                leftArmComprimento,
+                rightArmComprimento,
+                pontosRef
+              }
+            )
+          }
+          style={{
+            width: 300,
+            marginTop: 20,
+            marginBottom: 20,
+            backgroundColor: "#b41976",
+            paddingVertical: 12,
+            borderRadius: 8,
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+            Gerar Relatório em PDF
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );

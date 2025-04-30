@@ -16,22 +16,32 @@ export default function Layout() {
         options={{
           headerShown: false,
           title: "Home",
+          headerBackTitle: "", // Remove o texto do botão de voltar
         }}
       />
-      <Stack.Screen name="bracoAfetado" options={{ title: "Braço Afetado" }} />
-      <Stack.Screen name="bracoRef" options={{ title: "Braço Não Afetado" }} />
+      <Stack.Screen
+        name="bracoDireito"
+        options={{
+          title: "Braço Direito",
+          headerBackTitle: "",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="bracoEsquerdo"
+        options={{
+          title: "Braço Esquerdo",
+          headerBackTitle: "",
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name="calculadora"
         options={{
-          headerTitle: () => (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Image className="w-6 h-6" source={require("../../assets/maximize.png")} />
-              <Text style={{ marginLeft: 8, fontSize: 18, fontWeight: "bold" }}>
-                Calculadora
-              </Text>
-            </View>
-          ),
-          headerBackTitle: "Voltar",
+          headerTitle: "", // Remove o título completamente
+          headerBackTitle: "",
+          animation: "fade", // Ajusta a animação para evitar transições bruscas
+          headerTransparent: true, // Torna o header transparente
         }}
       />
     </Stack>
