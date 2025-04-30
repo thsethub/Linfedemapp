@@ -113,7 +113,7 @@ export default function Index() {
         <TouchableOpacity
           className="bg-primary-500 px-4 py-2 mt-10 rounded-lg justify-center items-center w-full"
           onPress={() => {
-            router.navigate("/sing-in");
+            router.navigate("/stack/home");
           }}
         >
           <Text className="text-white-500 font-bold text-center text-xl">
@@ -124,7 +124,7 @@ export default function Index() {
         <TouchableOpacity
           className="mt-2"
           onPress={() => {
-            router.navigate("/sing-up");
+            router.navigate("/stack/home");
           }}
         >
           <Text className="text-center">

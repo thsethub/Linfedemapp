@@ -40,7 +40,6 @@ export default function bracoAfetado() {
   };
 
   const calculateDifference = () => {
-    // Determine os valores do membro acometido e do membro de referência com base no contexto
     const acometidoInputs =
       affectedArm === "left" ? leftArmInputs : rightArmInputs;
     const referenciaInputs =
@@ -51,20 +50,22 @@ export default function bracoAfetado() {
     const referenciaComprimento =
       referenceArm === "left" ? leftArmComprimento : rightArmComprimento;
 
-    // Calcule as diferenças ponto a ponto
-    const differences = acometidoInputs.map((acometidoValue, index) => {
-      const refValue = parseFloat(referenciaInputs[index]) || 0;
-      const parsedAcometidoValue = parseFloat(acometidoValue) || 0;
-      return parsedAcometidoValue - refValue; // Sempre membro acometido - membro de referência
-    });
+    // Inclui os comprimentos de referência como o primeiro par de diferenças
+    const differences = [
+      parseFloat(
+        (
+          parseFloat(acometidoComprimento) - parseFloat(referenciaComprimento)
+        ).toFixed(2)
+      ),
+      ...acometidoInputs.map((acometidoValue, index) => {
+        const refValue = parseFloat(referenciaInputs[index]) || 0;
+        const parsedAcometidoValue = parseFloat(acometidoValue) || 0;
+        return parseFloat((parsedAcometidoValue - refValue).toFixed(2)); // Formata com duas casas decimais
+      }),
+    ];
 
-    // Calcule a diferença de comprimento
-    const comprimentoDifference =
-      parseFloat(acometidoComprimento) - parseFloat(referenciaComprimento);
-
-    // Atualize o contexto com as diferenças calculadas
-    setDifferences([comprimentoDifference, ...differences]);
-    return [comprimentoDifference, ...differences];
+    setDifferences(differences); // Atualiza o contexto com os valores numéricos
+    return differences;
   };
 
   const getReferenceName = () => {
@@ -489,6 +490,24 @@ export default function bracoAfetado() {
           </View>
           <TouchableOpacity
             onPress={() => {
+              // Verifica se há valores válidos par a par
+              const hasValidInput =
+                (parseFloat(leftArmComprimento) > 0 &&
+                  parseFloat(rightArmComprimento) > 0) ||
+                leftArmInputs.some(
+                  (input, index) =>
+                    parseFloat(input) > 0 &&
+                    parseFloat(rightArmInputs[index] || "0") > 0
+                );
+
+              if (!hasValidInput) {
+                alert(
+                  "Por favor, preencha ao menos uma medição válida para ambos os membros antes de continuar."
+                );
+                return;
+              }
+
+              // Calcula as diferenças e navega para a tela de resultado
               const differences = calculateDifference();
               console.log("Diferenças:", differences);
               router.navigate("/resultado");

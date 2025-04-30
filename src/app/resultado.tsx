@@ -14,7 +14,7 @@ import { useMeasurementContext } from "@/context/context";
 import { router } from "expo-router";
 // import { generatePatientReport } from "@/utils/generateReport";
 import { generatePatientReport } from "../utils/generatePatientReport";
-
+import { parse } from "@babel/core";
 
 export default function Resultado() {
   const {
@@ -26,7 +26,9 @@ export default function Resultado() {
     leftArmComprimento,
     rightArmComprimento,
     affectedArm,
+    setAffectedArm,
     referenceArm,
+    setReferenceArm,
     patientData,
     setPatientData,
     setDifferences,
@@ -37,109 +39,6 @@ export default function Resultado() {
     setPontosRef,
     setSelectedValue,
   } = useMeasurementContext();
-
-  const handleButtonPress = () => {
-    if (!hasPatientData) {
-      // Limpa os dados de medição
-      setDifferences([]);
-      setLeftArmInputs([]);
-      setRightArmInputs([]);
-      setLeftArmComprimento("0");
-      setRightArmComprimento("0");
-      setPontosRef("5cm");
-      setSelectedValue("opcao1");
-
-      console.log("Informações de medição foram limpas.");
-      router.push("/stack/home");
-    } else {
-      // Organiza todas as informações
-      const organizedData = `
-        Ficha de Exame 1:
-        Nome: ${patientData.fullName || "Não informado"}
-        Endereço: ${patientData.address || "Não informado"}
-        Telefone: ${patientData.phone || "Não informado"}
-        Data de Nascimento: ${patientData.birthDate || "Não informado"}
-  
-        Ficha de Exame 2:
-        Data do Diagnóstico do Câncer: ${
-          patientData.cancerDiagnosisDate || "Não informado"
-        }
-        Procedimentos Realizados: ${
-          patientData.procedures?.length
-            ? patientData.procedures.join(", ")
-            : "Não informado"
-        }
-        Alterações Cutâneas: ${
-          patientData.skinChanges?.length
-            ? patientData.skinChanges.join(", ")
-            : "Não informado"
-        }
-        Radioterapia: ${patientData.radiotherapy?.type || "Não informado"} (${
-        patientData.radiotherapy?.duration || "0"
-      } meses)
-        Cirurgia: ${patientData.surgery?.type || "Não informado"} (${
-        patientData.surgery?.duration || "0"
-      } meses)
-        Esvaziamento Axilar: ${
-          patientData.axillaryDissection?.type || "Não informado"
-        } (${patientData.axillaryDissection?.duration || "0"} meses)
-  
-        Dados Complementares:
-        Queixas Musculoesqueléticas: ${
-          patientData.musculoskeletalComplaints || "Não informado"
-        }
-        Sintomas de Linfedema: ${
-          patientData.lymphedemaSymptoms || "Não informado"
-        }
-        Sinal de Cacifo: ${patientData.cacifoSign || "Não informado"}
-        Sinal da Casca de Laranja: ${
-          patientData.orangePeelSign || "Não informado"
-        }
-        Sinal de Stemmer: ${patientData.stemmerSign || "Não informado"}
-        Nota: ${patientData.note || "Não informado"}
-  
-        Dados de Medição:
-        Volume de Referência Total: ${volumeReferenciaTotal.toFixed(2)} mL
-        Volume do Membro Afetado Total: ${volumeAfetadoTotal.toFixed(2)} mL
-        Diferença de Volume (%): ${volumeDifferencePercentage.toFixed(2)}%
-  
-        Volumes por Seção:
-        Referência: ${
-          volumesReferencia
-            .map((v: number, i: number) => `V${i + 1}: ${v.toFixed(2)} mL`)
-            .join(", ") || "Não calculado"
-        }
-        Afetado: ${
-          volumesAfetado
-            .map((v: number, i: number) => `V${i + 1}: ${v.toFixed(2)} mL`)
-            .join(", ") || "Não calculado"
-        }
-  
-        Perimetria:
-        Medições do Braço de Referência: ${
-          referenceArm === "left"
-            ? leftArmInputs.join(", ") || "Não informado"
-            : rightArmInputs.join(", ") || "Não informado"
-        }
-        Medições do Braço Afetado: ${
-          affectedArm === "left"
-            ? leftArmInputs.join(", ") || "Não informado"
-            : rightArmInputs.join(", ") || "Não informado"
-        }
-        Diferenças de Perímetro: ${
-          differences
-            .map((diff: number, i: number) => `P${i + 1}: ${diff.toFixed(2)} cm`)
-            .join(", ") || "Não calculado"
-        }
-      `;
-
-      // Exibe no console
-      console.log(organizedData);
-
-      // Exibe um alerta com as informações organizadas
-      alert(organizedData);
-    }
-  };
 
   // Verifica se a ficha de exame foi preenchida
   const hasPatientData = !!(
@@ -233,9 +132,11 @@ export default function Resultado() {
       return [];
     }
 
-    const validInputs = inputs.filter(
-      (input) => input !== "" && input !== null
-    );
+    // Inclui o comprimento de referência como o primeiro valor no array de inputs
+    const validInputs = [
+      comprimentoRef,
+      ...inputs.filter((input) => input !== "" && input !== null),
+    ];
     const volumes = validInputs.map((input, index) => {
       const Ci = parseFloat(input);
       if (isNaN(Ci)) {
@@ -338,9 +239,14 @@ export default function Resultado() {
             >
               <Text
                 className={getClassNames(differences[index + startIndex])}
-                style={{ fontSize: 12 }}
+                style={{ fontSize: 10 }}
               >
-                {formatDifference(differences[index + startIndex])} cm
+                {differences[index + startIndex] !== undefined
+                  ? formatDifference(
+                      parseFloat(differences[index + startIndex].toFixed(2))
+                    )
+                  : "N/A"}{" "}
+                cm
               </Text>
             </View>
           </View>
@@ -758,28 +664,86 @@ export default function Resultado() {
         </View>
         {hasPatientData ? renderComplementaryData() : null}
         <TouchableOpacity
-          onPress={() =>
-            generatePatientReport(
-              patientData,
-              {
-                volumesReferencia,
-                volumesAfetado,
-                volumeReferenciaTotal,
-                volumeAfetadoTotal,
-                volumeDifferencePercentage,
-              },
-              {
-                leftArmInputs,
-                rightArmInputs,
-                affectedArm,
-                referenceArm,
-                differences,
-                leftArmComprimento,
-                rightArmComprimento,
-                pontosRef
+          onPress={async () => {
+            try {
+              if (hasPatientData) {
+                // Se o usuário vem de uma ficha de exame, gera o relatório
+                await generatePatientReport(
+                  patientData,
+                  {
+                    volumesReferencia,
+                    volumesAfetado,
+                    volumeReferenciaTotal: parseFloat(volumeReferenciaTotal.toFixed(2)),
+                    volumeAfetadoTotal: parseFloat(volumeAfetadoTotal.toFixed(2)),
+                    volumeDifferencePercentage: parseFloat(volumeDifferencePercentage.toFixed(2)),
+                  },
+                  {
+                    leftArmInputs,
+                    rightArmInputs,
+                    affectedArm,
+                    referenceArm,
+                    differences: differences.map((diff) => parseFloat(diff.toFixed(2))),
+                    leftArmComprimento,
+                    rightArmComprimento,
+                    pontosRef,
+                  }
+                );
+                alert("Relatório gerado com sucesso!");
+              } else {
+                // Caso contrário, é um cálculo avulso
+                alert("Cálculo realizado com sucesso!");
               }
-            )
-          }
+
+              // Limpa os dados de medição e ficha de exame
+              setAffectedArm("right");
+              setDifferences([]);
+              setLeftArmInputs([]);
+              setRightArmInputs([]);
+              setLeftArmComprimento("0");
+              setRightArmComprimento("0");
+              setPontosRef("5cm");
+              setSelectedValue("opcao1");
+              setPatientData({
+                fullName: "",
+                birthDate: "",
+                address: "",
+                phone: "",
+                weight: "",
+                height: "",
+                activityLevel: "",
+                maritalStatus: "",
+                occupation: "",
+                cancerDiagnosisDate: "",
+                procedures: [],
+                skinChanges: [],
+                musculoskeletalComplaints: "",
+                lymphedemaSymptoms: "",
+                cacifoSign: "",
+                orangePeelSign: "",
+                stemmerSign: "",
+                radiotherapy: {
+                  type: "",
+                  duration: "",
+                },
+                surgery: {
+                  type: "",
+                  duration: "",
+                },
+                axillaryDissection: {
+                  type: "",
+                  duration: "",
+                },
+                musculoskeletalChanges: "",
+                lymphedemaSymptomsDetails: "",
+              }); // Limpa os dados do paciente
+
+              // Redireciona para a tela inicial
+              router.push("/stack/home");
+            } catch (error) {
+              console.error("Erro ao processar a ação:", error);
+              alert("Ocorreu um erro ao processar a ação.");
+            }
+          }}
           style={{
             width: 300,
             marginTop: 20,
@@ -791,7 +755,7 @@ export default function Resultado() {
           }}
         >
           <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-            Gerar Relatório em PDF
+            Finalizar
           </Text>
         </TouchableOpacity>
       </ScrollView>

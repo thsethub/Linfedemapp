@@ -150,9 +150,9 @@ export default function Home() {
         >
           <View className="flex-row bg-white-500 rounded-lg items-center">
             <TouchableOpacity
-            onPress={() => {
-              router.navigate("/historicoExames");
-            }}
+              onPress={() => {
+                router.navigate("/historicoExames");
+              }}
             >
               <View
                 style={{
@@ -200,7 +200,9 @@ export default function Home() {
           router.navigate("/");
         }}
         style={{
-          marginTop: 200,
+          position: "absolute",
+          bottom: 25,
+          alignSelf: "center",
         }}
       >
         <Text className="text-center">
