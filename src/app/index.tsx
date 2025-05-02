@@ -101,13 +101,13 @@ export default function Index() {
       <View className="flex-1 bg-white-500 px-6 py-10">
         <Text className="text-black-500 font-regular mb-4">LINFEDEMAPP</Text>
         <Text className="text-black-500 text-4xl font-semibold mb-2">
-          Apoiando na
+          Tecnologia a
         </Text>
         <Text className="text-black-500 text-4xl font-semibold mb-2">
-          sua recuperação
+          serviço da saúde
         </Text>
         <Text className="text-black-500 font-regular">
-          Ajudando mulheres cada vez mais fortes
+          Avaliação automatizada do linfedema com precisão e segurança
         </Text>
 
         <TouchableOpacity

@@ -67,7 +67,7 @@ export default function Calculadora() {
                 title="Tipo de Referência"
                 items={[
                   {
-                    label: "Processo Estilóide",
+                    label: "Processo Estilóide da Ulna",
                     value: "opcao1",
                     image: require("../../assets/busto-fem-esquerdo.png"),
                   },
@@ -171,7 +171,7 @@ export default function Calculadora() {
                   style={{ fontSize: 12, padding: 10 }}
                 >
                   Realize as medições no membro da paciente com um total de
-                  <Text className="font-semibold"> [n] pontos </Text>
+                  <Text className="font-semibold"> [{pontosRef}] pontos </Text>
                   para o exame.
                 </Text>
               </View>
