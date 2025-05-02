@@ -8,7 +8,7 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 import Dropdown from "@/components/dropdown";
 import DatePicker from "@/components/datepicker"; // Importa o componente DatePicker
 import { router } from "expo-router";

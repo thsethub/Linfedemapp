@@ -8,7 +8,7 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useMeasurementContext } from "@/context/context";
 import { router } from "expo-router";

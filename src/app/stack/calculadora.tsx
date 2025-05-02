@@ -6,7 +6,7 @@ import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 
 export default function Calculadora() {
   const {

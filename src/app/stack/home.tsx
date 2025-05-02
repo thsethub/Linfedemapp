@@ -7,7 +7,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
