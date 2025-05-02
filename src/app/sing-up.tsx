@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe";
+import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 
