@@ -14,9 +14,211 @@ import { useMeasurementContext } from "@/context/context";
 import { router } from "expo-router";
 import SinglePicker from "@/components/singlepicker"; // Adjust the path as needed
 import Dropdown from "@/components/dropdown2"; // Adjust the path as needed
+import Header from "@/components/headerFicha2";
+import axios from "axios";
+import { Alert } from "react-native";
+import * as SecureStore from "expo-secure-store"; // Importa o SecureStore para armazenar o token
+import { API_URL } from "@env";
 
 export default function FichaExame2() {
-  const { patientData, setPatientData } = useMeasurementContext();
+  const { patientData, setPatientData, clearAllData } = useMeasurementContext();
+
+  // Função para salvar o paciente no banco de dados
+  const savePatient = async () => {
+    try {
+      // Recupera o token armazenado
+      const token = await SecureStore.getItemAsync("access_token");
+
+      if (!token) {
+        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        return;
+      }
+
+      // Faz a requisição para obter o ID do usuário autenticado
+      const userResponse = await axios.get(`${API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const usuarioId = userResponse.data.id;
+
+      // Garante que todos os campos de `questions` tenham valores
+      const updatedPatientData = { ...patientData };
+      console.log(
+        "Estado atual de patientData antes de envio:",
+        updatedPatientData
+      );
+
+      // Garante que a data do diagnóstico esteja formatada corretamente
+      const formattedDate =
+        updatedPatientData.cancerDiagnosisDate &&
+        updatedPatientData.cancerDiagnosisDate !== "/"
+          ? updatedPatientData.cancerDiagnosisDate
+          : "Data não informada";
+
+      // Mapeia os campos do patientData para o formato esperado
+      const dataToSend = {
+        usuarioId,
+        nome: updatedPatientData.fullName,
+        dataNascimento: updatedPatientData.birthDate,
+        endereco: updatedPatientData.address,
+        telefone: updatedPatientData.phone,
+        pesoCorporal: updatedPatientData.weight,
+        altura: updatedPatientData.height,
+        nivelAtividadeFisica: updatedPatientData.activityLevel,
+        estadoCivil: updatedPatientData.maritalStatus,
+        ocupacao: updatedPatientData.occupation,
+        dataDiagnostiCancer: formattedDate,
+        procedimentos: updatedPatientData.procedures,
+        alteracoesCutaneas: updatedPatientData.skinChanges,
+        queixasMusculoesqueleticas:
+          updatedPatientData.musculoskeletalComplaints,
+        sintomasLinfedema: updatedPatientData.lymphedemaSymptoms,
+        sinalCacifo: updatedPatientData.cacifoSign,
+        sinalCascaLaranja: updatedPatientData.orangePeelSign,
+        sinalStemmer: updatedPatientData.stemmerSign,
+        radioterapia: {
+          tipo: updatedPatientData.radiotherapy.type,
+          duracao: updatedPatientData.radiotherapy.duration,
+        },
+        cirurgia: {
+          tipo: updatedPatientData.surgery.type,
+          duracao: updatedPatientData.surgery.duration,
+        },
+        disseccaoAxilar: {
+          tipo: updatedPatientData.axillaryDissection.type,
+          duracao: updatedPatientData.axillaryDissection.duration,
+        },
+        alteracoesMusculoesqueleticas:
+          updatedPatientData.musculoskeletalChanges,
+        detalhesSintomasLinfedema: updatedPatientData.lymphedemaSymptomsDetails,
+      };
+
+      console.log("Dados formatados para envio:", dataToSend);
+
+      // Envia os dados ao backend
+      const response = await axios.post(
+        `${API_URL}/api/pacientes`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Paciente salvo com sucesso:", response.data);
+
+      // Limpa os dados do paciente e navega para a home
+      clearAllData();
+      Alert.alert("Sucesso", "Paciente salvo com sucesso!", [
+        {
+          text: "OK",
+          onPress: () => router.push("/home"),
+        },
+      ]);
+    } catch (error) {
+      console.error("Erro ao salvar o paciente:", error);
+      Alert.alert("Erro", "Não foi possível salvar o paciente.");
+    }
+  };
+
+  const goToMensuration = async () => {
+    try {
+      // Recupera o token armazenado
+      const token = await SecureStore.getItemAsync("access_token");
+
+      if (!token) {
+        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        return;
+      }
+
+      // Faz a requisição para obter o ID do usuário autenticado
+      const userResponse = await axios.get(`${API_URL}:8080/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const usuarioId = userResponse.data.id;
+
+      // Garante que todos os campos de `questions` tenham valores
+      const updatedPatientData = { ...patientData };
+
+      // Garante que a data do diagnóstico esteja formatada corretamente
+      const formattedDate =
+        updatedPatientData.cancerDiagnosisDate &&
+        updatedPatientData.cancerDiagnosisDate !== "/"
+          ? updatedPatientData.cancerDiagnosisDate
+          : "Data não informada";
+
+      // Mapeia os campos do patientData para o formato esperado
+      const dataToSend = {
+        usuarioId,
+        nome: updatedPatientData.fullName,
+        dataNascimento: updatedPatientData.birthDate,
+        endereco: updatedPatientData.address,
+        telefone: updatedPatientData.phone,
+        pesoCorporal: updatedPatientData.weight,
+        altura: updatedPatientData.height,
+        nivelAtividadeFisica: updatedPatientData.activityLevel,
+        estadoCivil: updatedPatientData.maritalStatus,
+        ocupacao: updatedPatientData.occupation,
+        dataDiagnostiCancer: formattedDate,
+        procedimentos: updatedPatientData.procedures,
+        alteracoesCutaneas: updatedPatientData.skinChanges,
+        queixasMusculoesqueleticas:
+          updatedPatientData.musculoskeletalComplaints,
+        sintomasLinfedema: updatedPatientData.lymphedemaSymptoms,
+        sinalCacifo: updatedPatientData.cacifoSign,
+        sinalCascaLaranja: updatedPatientData.orangePeelSign,
+        sinalStemmer: updatedPatientData.stemmerSign,
+        radioterapia: {
+          tipo: updatedPatientData.radiotherapy.type,
+          duracao: updatedPatientData.radiotherapy.duration,
+        },
+        cirurgia: {
+          tipo: updatedPatientData.surgery.type,
+          duracao: updatedPatientData.surgery.duration,
+        },
+        disseccaoAxilar: {
+          tipo: updatedPatientData.axillaryDissection.type,
+          duracao: updatedPatientData.axillaryDissection.duration,
+        },
+        alteracoesMusculoesqueleticas:
+          updatedPatientData.musculoskeletalChanges,
+        detalhesSintomasLinfedema: updatedPatientData.lymphedemaSymptomsDetails,
+      };
+
+      // Envia os dados ao backend
+      const response = await axios.post(
+        `${API_URL}/api/pacientes`,
+        dataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Paciente salvo com sucesso:", response.data);
+
+      // Limpa os dados do paciente e navega para a tela de mensuração
+      clearAllData();
+      Alert.alert("Sucesso", "Paciente salvo com sucesso!", [
+        {
+          text: "OK",
+          onPress: () => router.push("/calculadora"),
+        },
+      ]);
+    } catch (error) {
+      console.error("Erro ao salvar o paciente:", error);
+      Alert.alert("Erro", "Não foi possível salvar o paciente.");
+    }
+  };
 
   const [selectedMonth, setSelectedMonth] = useState<string | null>(
     patientData.cancerDiagnosisDate?.split("/")[0] || null
@@ -25,14 +227,14 @@ export default function FichaExame2() {
     patientData.cancerDiagnosisDate?.split("/")[1] || null
   );
 
-  const handleDateSelection2 = (month: string | null, year: string | null) => {
-    const formattedDate = `${month || ""}/${year || ""}`;
-    setPatientData({ ...patientData, cancerDiagnosisDate: formattedDate });
-  };
+  // const handleDateSelection2 = (month: string | null, year: string | null) => {
+  //   const formattedDate = `${month || ""}/${year || ""}`;
+  //   setPatientData({ ...patientData, cancerDiagnosisDate: formattedDate });
+  // };
 
-  useEffect(() => {
-    handleDateSelection2(selectedMonth, selectedYear);
-  }, [selectedMonth, selectedYear]);
+  // useEffect(() => {
+  //   handleDateSelection2(selectedMonth, selectedYear);
+  // }, [selectedMonth, selectedYear]);
 
   const handleToggleSelection = (
     value: string,
@@ -49,6 +251,7 @@ export default function FichaExame2() {
     field: keyof typeof patientData,
     value: string
   ) => {
+    console.log(`Campo atualizado: ${field}, Novo valor: ${value}`); // Log para debug
     setPatientData({ ...patientData, [field]: value });
   };
 
@@ -103,22 +306,14 @@ export default function FichaExame2() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-white-600">
+    <SafeAreaView className="flex-1 bg-white-600 mt-8">
       <StatusBar barStyle="dark-content" backgroundColor="transparent" />
       <FlatList
         data={[]}
         renderItem={null}
         ListHeaderComponent={
           <View className="flex-1 justify-center items-center">
-            <View className="flex-row justify-center mt-8">
-              <Image
-                source={require("../assets/file-text2.png")}
-                className="w-7 h-7"
-              />
-              <Text className=" font-semibold text-center text-xl ml-2">
-                Ficha do Paciente
-              </Text>
-            </View>
+            <Header title="Ficha do Paciente" />
 
             {/* Formulário */}
             <View
@@ -548,25 +743,53 @@ export default function FichaExame2() {
               </View>
             </View>
 
-            {/* Botões de Navegação */}
-            <TouchableOpacity
-              onPress={() => {
-                router.navigate("/stack/calculadora");
-              }}
+            <View
               style={{
-                width: 300,
+                flexDirection: "row",
+                justifyContent: "space-between",
                 marginTop: 20,
-                marginBottom: 20,
-                backgroundColor: "#b41976",
-                paddingVertical: 12,
-                borderRadius: 8,
-                alignItems: "center",
+                paddingHorizontal: 20,
+                width: 300,
               }}
             >
-              <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-                Salvar
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={savePatient}
+                style={{
+                  width: 120,
+                  // marginTop: 20,
+                  marginBottom: 20,
+                  backgroundColor: "#fff",
+                  paddingVertical: 12,
+                  borderRadius: 8,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{ color: "#b41976", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Salvar
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={goToMensuration}
+                style={{
+                  width: 120,
+                  // marginTop: 20,
+                  marginBottom: 20,
+                  backgroundColor: "#b41976",
+                  paddingVertical: 12,
+                  borderRadius: 8,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Prosseguir
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         }
       />

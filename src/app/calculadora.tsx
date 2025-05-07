@@ -1,4 +1,5 @@
 import Dropdown from "@/components/dropdown";
+import Header from "@/components/headerCalculadora";
 import ReferenceSelector from "@/components/selectorReference";
 import { useMeasurementContext } from "@/context/context";
 import Feather from "@expo/vector-icons/Feather";
@@ -21,20 +22,10 @@ export default function Calculadora() {
   } = useMeasurementContext();
 
   return (
-    <SafeAreaView className="flex-1 bg-white-600">
+    <SafeAreaView className="flex-1 bg-white-600 mt-8">
       <StatusBar style="dark" backgroundColor="transparent" translucent />
-      <View
-        className="mt-4 justify-center items-center"
-        style={{ flexDirection: "row" }}
-      >
-        <Image
-          className="w-6 h-6"
-          source={require("../../assets/maximize.png")}
-        />
-        <Text style={{ marginLeft: 8, fontSize: 18, fontWeight: "bold" }}>
-          Calculadora
-        </Text>
-      </View>
+
+      <Header title="Calculadora" />
 
       <FlatList
         data={[]}
@@ -69,17 +60,17 @@ export default function Calculadora() {
                   {
                     label: "Processo Estilóide da Ulna",
                     value: "opcao1",
-                    image: require("../../assets/busto-fem-esquerdo.png"),
+                    image: require("../assets/busto-fem-esquerdo.png"),
                   },
                   {
                     label: "Linha Articular do Cotovelo",
                     value: "opcao2",
-                    image: require("../../assets/busto-fem-esquerdo.png"),
+                    image: require("../assets/busto-fem-esquerdo.png"),
                   },
                   {
                     label: "Acrômio",
                     value: "opcao3",
-                    image: require("../../assets/busto-fem-esquerdo.png"),
+                    image: require("../assets/busto-fem-esquerdo.png"),
                   },
                 ]}
                 selectedValue={selectedValue}
@@ -111,7 +102,7 @@ export default function Calculadora() {
             >
               <View className="flex-row mb-4">
                 <Image
-                  source={require("../../assets/plus-circle.png")}
+                  source={require("../assets/plus-circle.png")}
                   style={{
                     width: 18,
                     height: 18,
@@ -179,7 +170,7 @@ export default function Calculadora() {
 
             {/* Fim Container dos dados do membro de referência */}
             <TouchableOpacity
-              onPress={() => router.navigate("/stack/bracoEsquerdo")}
+              onPress={() => router.push("/bracoEsquerdo")}
               style={{
                 width: 300,
                 marginTop: 20,

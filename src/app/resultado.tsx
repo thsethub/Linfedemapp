@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,13 +8,18 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
+  Alert,
+  ActivityIndicator,
+  Modal,
+  FlatList,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { useMeasurementContext } from "@/context/context";
-import { router } from "expo-router";
-// import { generatePatientReport } from "@/utils/generateReport";
-import { generatePatientReport } from "../utils/generatePatientReport";
-import { parse } from "@babel/core";
+import { router, useRouter } from "expo-router";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import Header from "@/components/headerResultado";
+import { API_URL } from "@env";
 
 export default function Resultado() {
   const {
@@ -38,7 +43,152 @@ export default function Resultado() {
     setRightArmComprimento,
     setPontosRef,
     setSelectedValue,
+    clearAllData,
   } = useMeasurementContext();
+  const router = useRouter();
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [loadingPatients, setLoadingPatients] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  interface Patient {
+    id: string;
+    fullName: string;
+    birthDate?: string; // Add birthDate as an optional property
+    // Add other properties if needed
+  }
+
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const handleFinalize = () => {
+    Alert.alert(
+      "Finalizar Medição",
+      "Deseja associar esta medição a um paciente?",
+      [
+        {
+          text: "Não",
+          onPress: () => {
+            // Limpa os dados de medição e navega para a tela inicial
+            clearMeasurementData();
+            router.push("/home");
+          },
+          style: "cancel",
+        },
+        {
+          text: "Sim",
+          onPress: () => {
+            // Exibe o modal para selecionar um paciente
+            fetchPatients();
+            setModalVisible(true);
+          },
+        },
+      ]
+    );
+  };
+
+  const clearMeasurementData = () => {
+    // Limpa os dados de medição no contexto
+    clearAllData();
+    setDifferences([]);
+    setLeftArmInputs([]);
+    setRightArmInputs([]);
+    setLeftArmComprimento("0");
+    setRightArmComprimento("0");
+    setPontosRef("5cm");
+    setSelectedValue("opcao1");
+    setAffectedArm("right");
+  };
+
+  const fetchPatients = async () => {
+    try {
+      setLoadingPatients(true);
+      const token = await SecureStore.getItemAsync("access_token");
+      if (!token) {
+        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        return;
+      }
+
+      const userResponse = await axios.get(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const userId = userResponse.data.id;
+
+      const patientsResponse = await axios.get(
+        `${API_URL}/api/pacientes/usuario/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      setPatients(patientsResponse.data);
+    } catch (error) {
+      console.error("Erro ao buscar pacientes:", error);
+      Alert.alert("Erro", "Não foi possível carregar os pacientes.");
+    } finally {
+      setLoadingPatients(false);
+    }
+  };
+
+  const handleAssociateMeasurement = async () => {
+    if (!selectedPatient) {
+      Alert.alert("Erro", "Selecione um paciente para associar a medição.");
+      return;
+    }
+
+    try {
+      const token = await SecureStore.getItemAsync("access_token");
+      if (!token) {
+        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        return;
+      }
+
+      const convertArmValue = (value: string) => {
+        if (value === "left") return "Esquerdo";
+        if (value === "right") return "Direito";
+        return value; // Retorna o valor original se não for "left" ou "right"
+      };
+
+      const convertedReferenceArm = convertArmValue(referenceArm);
+      const convertedAffectedArm = convertArmValue(affectedArm);
+
+      const measurementData = {
+        volumetry: {
+          referenceArm: convertedReferenceArm,
+          affectedArm: convertedAffectedArm,
+          volumesReferencia,
+          volumesAfetado,
+          volumeDifference: volumeDifferencePercentage,
+        },
+        perimetry: {
+          pontosRef,
+          leftArmInputs,
+          rightArmInputs,
+          leftArmComprimento,
+          rightArmComprimento,
+          differences,
+        },
+      };
+
+      await axios.post(
+        `${API_URL}/api/pacientes/${selectedPatient.id}/mensuracao`,
+        measurementData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      Alert.alert("Sucesso", "Medição associada ao paciente com sucesso!");
+      setModalVisible(false);
+      clearMeasurementData();
+      router.push("/home");
+    } catch (error) {
+      console.error("Erro ao associar medição:", error);
+      Alert.alert("Erro", "Não foi possível associar a medição.");
+    }
+  };
+
+  const filteredPatients = patients.filter((patient) =>
+    patient.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Verifica se a ficha de exame foi preenchida
   const hasPatientData = !!(
@@ -116,32 +266,27 @@ export default function Resultado() {
     return difference >= 0 ? `+${difference}` : `${difference}`;
   };
 
-  const calculateVolume = (
-    comprimentoRef: string,
-    inputs: string[]
-  ): number[] => {
+  const calculateVolume = (comprimentoRef: string, inputs: string[]) => {
     const h = parseFloat(pontosRef); // distância entre os pontos
     if (isNaN(h)) {
       console.error("Invalid pontosRef value:", pontosRef);
-      return [];
+      return NaN;
     }
 
     const CA = parseFloat(comprimentoRef);
     if (isNaN(CA)) {
       console.error("Invalid comprimentoRef value:", comprimentoRef);
-      return [];
+      return NaN;
     }
 
-    // Inclui o comprimento de referência como o primeiro valor no array de inputs
-    const validInputs = [
-      comprimentoRef,
-      ...inputs.filter((input) => input !== "" && input !== null),
-    ];
+    const validInputs = inputs.filter(
+      (input) => input !== "" && input !== null
+    );
     const volumes = validInputs.map((input, index) => {
       const Ci = parseFloat(input);
       if (isNaN(Ci)) {
         console.error(`Invalid input value at index ${index}:`, input);
-        return 0;
+        return NaN;
       }
       const previousCA = index === 0 ? CA : parseFloat(validInputs[index - 1]);
       return (
@@ -149,18 +294,25 @@ export default function Resultado() {
       );
     });
 
+    if (volumes.some((volume) => isNaN(volume))) {
+      console.error("One or more volumes are NaN");
+      return NaN;
+    }
+
     return volumes;
   };
 
-  const volumesReferencia =
-    referenceArm === "left"
-      ? calculateVolume(leftArmComprimento, leftArmInputs)
-      : calculateVolume(rightArmComprimento, rightArmInputs);
+  const volumesReferencia = calculateVolume(
+    referenceArm === "right" ? rightArmComprimento : leftArmComprimento,
+    referenceArm === "right" ? rightArmInputs : leftArmInputs
+  );
+  const affectedInputs =
+    affectedArm === "right" ? rightArmInputs : leftArmInputs;
 
-  const volumesAfetado =
-    affectedArm === "left"
-      ? calculateVolume(leftArmComprimento, leftArmInputs)
-      : calculateVolume(rightArmComprimento, rightArmInputs);
+  const volumesAfetado = calculateVolume(
+    affectedArm === "right" ? rightArmComprimento : leftArmComprimento,
+    affectedInputs
+  );
 
   const volumeReferenciaTotal = Array.isArray(volumesReferencia)
     ? volumesReferencia.reduce((acc, volume) => acc + volume, 0)
@@ -171,7 +323,7 @@ export default function Resultado() {
 
   console.log("Volumes de Referência:", volumesReferencia);
   console.log("Volumes do Membro Afetado:", volumesAfetado);
-
+  // Calculate the volume difference percentage
   const volumeDifferencePercentage =
     ((volumeAfetadoTotal - volumeReferenciaTotal) / volumeReferenciaTotal) *
     100;
@@ -191,8 +343,12 @@ export default function Resultado() {
     if (hasVolumesChanged) {
       setPatientData({
         ...patientData,
-        volumesReferencia,
-        volumesAfetado,
+        volumesReferencia: Array.isArray(volumesReferencia)
+          ? volumesReferencia
+          : undefined,
+        volumesAfetado: Array.isArray(volumesAfetado)
+          ? volumesAfetado
+          : undefined,
       });
     }
   }, [volumesReferencia, volumesAfetado]);
@@ -451,26 +607,7 @@ export default function Resultado() {
           alignItems: "center",
         }}
       >
-        <View className="flex-row justify-center mt-12">
-          {/* <TouchableOpacity
-            style={{ width: 25, height: 25 }}
-            onPress={() => router.navigate("/stack/bracoAfetado")}
-          >
-            <Ionicons
-              name="chevron-back"
-              size={28}
-              color="#b41976"
-              style={{ position: "absolute", right: 100}}
-            />
-          </TouchableOpacity> */}
-          <Image
-            source={require("../assets/file-text2.png")}
-            className="w-7 h-7"
-          />
-          <Text className="font-semibold text-center mt-1 ml-2">
-            Diagnóstico
-          </Text>
-        </View>
+        <Header title="Diagnóstico" />
         <View
           className="p-6 bg-white-500 mt-4"
           style={{
@@ -664,100 +801,135 @@ export default function Resultado() {
         </View>
         {hasPatientData ? renderComplementaryData() : null}
         <TouchableOpacity
-          onPress={async () => {
-            try {
-              if (hasPatientData) {
-                // Se o usuário vem de uma ficha de exame, gera o relatório
-                await generatePatientReport(
-                  patientData,
-                  {
-                    volumesReferencia,
-                    volumesAfetado,
-                    volumeReferenciaTotal: parseFloat(volumeReferenciaTotal.toFixed(2)),
-                    volumeAfetadoTotal: parseFloat(volumeAfetadoTotal.toFixed(2)),
-                    volumeDifferencePercentage: parseFloat(volumeDifferencePercentage.toFixed(2)),
-                  },
-                  {
-                    leftArmInputs,
-                    rightArmInputs,
-                    affectedArm,
-                    referenceArm,
-                    differences: differences.map((diff) => parseFloat(diff.toFixed(2))),
-                    leftArmComprimento,
-                    rightArmComprimento,
-                    pontosRef,
-                  }
-                );
-                alert("Relatório gerado com sucesso!");
-              } else {
-                // Caso contrário, é um cálculo avulso
-                alert("Cálculo realizado com sucesso!");
-              }
-
-              // Limpa os dados de medição e ficha de exame
-              setAffectedArm("right");
-              setDifferences([]);
-              setLeftArmInputs([]);
-              setRightArmInputs([]);
-              setLeftArmComprimento("0");
-              setRightArmComprimento("0");
-              setPontosRef("5cm");
-              setSelectedValue("opcao1");
-              setPatientData({
-                fullName: "",
-                birthDate: "",
-                address: "",
-                phone: "",
-                weight: "",
-                height: "",
-                activityLevel: "",
-                maritalStatus: "",
-                occupation: "",
-                cancerDiagnosisDate: "",
-                procedures: [],
-                skinChanges: [],
-                musculoskeletalComplaints: "",
-                lymphedemaSymptoms: "",
-                cacifoSign: "",
-                orangePeelSign: "",
-                stemmerSign: "",
-                radiotherapy: {
-                  type: "",
-                  duration: "",
-                },
-                surgery: {
-                  type: "",
-                  duration: "",
-                },
-                axillaryDissection: {
-                  type: "",
-                  duration: "",
-                },
-                musculoskeletalChanges: "",
-                lymphedemaSymptomsDetails: "",
-              }); // Limpa os dados do paciente
-
-              // Redireciona para a tela inicial
-              router.push("/stack/home");
-            } catch (error) {
-              console.error("Erro ao processar a ação:", error);
-              alert("Ocorreu um erro ao processar a ação.");
-            }
-          }}
+          onPress={handleFinalize}
           style={{
-            width: 300,
-            marginTop: 20,
-            marginBottom: 20,
             backgroundColor: "#b41976",
-            paddingVertical: 12,
-            borderRadius: 8,
+            width: "100%",
+            height: 50,
+            borderRadius: 10,
             alignItems: "center",
+            justifyContent: "center",
+            marginTop: 20,
           }}
         >
           <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
             Finalizar
           </Text>
         </TouchableOpacity>
+
+        {/* Modal para Seleção de Paciente */}
+        <Modal
+          visible={modalVisible}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "#fff",
+                width: "90%",
+                borderRadius: 10,
+                padding: 20,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "bold",
+                  color: "#b41976",
+                  marginBottom: 10,
+                }}
+              >
+                Selecione um Paciente
+              </Text>
+
+              {/* Barra de Pesquisa */}
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  borderWidth: 1,
+                  borderColor: "#ccc",
+                  borderRadius: 10,
+                  paddingHorizontal: 10,
+                  marginBottom: 10,
+                }}
+              >
+                <TextInput
+                  placeholder="Pesquisar paciente"
+                  placeholderTextColor="#aaa"
+                  style={{ flex: 1, fontSize: 16 }}
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
+                />
+              </View>
+
+              {/* Lista de Pacientes */}
+              {loadingPatients ? (
+                <ActivityIndicator size="large" color="#b41976" />
+              ) : (
+                <FlatList
+                  data={filteredPatients}
+                  keyExtractor={(item) => item.id}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => setSelectedPatient(item)}
+                      style={{
+                        padding: 10,
+                        backgroundColor:
+                          selectedPatient?.id === item.id
+                            ? "#ffe0f0"
+                            : "#f7f7f7",
+                        borderRadius: 5,
+                        marginBottom: 5,
+                      }}
+                    >
+                      <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                        {item.fullName}
+                      </Text>
+                      <Text style={{ fontSize: 14, color: "#777" }}>
+                        Data de Nascimento: {item.birthDate || "Não informado"}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  ListEmptyComponent={
+                    <Text style={{ textAlign: "center", color: "#777" }}>
+                      Nenhum paciente encontrado.
+                    </Text>
+                  }
+                />
+              )}
+
+              {/* Botão Confirmar */}
+              <TouchableOpacity
+                onPress={handleAssociateMeasurement}
+                style={{
+                  backgroundColor: "#b41976",
+                  width: "100%",
+                  height: 50,
+                  borderRadius: 10,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: 10,
+                }}
+              >
+                <Text
+                  style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
+                >
+                  Confirmar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </SafeAreaView>
   );

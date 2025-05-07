@@ -13,6 +13,7 @@ import Dropdown from "@/components/dropdown";
 import DatePicker from "@/components/datepicker"; // Importa o componente DatePicker
 import { router } from "expo-router";
 import { useMeasurementContext } from "@/context/context";
+import Header from "@/components/headerFicha1";
 
 export default function FichaExame1() {
   const { patientData, setPatientData } = useMeasurementContext();
@@ -63,23 +64,15 @@ export default function FichaExame1() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white-600">
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+    <SafeAreaView className="flex-1 bg-white-600 mt-8">
+      <StatusBar barStyle="dark-content" backgroundColor="#f4f4f4" />
       <FlatList
         data={[]}
         renderItem={null}
         ListHeaderComponent={
           <View className="flex-1 justify-center items-center">
             {/* Header */}
-            <View className="flex-row justify-center mt-8">
-              <Image
-                source={require("../assets/file-text2.png")}
-                className="w-7 h-7"
-              />
-              <Text className=" font-semibold text-center text-xl ml-2">
-                Ficha do Paciente
-              </Text>
-            </View>
+            <Header title="Ficha do Paciente" />
 
             {/* Formulário */}
             <View
@@ -242,7 +235,7 @@ export default function FichaExame1() {
             {/* Botão para próxima tela */}
             <TouchableOpacity
               onPress={() => {
-                router.navigate("/fichaExame2");
+                router.push("/fichaExame2");
               }}
               style={{
                 width: 300,
@@ -255,7 +248,7 @@ export default function FichaExame1() {
               }}
             >
               <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-                Salvar
+                Próximo
               </Text>
             </TouchableOpacity>
           </View>

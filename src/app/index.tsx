@@ -10,10 +10,22 @@ import {
 import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store"; // Para acessar o SecureStore
 
 const { width, height } = Dimensions.get("window");
 
 export default function Index() {
+
+  // const clearToken = async () => {
+  //   try {
+  //     await SecureStore.deleteItemAsync("access_token"); // Remove o token armazenado
+  //     alert("Token removido com sucesso!");
+  //   } catch (error) {
+  //     console.error("Erro ao remover o token:", error);
+  //     alert("Erro ao remover o token.");
+  //   }
+  // };
+
   return (
     <SafeAreaView className="flex-1 bg-primary-500">
       {/* Top Section */}
@@ -113,7 +125,8 @@ export default function Index() {
         <TouchableOpacity
           className="bg-primary-500 px-4 py-2 mt-10 rounded-lg justify-center items-center w-full"
           onPress={() => {
-            router.navigate("/stack/home");
+            // clearToken(); // Chama a função para limpar o token
+            router.navigate("/sing-in");
           }}
         >
           <Text className="text-white-500 font-bold text-center text-xl">
@@ -124,7 +137,7 @@ export default function Index() {
         <TouchableOpacity
           className="mt-2"
           onPress={() => {
-            router.navigate("/stack/home");
+            router.push("/sing-up");
           }}
         >
           <Text className="text-center">

@@ -7,14 +7,17 @@ import {
   FlatList,
   Image,
   TextInput,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
-import Dropdown1 from "../../components/dropdown";
-import { useMeasurementContext } from "../../context/context";
+import Dropdown1 from "../components/dropdown";
+import { useMeasurementContext } from "../context/context";
 
 export default function bracoRef() {
+  const { width } = useWindowDimensions();
+
   const {
     pontosRef,
     setPontosRef,
@@ -223,10 +226,27 @@ export default function bracoRef() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white-600">
+    <SafeAreaView className="flex-1 bg-white-600 mt-8">
       <StatusBar style="dark" backgroundColor="transparent" translucent />
+
+      {/* Botão de Voltar */}
+      <TouchableOpacity
+        onPress={() => {
+          router.push("/calculadora");
+        }}
+        style={{
+          position: "absolute",
+          width: 40,
+          height: 40,
+          justifyContent: "center",
+          alignItems: "center",
+          ...(width > 768 ? { left: 100, top: 20 } : { right: 340, top: 20 }), // Responsivo: tablet ou celular
+        }}
+      >
+        <Feather name="arrow-left" size={28} color="#000" />
+      </TouchableOpacity>
       <Image
-        source={require("../../assets/busto-fem-direito.png")}
+        source={require("../assets/busto-fem-direito.png")}
         style={{ width: 200, height: 200, alignSelf: "center" }}
       />
 
@@ -234,7 +254,7 @@ export default function bracoRef() {
       <View className="flex-row justify-center items-center bg-white-500">
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/stack/bracoEsquerdo")}
+          onPress={() => router.push("/bracoEsquerdo")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -248,7 +268,7 @@ export default function bracoRef() {
 
         <TouchableOpacity
           className="flex-1 items-center"
-          onPress={() => router.navigate("/stack/bracoDireito")}
+          onPress={() => router.push("/bracoDireito")}
           style={{
             height: 50,
             justifyContent: "center",
@@ -279,7 +299,7 @@ export default function bracoRef() {
               >
                 <View className="flex-row mb-4">
                   <Image
-                    source={require("../../assets/plus-circle.png")}
+                    source={require("../assets/plus-circle.png")}
                     style={{
                       width: 18,
                       height: 18,
@@ -386,7 +406,7 @@ export default function bracoRef() {
                     }}
                     keyboardType="numeric"
                     value={leftArmComprimento}
-                    onChangeText={(setLeftArmComprimento)}
+                    onChangeText={setLeftArmComprimento}
                   />
                 </View>
                 <Text className="font-bold text-black-500">cm</Text>
@@ -423,7 +443,7 @@ export default function bracoRef() {
             >
               <View className="flex-row mb-4">
                 <Image
-                  source={require("../../assets/maximize.png")}
+                  source={require("../assets/maximize.png")}
                   style={{
                     width: 18,
                     height: 18,
@@ -436,7 +456,7 @@ export default function bracoRef() {
                 </Text>
                 <TouchableOpacity>
                   <Image
-                    source={require("../../assets/help-circle.png")}
+                    source={require("../assets/help-circle.png")}
                     style={{
                       width: 18,
                       height: 18,
@@ -449,7 +469,7 @@ export default function bracoRef() {
               {renderInputs()}
             </View>
             <TouchableOpacity
-              onPress={() => router.navigate("/stack/bracoDireito")}
+              onPress={() => router.push("/bracoDireito")}
               style={{
                 width: 300,
                 marginTop: 20,

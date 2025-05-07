@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -11,13 +11,42 @@ import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
-
-const { width, height } = Dimensions.get("window");
+import { useMeasurementContext } from "@/context/context";
 
 export default function Home() {
+
+  const { setPatientData } = useMeasurementContext();
+
+  // useEffect(() => {
+  //   setPatientData({
+  //     fullName: "João Silva",
+  //     birthDate: "1990-05-15",
+  //     address: "Rua das Flores, 123",
+  //     phone: "(11) 98765-4321",
+  //     weight: "75kg",
+  //     height: "1.75m",
+  //     activityLevel: "Moderado",
+  //     maritalStatus: "Casado",
+  //     occupation: "Engenheiro",
+  //     cancerDiagnosisDate: "2020-03-10",
+  //     procedures: ["Quimioterapia", "Radioterapia"],
+  //     skinChanges: ["Vermelhidão", "Descamação"],
+  //     musculoskeletalComplaints: "Dor no ombro direito",
+  //     lymphedemaSymptoms: "Inchaço no braço esquerdo",
+  //     cacifoSign: "Presente",
+  //     orangePeelSign: "Ausente",
+  //     stemmerSign: "Presente",
+  //     radiotherapy: { type: "Externa", duration: "6 meses" },
+  //     surgery: { type: "Mastectomia", duration: "2 horas" },
+  //     axillaryDissection: { type: "Parcial", duration: "1 hora" },
+  //     musculoskeletalChanges: "Limitação de movimento",
+  //     lymphedemaSymptomsDetails: "Inchaço constante e dor leve",
+  //   });
+  // }, []); // Executa apenas uma vez ao carregar a tela
+
   return (
-    <SafeAreaView className="flex-1 bg-white-500">
-      <StatusBar style="dark" backgroundColor="transparent" translucent />
+    <SafeAreaView className="flex-1 bg-white-500 mt-8">
+      <StatusBar style="dark" backgroundColor="#fff" translucent />
       <View className="justify-center items-center">
         <View
           className="bg-primary-500 px-6 mt-16"
@@ -28,7 +57,7 @@ export default function Home() {
           }}
         >
           <Image
-            source={require("../../assets/image 8.png")}
+            source={require("../assets/image 8.png")}
             style={{
               position: "absolute",
               top: -20,
@@ -67,7 +96,7 @@ export default function Home() {
           <View className="flex-row bg-white-500 rounded-lg items-center">
             <TouchableOpacity
               onPress={() => {
-                router.navigate("/fichaExame");
+                router.push("/fichaExame");
               }}
             >
               <View
@@ -83,7 +112,7 @@ export default function Home() {
                 }}
               >
                 <Image
-                  source={require("../../assets/file-text.png")}
+                  source={require("../assets/file-text.png")}
                   style={{
                     width: 24,
                     height: 24,
@@ -95,7 +124,7 @@ export default function Home() {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                router.navigate("/stack/calculadora");
+                router.push("/calculadora");
               }}
             >
               <View
@@ -111,7 +140,7 @@ export default function Home() {
                 }}
               >
                 <Image
-                  source={require("../../assets/Group.png")}
+                  source={require("../assets/Group.png")}
                   style={{
                     width: 23,
                     height: 23,
@@ -151,7 +180,7 @@ export default function Home() {
           <View className="flex-row bg-white-500 rounded-lg items-center">
             <TouchableOpacity
               onPress={() => {
-                router.navigate("/historicoExames");
+                router.push("/historicoExames");
               }}
             >
               <View
@@ -167,7 +196,7 @@ export default function Home() {
                 }}
               >
                 <Image
-                  source={require("../../assets/file-text.png")}
+                  source={require("../assets/file-text.png")}
                   style={{
                     width: 24,
                     height: 24,

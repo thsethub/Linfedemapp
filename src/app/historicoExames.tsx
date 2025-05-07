@@ -6,87 +6,213 @@ import {
   TouchableOpacity,
   TextInput,
   StyleSheet,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
-import { getReports, deleteReport } from "@/utils/storage";
-import * as FileSystem from "expo-file-system";
-import * as Sharing from "expo-sharing";
+import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import Header from "@/components/headerExames1";
+import { API_URL } from "@env"; // Certifique-se de que o caminho está correto
 
-export default function ReportList() {
-  const [reports, setReports] = useState<any[]>([]);
+// Interface para os pacientes
+interface Patient {
+  id: string;
+  fullName: string;
+  birthDate: string;
+}
+
+interface PatientData {
+  id: string;
+  birthDate: string;
+  fullName: any;
+  patient: Patient;
+  measurements: {
+    volumetry: any;
+    perimetry: any;
+  };
+}
+
+export default function HistoricoExames() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+  const [patients, setPatients] = useState<PatientData[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchReports = async () => {
-      const savedReports = await getReports();
-      setReports(savedReports);
-    };
-    fetchReports();
-  }, []);
-
-  const handleDelete = async (id: number, path: string) => {
+  const fetchPatients = async () => {
     try {
-      await FileSystem.deleteAsync(path, { idempotent: true });
-      await deleteReport(id);
-      setReports((prev) => prev.filter((report) => report.id !== id));
+      // Recupera o token armazenado
+      const token = await SecureStore.getItemAsync("access_token");
+
+      if (!token) {
+        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        return;
+      }
+
+      // Faz a requisição para obter os dados do usuário autenticado
+      const userResponse = await axios.get(`${API_URL}/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const userId = userResponse.data.id;
+
+      // Faz a requisição para listar os pacientes associados ao usuário
+      const patientsResponse = await axios.get(
+        `${API_URL}/api/pacientes/usuario/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setPatients(patientsResponse.data);
     } catch (error) {
-      console.error("Erro ao excluir arquivo:", error);
+      console.error("Erro ao buscar pacientes:", error);
+      Alert.alert("Erro", "Não foi possível carregar os pacientes.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+  
+  // Função para deletar um paciente
+  const deletePatient = async (patientId: string) => {
+    try {
+      // Recupera o token armazenado
+      const token = await SecureStore.getItemAsync("access_token");
+
+      if (!token) {
+        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        return;
+      }
+
+      // Confirmação antes de deletar
+      Alert.alert("Confirmação", "Tem certeza que deseja deletar o paciente?", [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Deletar",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await axios.delete(
+                `${API_URL}/api/pacientes/${patientId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+
+              // Recarrega a lista de pacientes após a exclusão
+              fetchPatients();
+
+              Alert.alert("Sucesso", "Paciente deletado com sucesso!");
+            } catch (error) {
+              console.error("Erro ao deletar paciente:", error);
+              Alert.alert("Erro", "Não foi possível deletar o paciente.");
+            }
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error("Erro ao deletar paciente:", error);
+      Alert.alert("Erro", "Não foi possível deletar o paciente.");
     }
   };
 
-  const filteredReports = reports.filter((report) =>
-    report.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filtra os pacientes com base na pesquisa
+  const filteredPatients = patients.filter((item) =>
+    item.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#b41976" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
       {/* Cabeçalho */}
       <View style={styles.header}>
-        <Ionicons name="time-outline" size={20} color="#000" />
-        <Text style={styles.headerTitle} className="font-semibold">Histórico de Exames</Text>
+        <Header title="Histórico Clínico" />
       </View>
 
       {/* Barra de Pesquisa */}
       <View style={styles.searchContainer} className="bg-white-600">
-        <Ionicons name="search-sharp" size={18} color="#B0B0B0" style={styles.searchIcon} />
+        <Ionicons
+          name="search-sharp"
+          size={18}
+          color="#B0B0B0"
+          style={styles.searchIcon}
+        />
         <TextInput
-        className="font-semibold"
+          className="font-semibold"
           style={styles.searchBar}
-          placeholder="Pesquisar"
+          placeholder="Pesquisar paciente"
           placeholderTextColor="#aaa"
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
       </View>
 
-      {/* Lista de Relatórios */}
+      {/* Lista de Pacientes */}
       <FlatList
-        data={filteredReports}
-        keyExtractor={(item) => item.id.toString()}
+        data={filteredPatients}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <View style={styles.cardContent}>
-              <Text style={styles.cardTitle}>{item.name}</Text>
-              <Text style={styles.cardDate}>{item.date}</Text>
+              <Text style={styles.cardTitle}>{item.fullName}</Text>
+              <Text style={styles.cardDate}>
+                Data de Nascimento: {item.birthDate || "Não informado"}
+              </Text>
             </View>
             <View style={styles.cardActions}>
               <TouchableOpacity
-                onPress={() => Sharing.shareAsync(item.path)}
                 style={styles.openButton}
+                onPress={() =>
+                  router.push({
+                    pathname: "/historicoDetalhes/[id]",
+                    params: { id: item.id },
+                  })
+                }
               >
-                <Ionicons name="download-outline" size={16} color="#b41976" />
-                <Text style={styles.openButtonText}>Fazer Download</Text>
+                <Ionicons
+                  name="folder-open-outline"
+                  size={16}
+                  color="#b41976"
+                />
+                <Text style={styles.openButtonText}>
+                  Abrir Histórico Clínico
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => handleDelete(item.id, item.path)}
                 style={styles.deleteButton}
+                onPress={() => deletePatient(item.id)}
               >
-                <Ionicons name="trash-outline" size={16} color="#fff" />
-                <Text style={styles.deleteButtonText}>Excluir</Text>
+                <Ionicons name="trash-outline" size={16} color="#ff0000" />
+                <Text style={styles.deleteButtonText}>Deletar</Text>
               </TouchableOpacity>
             </View>
           </View>
         )}
+        ListEmptyComponent={
+          <Text className="text-black-500 text-center">
+            Nenhum paciente encontrado.
+          </Text>
+        }
       />
     </View>
   );
@@ -125,7 +251,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: "#B0B0B0",
-    // fontWeight: "bold",
   },
   card: {
     backgroundColor: "#fff",
@@ -171,12 +296,14 @@ const styles = StyleSheet.create({
   deleteButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#b41976",
+    backgroundColor: "#ffe6e6",
     padding: 8,
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ff0000",
   },
   deleteButtonText: {
-    color: "#fff",
+    color: "#ff0000",
     fontSize: 12,
     marginLeft: 5,
   },

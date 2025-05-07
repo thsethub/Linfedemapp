@@ -49,6 +49,7 @@ interface MeasurementContextProps {
   setAffectedArm: (value: "right" | "left") => void;
   patientData: PatientData;
   setPatientData: (data: PatientData) => void;
+  clearAllData: () => void;
 }
 
 const MeasurementContext = createContext<MeasurementContextProps | undefined>(
@@ -94,6 +95,34 @@ export const MeasurementProvider: React.FC<{ children: ReactNode }> = ({
     lymphedemaSymptomsDetails: "",
   });
 
+  const clearAllData = () => {
+    // Limpa os dados do paciente
+    setPatientData({
+      fullName: "",
+      birthDate: "",
+      address: "",
+      phone: "",
+      weight: "",
+      height: "",
+      activityLevel: "",
+      maritalStatus: "",
+      occupation: "",
+      cancerDiagnosisDate: "",
+      procedures: [],
+      skinChanges: [],
+      musculoskeletalComplaints: "Não",
+      lymphedemaSymptoms: "Não",
+      cacifoSign: "Não",
+      orangePeelSign: "Não",
+      stemmerSign: "Não",
+      radiotherapy: { type: "", duration: "" },
+      surgery: { type: "", duration: "" },
+      axillaryDissection: { type: "", duration: "" },
+      musculoskeletalChanges: "",
+      lymphedemaSymptomsDetails: "",
+    });
+  }
+
   return (
     <MeasurementContext.Provider
       value={{
@@ -117,6 +146,7 @@ export const MeasurementProvider: React.FC<{ children: ReactNode }> = ({
         setAffectedArm,
         patientData,
         setPatientData,
+        clearAllData
       }}
     >
       {children}
