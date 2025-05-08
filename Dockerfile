@@ -8,13 +8,13 @@ WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 
 # Instale as dependências
-RUN yarn install
+RUN npm install --legacy-peer-deps
 
 # Copie o restante do código da aplicação para o diretório de trabalho
 COPY . .
 
 # Exponha as portas padrão do Expo SDK 53
-EXPOSE 8081 19000 19001
+EXPOSE 8081
 
 # Comando para iniciar o servidor do Expo
-CMD ["yarn", "start"]
+CMD ["sudo", "npx", "expo", "start"]
