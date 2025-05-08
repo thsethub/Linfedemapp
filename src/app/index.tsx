@@ -10,7 +10,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
-import * as SecureStore from "expo-secure-store"; // Para acessar o SecureStore
+
 
 const { width, height } = Dimensions.get("window");
 

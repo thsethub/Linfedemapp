@@ -18,7 +18,8 @@ import Header from "@/components/headerFicha2";
 import axios from "axios";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store"; // Importa o SecureStore para armazenar o token
-import { API_URL } from "@env";
+
+const API_URL = "http://191.252.38.73:8083"
 
 export default function FichaExame2() {
   const { patientData, setPatientData, clearAllData } = useMeasurementContext();

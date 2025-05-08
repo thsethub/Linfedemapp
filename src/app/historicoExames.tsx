@@ -14,7 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerExames1";
-import { API_URL } from "@env"; // Certifique-se de que o caminho está correto
+
+const API_URL = "http://191.252.38.73:8083"
 
 // Interface para os pacientes
 interface Patient {

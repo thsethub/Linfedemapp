@@ -13,7 +13,8 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { generatePatientReport } from "@/utils/generatePatientReport";
 import Header from "@/components/headerId";
-import { API_URL } from "@env";
+
+const API_URL = "http://191.252.38.73:8083"
 
 export default function PatientProfileScreen() {
   const { id } = useLocalSearchParams();

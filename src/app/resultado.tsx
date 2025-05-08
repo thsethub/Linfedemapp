@@ -19,7 +19,8 @@ import { router, useRouter } from "expo-router";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerResultado";
-import { API_URL } from "@env";
+
+const API_URL = "http://191.252.38.73:8083"
 
 export default function Resultado() {
   const {

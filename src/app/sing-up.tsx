@@ -11,7 +11,8 @@ import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import axios from "axios";
-import {API_URL} from '@env';
+
+const API_URL = "http://191.252.38.73:8083"
 
 export default function SingUp() {
   const [name, setName] = useState("");
