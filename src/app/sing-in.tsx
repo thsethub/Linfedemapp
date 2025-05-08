@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
-const API_URL = "http://191.252.38.73:8083"
+const API_URL = "http://15.228.154.120:8083"
 
 
 

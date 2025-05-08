@@ -14,7 +14,7 @@ import * as SecureStore from "expo-secure-store";
 import { generatePatientReport } from "@/utils/generatePatientReport";
 import Header from "@/components/headerId";
 
-const API_URL = "http://191.252.38.73:8083"
+const API_URL = "http://15.228.154.120:8083"
 
 export default function PatientProfileScreen() {
   const { id } = useLocalSearchParams();
