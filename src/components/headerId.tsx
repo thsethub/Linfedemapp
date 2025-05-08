@@ -27,7 +27,7 @@ const Header = ({ title, name, dataDiagnostiCancer }: HeaderProps) => {
         }}
         style={{
           position: "absolute",
-          right: 350,
+          right: 340,
           width: 40,
           height: 40,
           justifyContent: "center",
