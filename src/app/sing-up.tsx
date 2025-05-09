@@ -12,7 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import axios from "axios";
 
-const API_URL = "http://15.228.154.120:8083"
+const API_URL = "http://10.7.221.151:8083";
 
 export default function SingUp() {
   const [name, setName] = useState("");
@@ -23,6 +23,7 @@ export default function SingUp() {
   const [titulacao, setTitulacao] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -64,16 +65,14 @@ export default function SingUp() {
       password,
     };
 
+    setIsRegistering(true);
+
     try {
-      const response = await axios.post(
-        `${API_URL}/auth/register`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}/auth/register`, payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.status === 200 || response.status === 201) {
         Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
@@ -87,6 +86,8 @@ export default function SingUp() {
         error.response?.data?.message ||
         "Não foi possível realizar o cadastro.";
       Alert.alert("Erro", message);
+    } finally {
+      setIsRegistering(false);
     }
   };
 
@@ -124,12 +125,14 @@ export default function SingUp() {
         {/* Input Fields */}
         <TextInput
           placeholder="Nome completo"
+          placeholderTextColor="#666"
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={name}
           onChangeText={setName}
         />
         <TextInput
           placeholder="E-mail"
+          placeholderTextColor="#666"
           keyboardType="email-address"
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={email}
@@ -137,6 +140,7 @@ export default function SingUp() {
         />
         <TextInput
           placeholder="Idade"
+          placeholderTextColor="#666"
           keyboardType="numeric"
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={idade}
@@ -144,6 +148,7 @@ export default function SingUp() {
         />
         <TextInput
           placeholder="Telefone"
+          placeholderTextColor="#666"
           keyboardType="phone-pad"
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={telefone}
@@ -151,18 +156,21 @@ export default function SingUp() {
         />
         <TextInput
           placeholder="Origem (Ex: País, Estado, etc.)"
+          placeholderTextColor="#666"
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={origem}
           onChangeText={setOrigem}
         />
         <TextInput
           placeholder="Titulação (Ex: Graduação, mestrado, etc.)"
+          placeholderTextColor="#666"
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={titulacao}
           onChangeText={setTitulacao}
         />
         <TextInput
           placeholder="Senha"
+          placeholderTextColor="#666"
           secureTextEntry
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={password}
@@ -170,6 +178,7 @@ export default function SingUp() {
         />
         <TextInput
           placeholder="Confirmar senha"
+          placeholderTextColor="#666"
           secureTextEntry
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={confirmPassword}

@@ -15,7 +15,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerExames1";
 
-const API_URL = "http://15.228.154.120:8083"
+const API_URL = "http://10.7.221.151:8083"
 
 // Interface para os pacientes
 interface Patient {

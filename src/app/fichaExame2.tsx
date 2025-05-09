@@ -19,7 +19,7 @@ import axios from "axios";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store"; // Importa o SecureStore para armazenar o token
 
-const API_URL = "http://15.228.154.120:8083"
+const API_URL = "http://10.7.221.151:8083"
 
 export default function FichaExame2() {
   const { patientData, setPatientData, clearAllData } = useMeasurementContext();
@@ -117,7 +117,9 @@ export default function FichaExame2() {
       Alert.alert("Sucesso", "Paciente salvo com sucesso!", [
         {
           text: "OK",
-          onPress: () => router.push("/home"),
+          onPress: () => {
+            router.push("/home");
+          },
         },
       ]);
     } catch (error) {
@@ -126,7 +128,7 @@ export default function FichaExame2() {
     }
   };
 
-  const goToMensuration = async () => {
+  const nextPatient = async () => {
     try {
       // Recupera o token armazenado
       const token = await SecureStore.getItemAsync("access_token");
@@ -137,7 +139,7 @@ export default function FichaExame2() {
       }
 
       // Faz a requisição para obter o ID do usuário autenticado
-      const userResponse = await axios.get(`${API_URL}:8080/auth/me`, {
+      const userResponse = await axios.get(`${API_URL}/auth/me`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -147,6 +149,10 @@ export default function FichaExame2() {
 
       // Garante que todos os campos de `questions` tenham valores
       const updatedPatientData = { ...patientData };
+      console.log(
+        "Estado atual de patientData antes de envio:",
+        updatedPatientData
+      );
 
       // Garante que a data do diagnóstico esteja formatada corretamente
       const formattedDate =
@@ -193,6 +199,8 @@ export default function FichaExame2() {
         detalhesSintomasLinfedema: updatedPatientData.lymphedemaSymptomsDetails,
       };
 
+      console.log("Dados formatados para envio:", dataToSend);
+
       // Envia os dados ao backend
       const response = await axios.post(
         `${API_URL}/api/pacientes`,
@@ -207,12 +215,14 @@ export default function FichaExame2() {
 
       console.log("Paciente salvo com sucesso:", response.data);
 
-      // Limpa os dados do paciente e navega para a tela de mensuração
+      // Limpa os dados do paciente e navega para a home
       clearAllData();
       Alert.alert("Sucesso", "Paciente salvo com sucesso!", [
         {
           text: "OK",
-          onPress: () => router.push("/calculadora"),
+          onPress: () => {
+            router.push("/calculadora");
+          },
         },
       ]);
     } catch (error) {
@@ -773,7 +783,7 @@ export default function FichaExame2() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={goToMensuration}
+                onPress={nextPatient}
                 style={{
                   width: 120,
                   // marginTop: 20,

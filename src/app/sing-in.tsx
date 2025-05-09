@@ -13,14 +13,13 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
-const API_URL = "http://15.228.154.120:8083"
-
-
+const API_URL = "http://10.7.221.151:8083";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   useEffect(() => {
     const checkToken = async () => {
@@ -53,6 +52,13 @@ export default function SignIn() {
   }, []);
 
   const handleLogin = async () => {
+    setIsAuthenticating(true);
+    if (!email || !password) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      setIsAuthenticating(false);
+      return;
+    }
+
     try {
       const response = await axios.post(`${API_URL}/auth/login`, {
         email,
@@ -61,14 +67,20 @@ export default function SignIn() {
 
       const { token } = response.data;
 
-      console.log("Token:", token); // Log do token recebido
       await SecureStore.setItemAsync("access_token", token);
       router.push("/home");
     } catch (error) {
+      const errorMessage =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : "Erro ao fazer login.";
+        
       // console.error("Erro ao fazer login:", error);
-      Alert.alert("Erro", "E-mail ou senha inválidos.");
+      Alert.alert("Erro", errorMessage);
+      } finally {
+        setIsAuthenticating(false);
+      }
     }
-  };
 
   if (loading) {
     return (
