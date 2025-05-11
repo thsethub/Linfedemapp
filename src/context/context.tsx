@@ -19,6 +19,9 @@ interface PatientData {
   orangePeelSign: string;
   stemmerSign: string;
   radiotherapy: { type: string; duration: string };
+  hormoneTherapy: { type: string; duration: string };
+  hormoneTherapyDetails: string;
+  chemotherapy: { type: string; duration: string };
   surgery: { type: string; duration: string };
   axillaryDissection: { type: string; duration: string };
   musculoskeletalChanges: string;
@@ -26,6 +29,7 @@ interface PatientData {
   note?: string;
   volumesReferencia?: number[];
   volumesAfetado?: number[];
+  [key: string]: any; // Permite adicionar outras propriedades dinamicamente
 }
 
 interface MeasurementContextProps {
@@ -89,6 +93,9 @@ export const MeasurementProvider: React.FC<{ children: ReactNode }> = ({
     orangePeelSign: "Não",
     stemmerSign: "Não",
     radiotherapy: { type: "", duration: "" },
+    hormoneTherapy: { type: "", duration: "" },
+    hormoneTherapyDetails: "",
+    chemotherapy: { type: "", duration: "" },
     surgery: { type: "", duration: "" },
     axillaryDissection: { type: "", duration: "" },
     musculoskeletalChanges: "",
@@ -116,6 +123,9 @@ export const MeasurementProvider: React.FC<{ children: ReactNode }> = ({
       orangePeelSign: "Não",
       stemmerSign: "Não",
       radiotherapy: { type: "", duration: "" },
+      hormoneTherapy: { type: "", duration: "" },
+      hormoneTherapyDetails: "",
+      chemotherapy: { type: "", duration: "" },
       surgery: { type: "", duration: "" },
       axillaryDissection: { type: "", duration: "" },
       musculoskeletalChanges: "",

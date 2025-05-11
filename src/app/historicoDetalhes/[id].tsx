@@ -14,7 +14,7 @@ import * as SecureStore from "expo-secure-store";
 import { generatePatientReport } from "@/utils/generatePatientReport";
 import Header from "@/components/headerId";
 
-const API_URL = "http://10.7.221.151:8083"
+const API_URL = "http://192.168.0.102:8083";
 
 export default function PatientProfileScreen() {
   const { id } = useLocalSearchParams();
@@ -76,11 +76,11 @@ export default function PatientProfileScreen() {
       Alert.alert("Erro", "Não há dados suficientes para gerar o relatório.");
       return;
     }
-  
+
     try {
       // Obter a última mensuração
       const lastMeasurement = measurements[measurements.length - 1];
-  
+
       // Chamar a função de geração do PDF com os dados do paciente e a última mensuração
       await generatePatientReport(patient, lastMeasurement);
     } catch (error) {
@@ -177,30 +177,35 @@ export default function PatientProfileScreen() {
               : "Nenhum procedimento informado"
           }
         />
-        <Field
-          label="Radioterapia"
-          value={
-            patient.radioterapia
-              ? `${patient.radioterapia.tipo} - ${patient.radioterapia.duracao} meses`
-              : "Não informado"
-          }
-        />
-        <Field
-          label="Cirurgia"
-          value={
-            patient.cirurgia
-              ? `${patient.cirurgia.tipo} - ${patient.cirurgia.duracao} meses`
-              : "Não informado"
-          }
-        />
-        <Field
-          label="Dissecção Axilar"
-          value={
-            patient.disseccaoAxilar
-              ? `${patient.disseccaoAxilar.tipo} - ${patient.disseccaoAxilar.duracao} meses`
-              : "Não informado"
-          }
-        />
+
+        {/* Renderização dinâmica dos detalhes dos procedimentos */}
+        {[
+          { label: "Radioterapia", field: "radioterapia" },
+          { label: "Quimioterapia", field: "quimioterapia" },
+          { label: "Hormonoterapia", field: "hormonoterapia" },
+          { label: "Cirurgia", field: "cirurgia" },
+          { label: "Dissecção Axilar", field: "disseccaoAxilar" },
+        ].map(({ label, field }) =>
+          patient[field] ? (
+            <Field
+              key={field}
+              label={label}
+              value={
+                patient[field].tipo && patient[field].duracao
+                  ? `${patient[field].tipo} - ${patient[field].duracao} meses`
+                  : "Informação incompleta"
+              }
+            />
+          ) : null
+        )}
+
+        {/* Detalhes extras de hormonoterapia, se houver */}
+        {patient.detalhesHormonoterapia && (
+          <Field
+            label="Detalhes Hormonoterapia"
+            value={patient.detalhesHormonoterapia}
+          />
+        )}
       </Section>
 
       <Section title="Alterações Cutâneas">

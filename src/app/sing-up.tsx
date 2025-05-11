@@ -12,7 +12,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import axios from "axios";
 
-const API_URL = "http://10.7.221.151:8083";
+const API_URL = "http://192.168.0.102:8083"
 
 export default function SingUp() {
   const [name, setName] = useState("");

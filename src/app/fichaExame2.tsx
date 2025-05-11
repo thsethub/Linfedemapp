@@ -12,20 +12,36 @@ import { SafeAreaView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useMeasurementContext } from "@/context/context";
 import { router } from "expo-router";
+
+// Define or import the PatientData type
+type PatientData = {
+  cancerDiagnosisDate?: string;
+  procedures: string[];
+  skinChanges: string[];
+  musculoskeletalComplaints?: string;
+  lymphedemaSymptoms?: string;
+  cacifoSign?: string;
+  orangePeelSign?: string;
+  stemmerSign?: string;
+  [key: string]: any; // Add this to allow dynamic keys
+};
 import SinglePicker from "@/components/singlepicker"; // Adjust the path as needed
 import Dropdown from "@/components/dropdown2"; // Adjust the path as needed
 import Header from "@/components/headerFicha2";
 import axios from "axios";
+import ProcedureDetails from "@/components/procedimentosEcapsulados"; // Adjust the path as needed
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store"; // Importa o SecureStore para armazenar o token
 
-const API_URL = "http://10.7.221.151:8083"
+const API_URL = "http://192.168.0.102:8083";
 
 export default function FichaExame2() {
   const { patientData, setPatientData, clearAllData } = useMeasurementContext();
 
   // Função para salvar o paciente no banco de dados
   const savePatient = async () => {
+    // Valida os dados do paciente
+    if (!validatePatientData(patientData)) return;
     try {
       // Recupera o token armazenado
       const token = await SecureStore.getItemAsync("access_token");
@@ -79,21 +95,40 @@ export default function FichaExame2() {
         sinalCacifo: updatedPatientData.cacifoSign,
         sinalCascaLaranja: updatedPatientData.orangePeelSign,
         sinalStemmer: updatedPatientData.stemmerSign,
-        radioterapia: {
-          tipo: updatedPatientData.radiotherapy.type,
-          duracao: updatedPatientData.radiotherapy.duration,
-        },
-        cirurgia: {
-          tipo: updatedPatientData.surgery.type,
-          duracao: updatedPatientData.surgery.duration,
-        },
-        disseccaoAxilar: {
-          tipo: updatedPatientData.axillaryDissection.type,
-          duracao: updatedPatientData.axillaryDissection.duration,
-        },
-        alteracoesMusculoesqueleticas:
-          updatedPatientData.musculoskeletalChanges,
-        detalhesSintomasLinfedema: updatedPatientData.lymphedemaSymptomsDetails,
+        radioterapia: updatedPatientData.procedures.includes("Radioterapia")
+          ? {
+              tipo: updatedPatientData.radiotherapy?.type || null,
+              duracao: updatedPatientData.radiotherapy?.duration || null,
+            }
+          : null,
+        cirurgia: updatedPatientData.procedures.includes("Cirurgia")
+          ? {
+              tipo: updatedPatientData.surgery?.type || null,
+              duracao: updatedPatientData.surgery?.duration || null,
+            }
+          : null,
+        disseccaoAxilar: updatedPatientData.procedures.includes(
+          "Esvaziamento axilar"
+        )
+          ? {
+              tipo: updatedPatientData.axillaryDissection?.type || null,
+              duracao: updatedPatientData.axillaryDissection?.duration || null,
+            }
+          : null,
+        hormonoterapia: updatedPatientData.procedures.includes("Hormonoterapia")
+          ? {
+              tipo: updatedPatientData.hormoneTherapy?.type || null,
+              duracao: updatedPatientData.hormoneTherapy?.duration || null,
+            }
+          : null,
+        detalhesHormonoterapia:
+          updatedPatientData.hormoneTherapyDetails || null,
+        quimioterapia: updatedPatientData.procedures.includes("Quimioterapia")
+          ? {
+              tipo: updatedPatientData.chemotherapy?.type || null,
+              duracao: updatedPatientData.chemotherapy?.duration || null,
+            }
+          : null,
       };
 
       console.log("Dados formatados para envio:", dataToSend);
@@ -129,6 +164,9 @@ export default function FichaExame2() {
   };
 
   const nextPatient = async () => {
+    
+    // Valida os dados do paciente
+    if (!validatePatientData(patientData)) return;
     try {
       // Recupera o token armazenado
       const token = await SecureStore.getItemAsync("access_token");
@@ -182,21 +220,40 @@ export default function FichaExame2() {
         sinalCacifo: updatedPatientData.cacifoSign,
         sinalCascaLaranja: updatedPatientData.orangePeelSign,
         sinalStemmer: updatedPatientData.stemmerSign,
-        radioterapia: {
-          tipo: updatedPatientData.radiotherapy.type,
-          duracao: updatedPatientData.radiotherapy.duration,
-        },
-        cirurgia: {
-          tipo: updatedPatientData.surgery.type,
-          duracao: updatedPatientData.surgery.duration,
-        },
-        disseccaoAxilar: {
-          tipo: updatedPatientData.axillaryDissection.type,
-          duracao: updatedPatientData.axillaryDissection.duration,
-        },
-        alteracoesMusculoesqueleticas:
-          updatedPatientData.musculoskeletalChanges,
-        detalhesSintomasLinfedema: updatedPatientData.lymphedemaSymptomsDetails,
+        radioterapia: updatedPatientData.procedures.includes("Radioterapia")
+          ? {
+              tipo: updatedPatientData.radiotherapy?.type || null,
+              duracao: updatedPatientData.radiotherapy?.duration || null,
+            }
+          : null,
+        cirurgia: updatedPatientData.procedures.includes("Cirurgia")
+          ? {
+              tipo: updatedPatientData.surgery?.type || null,
+              duracao: updatedPatientData.surgery?.duration || null,
+            }
+          : null,
+        disseccaoAxilar: updatedPatientData.procedures.includes(
+          "Esvaziamento axilar"
+        )
+          ? {
+              tipo: updatedPatientData.axillaryDissection?.type || null,
+              duracao: updatedPatientData.axillaryDissection?.duration || null,
+            }
+          : null,
+        hormonoterapia: updatedPatientData.procedures.includes("Hormonoterapia")
+          ? {
+              tipo: updatedPatientData.hormoneTherapy?.type || null,
+              duracao: updatedPatientData.hormoneTherapy?.duration || null,
+            }
+          : null,
+        detalhesHormonoterapia:
+          updatedPatientData.hormoneTherapyDetails || null,
+        quimioterapia: updatedPatientData.procedures.includes("Quimioterapia")
+          ? {
+              tipo: updatedPatientData.chemotherapy?.type || null,
+              duracao: updatedPatientData.chemotherapy?.duration || null,
+            }
+          : null,
       };
 
       console.log("Dados formatados para envio:", dataToSend);
@@ -238,14 +295,86 @@ export default function FichaExame2() {
     patientData.cancerDiagnosisDate?.split("/")[1] || null
   );
 
-  // const handleDateSelection2 = (month: string | null, year: string | null) => {
-  //   const formattedDate = `${month || ""}/${year || ""}`;
-  //   setPatientData({ ...patientData, cancerDiagnosisDate: formattedDate });
-  // };
+  function validatePatientData(data: typeof patientData) {
+    // Campos obrigatórios básicos
+    const requiredFields = [
+      "fullName",
+      "birthDate",
+      "address",
+      "phone",
+      "weight",
+      "height",
+      "activityLevel",
+      "maritalStatus",
+      "occupation",
+      "cancerDiagnosisDate",
+    ];
 
-  // useEffect(() => {
-  //   handleDateSelection2(selectedMonth, selectedYear);
-  // }, [selectedMonth, selectedYear]);
+    for (const field of requiredFields) {
+      if (!data[field] || data[field].toString().trim() === "") {
+        Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
+        return false;
+      }
+    }
+
+    // Procedimentos obrigatórios
+    if (!data.procedures || data.procedures.length === 0) {
+      Alert.alert("Atenção", "Selecione pelo menos um procedimento realizado.");
+      return false;
+    }
+
+    // Para cada procedimento selecionado, verifique se tipo e duração estão preenchidos
+    for (const proc of data.procedures) {
+      let key = "";
+      switch (proc) {
+        case "Quimioterapia":
+          key = "chemotherapy";
+          break;
+        case "Radioterapia":
+          key = "radiotherapy";
+          break;
+        case "Hormonoterapia":
+          key = "hormoneTherapy";
+          break;
+        case "Cirurgia":
+          key = "surgery";
+          break;
+        case "Esvaziamento axilar":
+          key = "axillaryDissection";
+          break;
+      }
+      if (key && (!data[key] || !data[key].type || !data[key].duration)) {
+        Alert.alert(
+          "Atenção",
+          `Preencha o tipo e a duração para o procedimento: ${proc}.`
+        );
+        return false;
+      }
+    }
+
+    // Alterações cutâneas obrigatórias
+    if (!data.skinChanges || data.skinChanges.length === 0) {
+      Alert.alert("Atenção", "Selecione pelo menos uma alteração cutânea.");
+      return false;
+    }
+
+    // Perguntas complementares obrigatórias
+    const questionsRequired = [
+      "musculoskeletalComplaints",
+      "lymphedemaSymptoms",
+      "cacifoSign",
+      "orangePeelSign",
+      "stemmerSign",
+    ];
+    for (const field of questionsRequired) {
+      if (!data[field] || data[field].toString().trim() === "") {
+        Alert.alert("Atenção", "Responda todas as perguntas complementares.");
+        return false;
+      }
+    }
+
+    return true;
+  }
 
   const handleToggleSelection = (
     value: string,
@@ -267,25 +396,30 @@ export default function FichaExame2() {
   };
 
   const handleDurationChange = (
-    field: keyof typeof patientData,
+    procedure: string,
+    field: keyof PatientData,
     value: string
   ) => {
     setPatientData({
       ...patientData,
-      [field]:
-        typeof patientData[field] === "object" && patientData[field] !== null
-          ? { ...patientData[field], duration: value }
-          : { duration: value },
+      [field]: {
+        ...patientData[field],
+        duration: value,
+      },
     });
   };
 
   const handleDropdownChange = (
-    field: keyof typeof patientData,
-    value: any
+    procedure: string,
+    field: keyof PatientData,
+    value: string
   ) => {
     setPatientData({
       ...patientData,
-      [field]: value,
+      [field]: {
+        ...patientData[field],
+        type: value,
+      },
     });
   };
 
@@ -530,98 +664,50 @@ export default function FichaExame2() {
                 <Text className="text-lg font-medium mb-2">Detalhes</Text>
               </View>
 
-              {/* Radioterapia */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start", // Alinha os elementos pelo topo
-                  marginBottom: 16,
-                }}
-              >
-                {/* Bloco Radioterapia + Dropdown */}
-                <View style={{ flex: 1, marginRight: 12 }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Radioterapia
-                  </Text>
-                  <Dropdown
-                    title="Selecione o tipo"
-                    items={[
+              {/* Renderização dinâmica dos procedimentos selecionados */}
+              {patientData.procedures.map((procedure) => {
+                let dropdownItems: { label: string; value: string }[] = [];
+                let selectedValue = "";
+                let duration = "";
+                let field: keyof typeof patientData = "radiotherapy"; // Campo padrão
+
+                // Configurações específicas para cada procedimento
+                switch (procedure) {
+                  case "Quimioterapia":
+                    dropdownItems = [
                       { label: "Neoadjuvante", value: "Neoadjuvante" },
                       { label: "Adjuvante", value: "Adjuvante" },
                       { label: "Neo + Adjuvante", value: "Neo + Adjuvante" },
-                    ]}
-                    selectedValue={patientData.radiotherapy.type}
-                    setSelectedValue={(value) =>
-                      handleDropdownChange("radiotherapy", {
-                        ...patientData.radiotherapy,
-                        type: value,
-                      })
-                    }
-                  />
-                </View>
+                    ];
+                    selectedValue = patientData.chemotherapy?.type || "";
+                    duration = patientData.chemotherapy?.duration || "";
+                    field = "chemotherapy";
+                    break;
 
-                {/* Bloco "Há quanto tempo?" + input + label Meses */}
-                <View style={{ alignItems: "center" }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "500",
-                      marginBottom: 10,
-                    }}
-                  >
-                    Há quanto tempo?
-                  </Text>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <TextInput
-                      placeholder="___"
-                      keyboardType="numeric"
-                      value={patientData.radiotherapy.duration}
-                      onChangeText={(value) =>
-                        handleDurationChange("radiotherapy", value)
-                      }
-                      style={{
-                        width: 50,
-                        height: 30,
-                        backgroundColor: "#f8f8f8",
-                        borderRadius: 8,
-                        textAlign: "center",
-                        marginRight: 6,
-                        paddingVertical: 4,
-                      }}
-                    />
-                    <Text>Meses</Text>
-                  </View>
-                </View>
-              </View>
+                  case "Radioterapia":
+                    dropdownItems = [
+                      { label: "Neoadjuvante", value: "Neoadjuvante" },
+                      { label: "Adjuvante", value: "Adjuvante" },
+                      { label: "Neo + Adjuvante", value: "Neo + Adjuvante" },
+                    ];
+                    selectedValue = patientData.radiotherapy?.type || "";
+                    duration = patientData.radiotherapy?.duration || "";
+                    field = "radiotherapy";
+                    break;
 
-              {/* Cirurgia */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start", // Alinha os elementos pelo topo
-                  marginBottom: 16,
-                }}
-              >
-                {/* Bloco Cirurgia + Dropdown */}
-                <View style={{ flex: 1, marginRight: 12 }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Cirurgia
-                  </Text>
-                  <Dropdown
-                    title="Selecione o tipo"
-                    items={[
+                  case "Hormonoterapia":
+                    dropdownItems = [
+                      { label: "Neoadjuvante", value: "Neoadjuvante" },
+                      { label: "Adjuvante", value: "Adjuvante" },
+                      { label: "Neo + Adjuvante", value: "Neo + Adjuvante" },
+                    ];
+                    selectedValue = patientData.hormoneTherapy?.type || "";
+                    duration = patientData.hormoneTherapy?.duration || "";
+                    field = "hormoneTherapy";
+                    break;
+
+                  case "Cirurgia":
+                    dropdownItems = [
                       {
                         label: "Mastectomia simples",
                         value: "Mastectomia simples",
@@ -635,123 +721,46 @@ export default function FichaExame2() {
                         value: "Mastectomia radical",
                       },
                       { label: "Quadrantectomia", value: "Quadrantectomia" },
-                    ]}
-                    selectedValue={patientData.surgery.type}
-                    setSelectedValue={(value) =>
-                      handleDropdownChange("surgery", {
-                        ...patientData.surgery,
-                        type: value,
-                      })
-                    }
-                  />
-                </View>
+                    ];
+                    selectedValue = patientData.surgery?.type || "";
+                    duration = patientData.surgery?.duration || "";
+                    field = "surgery";
+                    break;
 
-                {/* Bloco "Há quanto tempo?" + input + label Meses */}
-                <View style={{ alignItems: "center" }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "500",
-                      marginBottom: 10,
-                    }}
-                  >
-                    Há quanto tempo?
-                  </Text>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <TextInput
-                      placeholder="___"
-                      keyboardType="numeric"
-                      value={patientData.surgery.duration}
-                      onChangeText={(value) =>
-                        handleDurationChange("surgery", value)
-                      }
-                      style={{
-                        width: 50,
-                        height: 30,
-                        backgroundColor: "#f8f8f8",
-                        borderRadius: 8,
-                        textAlign: "center",
-                        marginRight: 6,
-                        paddingVertical: 4,
-                      }}
-                    />
-                    <Text>Meses</Text>
-                  </View>
-                </View>
-              </View>
-
-              {/* Esvaziamento Axilar */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start", // Alinha os elementos pelo topo
-                  marginBottom: 16,
-                }}
-              >
-                {/* Bloco Esvaziamento Axilar + Dropdown */}
-                <View style={{ flex: 1, marginRight: 12 }}>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Esvaziamento Axilar
-                  </Text>
-                  <Dropdown
-                    title="Selecione o tipo"
-                    items={[
+                  case "Esvaziamento axilar":
+                    dropdownItems = [
                       { label: "Total", value: "Total" },
                       { label: "Seletivo", value: "Seletivo" },
                       {
                         label: "Não sabe informar",
                         value: "Não sabe informar",
                       },
-                    ]}
-                    selectedValue={patientData.axillaryDissection.type}
-                    setSelectedValue={(value) =>
-                      handleDropdownChange("axillaryDissection", {
-                        ...patientData.axillaryDissection,
-                        type: value,
-                      })
+                    ];
+                    selectedValue = patientData.axillaryDissection?.type || "";
+                    duration = patientData.axillaryDissection?.duration || "";
+                    field = "axillaryDissection";
+                    break;
+
+                  default:
+                    break;
+                }
+
+                return (
+                  <ProcedureDetails
+                    key={procedure}
+                    title={procedure}
+                    dropdownItems={dropdownItems}
+                    selectedValue={selectedValue}
+                    onDropdownChange={(value) =>
+                      handleDropdownChange(procedure, field, value || "")
+                    }
+                    duration={duration}
+                    onDurationChange={(value) =>
+                      handleDurationChange(procedure, field, value)
                     }
                   />
-                </View>
-
-                {/* Bloco "Há quanto tempo?" + input + label Meses */}
-                <View style={{ alignItems: "center" }}>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontWeight: "500",
-                      marginBottom: 10,
-                    }}
-                  >
-                    Há quanto tempo?
-                  </Text>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <TextInput
-                      placeholder="___"
-                      keyboardType="numeric"
-                      value={patientData.axillaryDissection.duration}
-                      onChangeText={(value) =>
-                        handleDurationChange("axillaryDissection", value)
-                      }
-                      style={{
-                        width: 50,
-                        height: 30,
-                        backgroundColor: "#f8f8f8",
-                        borderRadius: 8,
-                        textAlign: "center",
-                        marginRight: 6,
-                        paddingVertical: 4,
-                      }}
-                    />
-                    <Text>Meses</Text>
-                  </View>
-                </View>
-              </View>
+                );
+              })}
             </View>
 
             <View

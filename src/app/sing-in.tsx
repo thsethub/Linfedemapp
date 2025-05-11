@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
-const API_URL = "http://10.7.221.151:8083";
+const API_URL = "http://192.168.0.102:8083"
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
