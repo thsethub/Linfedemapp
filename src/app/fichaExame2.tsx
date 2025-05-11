@@ -6,12 +6,20 @@ import {
   FlatList,
   StatusBar,
   Image,
-  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useMeasurementContext } from "@/context/context";
 import { router } from "expo-router";
+
+import SinglePicker from "@/components/singlepicker";
+import Header from "@/components/headerFicha2";
+import axios from "axios";
+import ProcedureDetails from "@/components/procedimentosEcapsulados";
+import { Alert } from "react-native";
+import * as SecureStore from "expo-secure-store";
+
+const API_URL = "http://15.228.154.120:8083";
 
 // Define or import the PatientData type
 type PatientData = {
@@ -23,17 +31,8 @@ type PatientData = {
   cacifoSign?: string;
   orangePeelSign?: string;
   stemmerSign?: string;
-  [key: string]: any; // Add this to allow dynamic keys
+  [key: string]: any;
 };
-import SinglePicker from "@/components/singlepicker"; // Adjust the path as needed
-import Dropdown from "@/components/dropdown2"; // Adjust the path as needed
-import Header from "@/components/headerFicha2";
-import axios from "axios";
-import ProcedureDetails from "@/components/procedimentosEcapsulados"; // Adjust the path as needed
-import { Alert } from "react-native";
-import * as SecureStore from "expo-secure-store"; // Importa o SecureStore para armazenar o token
-
-const API_URL = "http://192.168.0.102:8083";
 
 export default function FichaExame2() {
   const { patientData, setPatientData, clearAllData } = useMeasurementContext();
@@ -62,10 +61,10 @@ export default function FichaExame2() {
 
       // Garante que todos os campos de `questions` tenham valores
       const updatedPatientData = { ...patientData };
-      console.log(
-        "Estado atual de patientData antes de envio:",
-        updatedPatientData
-      );
+      // console.log(
+      //   "Estado atual de patientData antes de envio:",
+      //   updatedPatientData
+      // );
 
       // Garante que a data do diagnóstico esteja formatada corretamente
       const formattedDate =
@@ -131,7 +130,7 @@ export default function FichaExame2() {
           : null,
       };
 
-      console.log("Dados formatados para envio:", dataToSend);
+      // console.log("Dados formatados para envio:", dataToSend);
 
       // Envia os dados ao backend
       const response = await axios.post(
@@ -145,7 +144,7 @@ export default function FichaExame2() {
         }
       );
 
-      console.log("Paciente salvo com sucesso:", response.data);
+      // console.log("Paciente salvo com sucesso:", response.data);
 
       // Limpa os dados do paciente e navega para a home
       clearAllData();
@@ -158,7 +157,7 @@ export default function FichaExame2() {
         },
       ]);
     } catch (error) {
-      console.error("Erro ao salvar o paciente:", error);
+      // console.error("Erro ao salvar o paciente:", error);
       Alert.alert("Erro", "Não foi possível salvar o paciente.");
     }
   };
@@ -187,10 +186,10 @@ export default function FichaExame2() {
 
       // Garante que todos os campos de `questions` tenham valores
       const updatedPatientData = { ...patientData };
-      console.log(
-        "Estado atual de patientData antes de envio:",
-        updatedPatientData
-      );
+      // console.log(
+      //   "Estado atual de patientData antes de envio:",
+      //   updatedPatientData
+      // );
 
       // Garante que a data do diagnóstico esteja formatada corretamente
       const formattedDate =
@@ -256,7 +255,7 @@ export default function FichaExame2() {
           : null,
       };
 
-      console.log("Dados formatados para envio:", dataToSend);
+      // console.log("Dados formatados para envio:", dataToSend);
 
       // Envia os dados ao backend
       const response = await axios.post(
@@ -270,7 +269,7 @@ export default function FichaExame2() {
         }
       );
 
-      console.log("Paciente salvo com sucesso:", response.data);
+      // console.log("Paciente salvo com sucesso:", response.data);
 
       // Limpa os dados do paciente e navega para a home
       clearAllData();
@@ -283,7 +282,7 @@ export default function FichaExame2() {
         },
       ]);
     } catch (error) {
-      console.error("Erro ao salvar o paciente:", error);
+      // console.error("Erro ao salvar o paciente:", error);
       Alert.alert("Erro", "Não foi possível salvar o paciente.");
     }
   };
@@ -391,7 +390,7 @@ export default function FichaExame2() {
     field: keyof typeof patientData,
     value: string
   ) => {
-    console.log(`Campo atualizado: ${field}, Novo valor: ${value}`); // Log para debug
+    // console.log(`Campo atualizado: ${field}, Novo valor: ${value}`); // Log para debug
     setPatientData({ ...patientData, [field]: value });
   };
 

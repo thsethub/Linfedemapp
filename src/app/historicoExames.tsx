@@ -15,7 +15,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerExames1";
 
-const API_URL = "http://192.168.0.102:8083"
+const API_URL = "http://15.228.154.120:8083"
 
 // Interface para os pacientes
 interface Patient {
@@ -72,7 +72,7 @@ export default function HistoricoExames() {
 
       setPatients(patientsResponse.data);
     } catch (error) {
-      console.error("Erro ao buscar pacientes:", error);
+      // console.error("Erro ao buscar pacientes:", error);
       Alert.alert("Erro", "Não foi possível carregar os pacientes.");
     } finally {
       setLoading(false);
@@ -118,14 +118,14 @@ export default function HistoricoExames() {
 
               Alert.alert("Sucesso", "Paciente deletado com sucesso!");
             } catch (error) {
-              console.error("Erro ao deletar paciente:", error);
+              // console.error("Erro ao deletar paciente:", error);
               Alert.alert("Erro", "Não foi possível deletar o paciente.");
             }
           },
         },
       ]);
     } catch (error) {
-      console.error("Erro ao deletar paciente:", error);
+      // console.error("Erro ao deletar paciente:", error);
       Alert.alert("Erro", "Não foi possível deletar o paciente.");
     }
   };

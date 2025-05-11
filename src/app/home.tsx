@@ -1,48 +1,16 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   Image,
-  Dimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
-import { useMeasurementContext } from "@/context/context";
 
 export default function Home() {
-
-  const { setPatientData } = useMeasurementContext();
-
-  // useEffect(() => {
-  //   setPatientData({
-  //     fullName: "João Silva",
-  //     birthDate: "1990-05-15",
-  //     address: "Rua das Flores, 123",
-  //     phone: "(11) 98765-4321",
-  //     weight: "75kg",
-  //     height: "1.75m",
-  //     activityLevel: "Moderado",
-  //     maritalStatus: "Casado",
-  //     occupation: "Engenheiro",
-  //     cancerDiagnosisDate: "2020-03-10",
-  //     procedures: ["Quimioterapia", "Radioterapia"],
-  //     skinChanges: ["Vermelhidão", "Descamação"],
-  //     musculoskeletalComplaints: "Dor no ombro direito",
-  //     lymphedemaSymptoms: "Inchaço no braço esquerdo",
-  //     cacifoSign: "Presente",
-  //     orangePeelSign: "Ausente",
-  //     stemmerSign: "Presente",
-  //     radiotherapy: { type: "Externa", duration: "6 meses" },
-  //     surgery: { type: "Mastectomia", duration: "2 horas" },
-  //     axillaryDissection: { type: "Parcial", duration: "1 hora" },
-  //     musculoskeletalChanges: "Limitação de movimento",
-  //     lymphedemaSymptomsDetails: "Inchaço constante e dor leve",
-  //   });
-  // }, []); // Executa apenas uma vez ao carregar a tela
 
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">

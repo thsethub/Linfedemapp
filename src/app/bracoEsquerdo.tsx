@@ -12,7 +12,6 @@ import {
 import { SafeAreaView } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
-import Dropdown1 from "../components/dropdown";
 import { useMeasurementContext } from "../context/context";
 
 export default function bracoRef() {

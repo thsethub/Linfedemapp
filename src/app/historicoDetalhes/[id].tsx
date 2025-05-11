@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  Image,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import axios from "axios";
@@ -14,7 +13,7 @@ import * as SecureStore from "expo-secure-store";
 import { generatePatientReport } from "@/utils/generatePatientReport";
 import Header from "@/components/headerId";
 
-const API_URL = "http://192.168.0.102:8083";
+const API_URL = "http://15.228.154.120:8083";
 
 export default function PatientProfileScreen() {
   const { id } = useLocalSearchParams();
@@ -61,7 +60,7 @@ export default function PatientProfileScreen() {
 
         setMeasurements(measurementsResponse.data);
       } catch (error) {
-        console.error("Erro ao buscar os dados do paciente:", error);
+        // console.error("Erro ao buscar os dados do paciente:", error);
         Alert.alert("Erro", "Não foi possível carregar os dados do paciente.");
       } finally {
         setLoading(false);
@@ -84,7 +83,7 @@ export default function PatientProfileScreen() {
       // Chamar a função de geração do PDF com os dados do paciente e a última mensuração
       await generatePatientReport(patient, lastMeasurement);
     } catch (error) {
-      console.error("Erro ao gerar o PDF:", error);
+      // console.error("Erro ao gerar o PDF:", error);
       Alert.alert("Erro", "Não foi possível gerar o relatório.");
     }
   };

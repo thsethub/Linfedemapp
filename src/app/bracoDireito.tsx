@@ -13,7 +13,6 @@ import {
 import { useMeasurementContext } from "../context/context";
 import { router } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
-import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function bracoAfetado() {
   const { width } = useWindowDimensions(); // Obtém a largura da tela
@@ -528,7 +527,7 @@ export default function bracoAfetado() {
 
               // Calcula as diferenças e navega para a tela de resultado
               const differences = calculateDifference();
-              console.log("Diferenças:", differences);
+              // console.log("Diferenças:", differences);
               router.push("/resultado");
             }}
             style={{

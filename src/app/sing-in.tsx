@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
-const API_URL = "http://192.168.0.102:8083"
+const API_URL = "http://15.228.154.120:8083"
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -35,7 +35,7 @@ export default function SignIn() {
 
           if (response.status === 200) {
             // Token válido, redireciona para Home
-            console.log("Token:", token); // Log do token recebido
+            // console.log("Token:", token); // Log do token recebido
             router.push("/home");
           }
         } catch (error) {

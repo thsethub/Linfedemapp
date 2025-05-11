@@ -15,12 +15,12 @@ import {
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { useMeasurementContext } from "@/context/context";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerResultado";
 
-const API_URL = "http://192.168.0.102:8083"
+const API_URL = "http://15.228.154.120:8083"
 
 export default function Resultado() {
   const {
@@ -34,7 +34,7 @@ export default function Resultado() {
     affectedArm,
     setAffectedArm,
     referenceArm,
-    setReferenceArm,
+    // setReferenceArm,
     patientData,
     setPatientData,
     setDifferences,
@@ -51,11 +51,11 @@ export default function Resultado() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loadingPatients, setLoadingPatients] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
   interface Patient {
     id: string;
     fullName: string;
-    birthDate?: string; // Add birthDate as an optional property
-    // Add other properties if needed
+    birthDate?: string;
   }
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -122,7 +122,7 @@ export default function Resultado() {
 
       setPatients(patientsResponse.data);
     } catch (error) {
-      console.error("Erro ao buscar pacientes:", error);
+      // console.error("Erro ao buscar pacientes:", error);
       Alert.alert("Erro", "Não foi possível carregar os pacientes.");
     } finally {
       setLoadingPatients(false);
@@ -182,7 +182,7 @@ export default function Resultado() {
       clearMeasurementData();
       router.push("/home");
     } catch (error) {
-      console.error("Erro ao associar medição:", error);
+      // console.error("Erro ao associar medição:", error);
       Alert.alert("Erro", "Não foi possível associar a medição.");
     }
   };
@@ -270,13 +270,13 @@ export default function Resultado() {
   const calculateVolume = (comprimentoRef: string, inputs: string[]) => {
     const h = parseFloat(pontosRef); // distância entre os pontos
     if (isNaN(h)) {
-      console.error("Invalid pontosRef value:", pontosRef);
+      // console.error("Invalid pontosRef value:", pontosRef);
       return NaN;
     }
 
     const CA = parseFloat(comprimentoRef);
     if (isNaN(CA)) {
-      console.error("Invalid comprimentoRef value:", comprimentoRef);
+      // console.error("Invalid comprimentoRef value:", comprimentoRef);
       return NaN;
     }
 
@@ -286,7 +286,7 @@ export default function Resultado() {
     const volumes = validInputs.map((input, index) => {
       const Ci = parseFloat(input);
       if (isNaN(Ci)) {
-        console.error(`Invalid input value at index ${index}:`, input);
+        // console.error(`Invalid input value at index ${index}:`, input);
         return NaN;
       }
       const previousCA = index === 0 ? CA : parseFloat(validInputs[index - 1]);
@@ -296,7 +296,7 @@ export default function Resultado() {
     });
 
     if (volumes.some((volume) => isNaN(volume))) {
-      console.error("One or more volumes are NaN");
+      // console.error("One or more volumes are NaN");
       return NaN;
     }
 
@@ -322,14 +322,14 @@ export default function Resultado() {
     ? volumesAfetado.reduce((acc, volume) => acc + volume, 0)
     : 0;
 
-  console.log("Volumes de Referência:", volumesReferencia);
-  console.log("Volumes do Membro Afetado:", volumesAfetado);
+  // console.log("Volumes de Referência:", volumesReferencia);
+  // console.log("Volumes do Membro Afetado:", volumesAfetado);
   // Calculate the volume difference percentage
   const volumeDifferencePercentage =
     ((volumeAfetadoTotal - volumeReferenciaTotal) / volumeReferenciaTotal) *
     100;
 
-  console.log("Diferença de Volume em %:", volumeDifferencePercentage);
+  // console.log("Diferença de Volume em %:", volumeDifferencePercentage);
 
   useEffect(() => {
     const currentVolumesReferencia = patientData.volumesReferencia || [];
