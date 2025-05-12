@@ -13,7 +13,7 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
-const API_URL = "http://15.228.154.120:8083"
+const API_URL = "http://15.228.154.120:8083";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -74,15 +74,22 @@ export default function SignIn() {
         axios.isAxiosError(error) && error.response?.data?.message
           ? error.response.data.message
           : "Erro ao fazer login.";
-        
+
       // console.error("Erro ao fazer login:", error);
       Alert.alert("Erro", errorMessage);
-      } finally {
-        setIsAuthenticating(false);
-      }
+    } finally {
+      setIsAuthenticating(false);
     }
+  };
 
   if (loading) {
+    return (
+      <SafeAreaView className="flex-1 justify-center items-center bg-white-500">
+        <ActivityIndicator size="large" color="#b41976" />
+      </SafeAreaView>
+    );
+  }
+  if (isAuthenticating) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center bg-white-500">
         <ActivityIndicator size="large" color="#b41976" />

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -90,6 +91,15 @@ export default function SingUp() {
       setIsRegistering(false);
     }
   };
+
+  if (isRegistering) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <ActivityIndicator size="large" color="#b41976ff" />
+        <Text className="mt-4 text-black-500">Realizando cadastro...</Text>
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1">
