@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
 
 interface DropdownProps {
@@ -18,6 +19,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   const [open, setOpen] = useState(false);
 
   return (
+    
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       <DropDownPicker

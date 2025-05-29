@@ -4,14 +4,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
-  StatusBar,
+  // FlatList,
   Image,
-  ScrollView,
-  Platform,
-  KeyboardAvoidingView,
+  // ScrollView,
+  // Platform,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import Dropdown from "@/components/dropdown";
 import DatePicker from "@/components/datepicker"; // Importa o componente DatePicker
 import { router } from "expo-router";
@@ -68,13 +68,13 @@ export default function FichaExame1() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-600 mt-8">
-      <StatusBar barStyle="dark-content" backgroundColor="#f4f4f4" />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
-      ></KeyboardAvoidingView>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <StatusBar style="dark" translucent />
+      <KeyboardAwareScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        enableOnAndroid
+        extraScrollHeight={210}
+        keyboardShouldPersistTaps="handled"
+      >
         <View className="flex-1 justify-center items-center">
           {/* Header */}
           <Header title="Ficha do Paciente" />
@@ -85,7 +85,7 @@ export default function FichaExame1() {
             style={{
               width: 360,
               borderRadius: 40,
-              backgroundColor: "#FFF",
+              backgroundColor: "#Fff",
             }}
           >
             <View className="flex-row mb-4">
@@ -247,7 +247,7 @@ export default function FichaExame1() {
             </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

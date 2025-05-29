@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { generatePatientReport } from "@/utils/generatePatientReport";
@@ -130,6 +131,7 @@ export default function PatientProfileScreen() {
 
   return (
     <ScrollView className="flex-1 bg-[#f7f7f7]">
+      <StatusBar style="dark" translucent />
       {/* Cabeçalho */}
       <Header
         title="Histórico Clínico"
@@ -302,11 +304,11 @@ export default function PatientProfileScreen() {
                       : "Não informado"}
                   </Text>
                   <Text className="text-gray-700">
-                    Comprimento do Braço Esquerdo:{" "}
+                    Entrada de Referência do Braço Esquerdo:{" "}
                     {item.leftArmComprimento || "Não informado"} cm
                   </Text>
                   <Text className="text-gray-700">
-                    Comprimento do Braço Direito:{" "}
+                    Entrada de Referência do Braço Direito:{" "}
                     {item.rightArmComprimento || "Não informado"} cm
                   </Text>
                   <Text className="text-gray-700">

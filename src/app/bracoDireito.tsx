@@ -3,16 +3,17 @@ import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
   Image,
   TextInput,
   TouchableOpacity,
-  ScrollView,
+  // ScrollView,
   useWindowDimensions,
 } from "react-native";
 import { useMeasurementContext } from "../context/context";
 import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import Feather from "@expo/vector-icons/Feather";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function bracoAfetado() {
   const { width } = useWindowDimensions(); // Obtém a largura da tela
@@ -272,11 +273,7 @@ export default function bracoAfetado() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-600 ">
-      <StatusBar
-        barStyle="dark-content"
-        backgroundColor="transparent"
-        translucent
-      />
+      <StatusBar style="dark" translucent />
 
       {/* Botão de Voltar */}
       <TouchableOpacity
@@ -330,7 +327,15 @@ export default function bracoAfetado() {
         </TouchableOpacity>
       </View>
       {/* Fim da barra de navegação */}
-      <ScrollView>
+
+      <KeyboardAwareScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        enableOnAndroid
+        extraScrollHeight={160}
+        keyboardShouldPersistTaps="handled"
+      >
         <View className="flex-1 justify-center items-center mt-4">
           <View
             className="flex-1 p-6 bg-white-500"
@@ -545,7 +550,7 @@ export default function bracoAfetado() {
             </Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 }

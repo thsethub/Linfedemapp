@@ -3,10 +3,11 @@ import { View, Text, StyleSheet } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
 interface DropdownProps {
-  title: string; // Nome acima do dropdown
-  items: { label: string; value: string }[]; // Itens do dropdown
-  selectedValue: string | null; // Valor selecionado
-  setSelectedValue: (value: string | null) => void; // Função para atualizar o valor selecionado
+  title: string;
+  items: { label: string; value: string }[];
+  selectedValue: string | null;
+  setSelectedValue: (value: string | null) => void;
+  zIndex?: number; // <- novo!
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -14,11 +15,12 @@ const Dropdown: React.FC<DropdownProps> = ({
   items,
   selectedValue,
   setSelectedValue,
+  zIndex = 1000, // <- valor padrão
 }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { zIndex }]}>
       <DropDownPicker
         open={open}
         value={selectedValue}
@@ -32,7 +34,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         placeholder="Selecionar"
         placeholderStyle={styles.placeholderStyle}
         style={styles.dropdown}
-        dropDownContainerStyle={styles.dropdownContainer}
+        dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 1000 }]}
         listItemContainerStyle={styles.listItemContainer}
         labelStyle={styles.labelStyle}
         dropDownDirection="BOTTOM"
@@ -44,9 +46,9 @@ const Dropdown: React.FC<DropdownProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 16
   },
   title: {
     fontWeight: "600",

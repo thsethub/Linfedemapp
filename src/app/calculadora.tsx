@@ -3,7 +3,7 @@ import Header from "@/components/headerCalculadora";
 import ReferenceSelector from "@/components/selectorReference";
 import { useMeasurementContext } from "@/context/context";
 import Feather from "@expo/vector-icons/Feather";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
@@ -15,7 +15,7 @@ export default function Calculadora() {
     setPontosRef,
     selectedValue,
     setSelectedValue,
-    referenceArm,
+    // referenceArm,
     setReferenceArm,
     affectedArm,
     setAffectedArm,
@@ -23,7 +23,7 @@ export default function Calculadora() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-600 mt-8">
-      <StatusBar style="dark" backgroundColor="transparent" translucent />
+      <StatusBar style="dark" translucent />
 
       <Header title="Calculadora" />
 

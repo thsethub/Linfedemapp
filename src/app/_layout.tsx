@@ -7,7 +7,7 @@ import { MeasurementProvider } from "./../context/context";
 export default function Layout() {
   return (
     <MeasurementProvider>
-      <StatusBar style="auto" backgroundColor="transparent" translucent />
+      <StatusBar style="light" translucent />
       <Slot />
     </MeasurementProvider>
   );

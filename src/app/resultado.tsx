@@ -3,7 +3,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  StatusBar,
   Image,
   ScrollView,
   TouchableOpacity,
@@ -16,11 +15,12 @@ import {
 import Feather from "@expo/vector-icons/Feather";
 import { useMeasurementContext } from "@/context/context";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerResultado";
 
-const API_URL = "http://15.228.154.120:8083"
+const API_URL = "http://15.228.154.120:8083";
 
 export default function Resultado() {
   const {
@@ -51,6 +51,7 @@ export default function Resultado() {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loadingPatients, setLoadingPatients] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loadingAssociation, setLoadingAssociation] = useState(false);
 
   interface Patient {
     id: string;
@@ -130,6 +131,10 @@ export default function Resultado() {
   };
 
   const handleAssociateMeasurement = async () => {
+    if (loadingAssociation) {
+      return;
+    }
+    setLoadingAssociation(true);
     if (!selectedPatient) {
       Alert.alert("Erro", "Selecione um paciente para associar a medição.");
       return;
@@ -179,11 +184,13 @@ export default function Resultado() {
 
       Alert.alert("Sucesso", "Medição associada ao paciente com sucesso!");
       setModalVisible(false);
+      setLoadingAssociation(false);
       clearMeasurementData();
       router.push("/home");
     } catch (error) {
       // console.error("Erro ao associar medição:", error);
       Alert.alert("Erro", "Não foi possível associar a medição.");
+      setLoadingAssociation(false);
     }
   };
 
@@ -328,6 +335,8 @@ export default function Resultado() {
   const volumeDifferencePercentage =
     ((volumeAfetadoTotal - volumeReferenciaTotal) / volumeReferenciaTotal) *
     100;
+
+  const volumeDifference = volumeAfetadoTotal - volumeReferenciaTotal;
 
   // console.log("Diferença de Volume em %:", volumeDifferencePercentage);
 
@@ -599,9 +608,17 @@ export default function Resultado() {
     );
   };
 
+  if (loadingAssociation) {
+    return (
+      <View className="flex-1 justify-center items-center bg-white">
+        <ActivityIndicator size="large" color="#b41976" />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-white-600">
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" />
+      <StatusBar style="dark" translucent />
       <ScrollView
         contentContainerStyle={{
           padding: 20,
@@ -629,23 +646,53 @@ export default function Resultado() {
             </Text>
           </View>
           <View>{renderDifferences()}</View>
-          <View
-            className="mt-4 items-center justify-center"
-            style={{
-              width: 330,
-              height: 70,
-              right: 5,
-              borderRadius: 10,
-              backgroundColor: "#f8e8f1",
-            }}
-          >
-            <Text
-              className="text-primary-500"
-              style={{ fontSize: 12, padding: 10 }}
-            >
-              Atente-se para realizar as medições no membro da paciente a partir
-              da posição de referência escolhida acima durante o exame.
-            </Text>
+
+          <Text className="text-primary-500 text-sm mt-4">
+            O segmento/membro pode apresentar alterações:{" "}
+          </Text>
+          <View className="flex-row justify-center mt-2">
+            {/* Sem alterações */}
+            <View className="items-center">
+              <Text className="text-green-500 font-bold text-sm mb-1">
+                Sem alterações
+              </Text>
+              <View className="bg-green-50 rounded-md px-3 py-1">
+                <Text className="text-green-500 font-semibold text-xs">
+                  (1~2cm)
+                </Text>
+              </View>
+            </View>
+            {/* Alteração leve */}
+            <View className="items-center mr-2">
+              <Text className="text-yellow-500 font-bold text-sm mb-1">
+                Leve
+              </Text>
+              <View className="bg-yellow-50 rounded-md px-3 py-1">
+                <Text className="text-yellow-500 font-semibold text-xs">
+                  (2~3cm)
+                </Text>
+              </View>
+            </View>
+            {/* Alteração moderada */}
+            <View className="items-center mr-2">
+              <Text className="text-orange-500 font-bold text-sm mb-1">
+                Moderada
+              </Text>
+              <View className="bg-orange-50 rounded-md px-3 py-1">
+                <Text className="text-orange-500 font-semibold text-xs">
+                  (3~5cm)
+                </Text>
+              </View>
+            </View>
+            {/* Alteração grave */}
+            <View className="items-center">
+              <Text className="text-red-500 font-bold text-sm mb-1">Grave</Text>
+              <View className="bg-red-50 rounded-md px-3 py-1">
+                <Text className="text-red-500 font-semibold text-xs">
+                  ({">"}5cm)
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
         {/* Perimetria */}
@@ -789,6 +836,11 @@ export default function Resultado() {
                   `${volumeDifferencePercentage.toFixed(2)}%`
                 )[0]
               }
+              <Text className="font-semibold">
+                {/* Valor absoluto da diferença */}
+                {Math.abs(volumeDifference).toFixed(2)} mL
+              </Text>
+              {" e alterações de volume de "}
               <Text className="font-semibold">
                 {volumeDifferencePercentage.toFixed(2)}%
               </Text>

@@ -1,25 +1,26 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useContext } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  FlatList,
+  // FlatList,
   Image,
   TextInput,
   useWindowDimensions,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
 import { useMeasurementContext } from "../context/context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export default function bracoRef() {
   const { width } = useWindowDimensions();
 
   const {
     pontosRef,
-    setPontosRef,
+    // setPontosRef,
     leftArmComprimento,
     setLeftArmComprimento,
     selectedValue,
@@ -226,7 +227,7 @@ export default function bracoRef() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-600 mt-8">
-      <StatusBar style="dark" backgroundColor="transparent" translucent />
+      <StatusBar style="dark" translucent />
 
       {/* Botão de Voltar */}
       <TouchableOpacity
@@ -281,159 +282,18 @@ export default function bracoRef() {
       </View>
       {/* Fim da barra de navegação */}
 
-      {/* FlatList dos componentes */}
-      <FlatList
-        data={[]}
-        renderItem={null}
-        ListHeaderComponent={
-          <View className="flex-1 justify-center items-center ">
-            <View className="flex-1 justify-center items-center mt-4">
-              <View
-                className="flex-1 p-6 bg-white-500"
-                style={{
-                  width: 360,
-                  borderRadius: 40,
-                  backgroundColor: "#FFF",
-                }}
-              >
-                <View className="flex-row mb-4">
-                  <Image
-                    source={require("../assets/plus-circle.png")}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      marginRight: 10,
-                      marginTop: 4.5,
-                    }}
-                  />
-                  <Text className="text-lg font-medium text-black-500">
-                    Dados do membro de referência
-                  </Text>
-                </View>
-                <Text className="text-lg font-medium">
-                  Distância entre os pontos
-                </Text>
-                <View
-                  className="flex-row justify-center items-center bg-white-600"
-                  style={{ width: 300, borderRadius: 40 }}
-                ></View>
-                <View
-                  className="items-center justify-center"
-                  style={{
-                    width: 69,
-                    height: 35,
-                    right: 5,
-                    borderRadius: 10,
-                    backgroundColor: "#f8e8f1",
-                  }}
-                >
-                  <Text
-                    className="text-primary-500 font-semibold"
-                    style={{ fontSize: 12, padding: 10 }}
-                  >
-                    {pontosRef}
-                  </Text>
-                </View>
-                <Text className="text-lg font-medium">Referência</Text>
-                <View
-                  className="flex-row justify-center items-center bg-white-600"
-                  style={{ width: 300, borderRadius: 40 }}
-                ></View>
-                <View
-                  className="items-center justify-center"
-                  style={{
-                    width: 200,
-                    height: 35,
-                    right: 5,
-                    borderRadius: 10,
-                    backgroundColor: "#f8e8f1",
-                  }}
-                >
-                  <Text
-                    className="text-primary-500 font-semibold"
-                    style={{ fontSize: 12, padding: 10 }}
-                  >
-                    {getReferenceName()}
-                  </Text>
-                </View>
-              </View>
-            </View>
-
-            {/* Container dos dados do membro de referência */}
+      <KeyboardAwareScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
+        enableOnAndroid
+        extraScrollHeight={160}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View className="flex-1 justify-center items-center ">
+          <View className="flex-1 justify-center items-center mt-4">
             <View
-              className="flex-1 p-6 bg-white-500 mt-4"
-              style={{
-                width: 360,
-                borderRadius: 40,
-                backgroundColor: "#FFF",
-              }}
-            >
-              <View className="flex-row mb-4">
-                <Feather
-                  name="map-pin"
-                  size={18}
-                  color="black"
-                  style={{ marginRight: 10, marginTop: 4.5 }}
-                />
-                <Text className="text-lg font-medium text-black-500">
-                  Referência
-                </Text>
-              </View>
-
-              {/* Perímetro do Membro para Referência */}
-              <Text className="text-lg font-medium mb-4">
-                Perímetro do ponto de referência (0cm)
-              </Text>
-              <View className="text-lg flex-row items-center justify-center">
-                <View
-                  className="flex-row items-center justify-center"
-                  style={{
-                    marginRight: 10,
-                    width: 120,
-                    height: 56,
-                    backgroundColor: "#f8e8f1",
-                    borderRadius: 8,
-                  }}
-                >
-                  <TextInput
-                    style={{
-                      textAlign: "center",
-                      width: 100,
-                      height: 56,
-                      fontSize: 20,
-                      fontWeight: "bold",
-                    }}
-                    keyboardType="numeric"
-                    value={leftArmComprimento}
-                    onChangeText={setLeftArmComprimento}
-                  />
-                </View>
-                <Text className="font-bold text-black-500">cm</Text>
-              </View>
-              <View
-                className="mt-4 items-center justify-center"
-                style={{
-                  width: 330,
-                  height: 70,
-                  right: 5,
-                  borderRadius: 10,
-                  backgroundColor: "#f8e8f1",
-                }}
-              >
-                <Text
-                  className="text-primary-500"
-                  style={{ fontSize: 12, padding: 10 }}
-                >
-                  Atente-se para realizar as medições no membro da paciente a
-                  partir da posição de referência escolhida acima durante o
-                  exame.
-                </Text>
-              </View>
-            </View>
-
-            {/* Perimetria */}
-            <View
-              className="flex-1 p-6 bg-white-500 mt-4"
+              className="flex-1 p-6 bg-white-500"
               style={{
                 width: 360,
                 borderRadius: 40,
@@ -442,7 +302,7 @@ export default function bracoRef() {
             >
               <View className="flex-row mb-4">
                 <Image
-                  source={require("../assets/maximize.png")}
+                  source={require("../assets/plus-circle.png")}
                   style={{
                     width: 18,
                     height: 18,
@@ -451,43 +311,186 @@ export default function bracoRef() {
                   }}
                 />
                 <Text className="text-lg font-medium text-black-500">
-                  Perimetria
+                  Dados do membro de referência
                 </Text>
-                <TouchableOpacity>
-                  <Image
-                    source={require("../assets/help-circle.png")}
-                    style={{
-                      width: 18,
-                      height: 18,
-                      marginLeft: 10,
-                      marginTop: 4.5,
-                    }}
-                  />
-                </TouchableOpacity>
               </View>
-              {renderInputs()}
+              <Text className="text-lg font-medium">
+                Distância entre os pontos
+              </Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 69,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {pontosRef}
+                </Text>
+              </View>
+              <Text className="text-lg font-medium">Referência</Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 200,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {getReferenceName()}
+                </Text>
+              </View>
             </View>
-            <TouchableOpacity
-              onPress={() => router.push("/bracoDireito")}
+          </View>
+
+          {/* Container dos dados do membro de referência */}
+          <View
+            className="flex-1 p-6 bg-white-500 mt-4"
+            style={{
+              width: 360,
+              borderRadius: 40,
+              backgroundColor: "#FFF",
+            }}
+          >
+            <View className="flex-row mb-4">
+              <Feather
+                name="map-pin"
+                size={18}
+                color="black"
+                style={{ marginRight: 10, marginTop: 4.5 }}
+              />
+              <Text className="text-lg font-medium text-black-500">
+                Referência
+              </Text>
+            </View>
+
+            {/* Perímetro do Membro para Referência */}
+            <Text className="text-lg font-medium mb-4">
+              Perímetro do ponto de referência (0cm)
+            </Text>
+            <View className="text-lg flex-row items-center justify-center">
+              <View
+                className="flex-row items-center justify-center"
+                style={{
+                  marginRight: 10,
+                  width: 120,
+                  height: 56,
+                  backgroundColor: "#f8e8f1",
+                  borderRadius: 8,
+                }}
+              >
+                <TextInput
+                  style={{
+                    textAlign: "center",
+                    width: 100,
+                    height: 56,
+                    fontSize: 20,
+                    fontWeight: "bold",
+                  }}
+                  keyboardType="numeric"
+                  value={leftArmComprimento}
+                  onChangeText={setLeftArmComprimento}
+                />
+              </View>
+              <Text className="font-bold text-black-500">cm</Text>
+            </View>
+            <View
+              className="mt-4 items-center justify-center"
               style={{
-                width: 300,
-                marginTop: 20,
-                marginBottom: 20,
-                backgroundColor: "#fff",
-                paddingVertical: 12,
-                borderRadius: 8,
-                alignItems: "center",
+                width: 330,
+                height: 70,
+                right: 5,
+                borderRadius: 10,
+                backgroundColor: "#f8e8f1",
               }}
             >
               <Text
-                style={{ color: "#b41976", fontSize: 16, fontWeight: "bold" }}
+                className="text-primary-500"
+                style={{ fontSize: 12, padding: 10 }}
               >
-                Próximo
+                Atente-se para realizar as medições no membro da paciente a
+                partir da posição de referência escolhida acima durante o exame.
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
-        }
-      />
+
+          {/* Perimetria */}
+          <View
+            className="flex-1 p-6 bg-white-500 mt-4"
+            style={{
+              width: 360,
+              borderRadius: 40,
+              backgroundColor: "#FFF",
+            }}
+          >
+            <View className="flex-row mb-4">
+              <Image
+                source={require("../assets/maximize.png")}
+                style={{
+                  width: 18,
+                  height: 18,
+                  marginRight: 10,
+                  marginTop: 4.5,
+                }}
+              />
+              <Text className="text-lg font-medium text-black-500">
+                Perimetria
+              </Text>
+              <TouchableOpacity>
+                <Image
+                  source={require("../assets/help-circle.png")}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    marginLeft: 10,
+                    marginTop: 4.5,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            {renderInputs()}
+          </View>
+          <TouchableOpacity
+            onPress={() => router.push("/bracoDireito")}
+            style={{
+              width: 300,
+              marginTop: 20,
+              marginBottom: 20,
+              backgroundColor: "#fff",
+              paddingVertical: 12,
+              borderRadius: 8,
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ color: "#b41976", fontSize: 16, fontWeight: "bold" }}
+            >
+              Próximo
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
+      {/* FlatList dos componentes */}
     </SafeAreaView>
   );
 }

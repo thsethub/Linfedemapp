@@ -14,7 +14,7 @@ export default function Home() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">
-      <StatusBar style="dark" backgroundColor="#fff" translucent />
+      <StatusBar style="dark" translucent />
       <View className="justify-center items-center">
         <View
           className="bg-primary-500 px-6 mt-16"

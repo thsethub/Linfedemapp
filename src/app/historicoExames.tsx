@@ -13,9 +13,10 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
+import { StatusBar } from "expo-status-bar";
 import Header from "@/components/headerExames1";
 
-const API_URL = "http://15.228.154.120:8083"
+const API_URL = "http://15.228.154.120:8083";
 
 // Interface para os pacientes
 interface Patient {
@@ -81,7 +82,7 @@ export default function HistoricoExames() {
   useEffect(() => {
     fetchPatients();
   }, []);
-  
+
   // Função para deletar um paciente
   const deletePatient = async (patientId: string) => {
     try {
@@ -104,14 +105,11 @@ export default function HistoricoExames() {
           style: "destructive",
           onPress: async () => {
             try {
-              await axios.delete(
-                `${API_URL}/api/pacientes/${patientId}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${token}`,
-                  },
-                }
-              );
+              await axios.delete(`${API_URL}/api/pacientes/${patientId}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
 
               // Recarrega a lista de pacientes após a exclusão
               fetchPatients();
@@ -145,6 +143,7 @@ export default function HistoricoExames() {
 
   return (
     <View style={styles.container}>
+      <StatusBar style="dark" translucent />
       {/* Cabeçalho */}
       <View style={styles.header}>
         <Header title="Histórico Clínico" />

@@ -99,7 +99,7 @@ export default function SignIn() {
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar style="light" backgroundColor="#b41976ff" translucent />
+      <StatusBar style="light" translucent />
 
       <View
         className="bg-primary-500 px-6 py-10 mb-10"
@@ -113,7 +113,7 @@ export default function SignIn() {
           LINFEDEMAPP
         </Text>
         <Text className="text-white-500 font-semibold text-3xl">
-          Bem-vinda de volta!
+          Bem-vindo(a) de volta!
         </Text>
       </View>
 

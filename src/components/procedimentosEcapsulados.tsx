@@ -9,6 +9,9 @@ interface ProcedureDetailsProps {
   onDropdownChange: (value: string | null) => void;
   duration: string;
   onDurationChange: (value: string) => void;
+  zIndex: number; // <- novo!
+  open: boolean;
+  setOpen: (isOpen: boolean) => void;
 }
 
 const ProcedureDetails: React.FC<ProcedureDetailsProps> = ({
@@ -18,6 +21,7 @@ const ProcedureDetails: React.FC<ProcedureDetailsProps> = ({
   onDropdownChange,
   duration,
   onDurationChange,
+  zIndex,
 }) => {
   return (
     <View
@@ -36,6 +40,7 @@ const ProcedureDetails: React.FC<ProcedureDetailsProps> = ({
           items={dropdownItems}
           selectedValue={selectedValue}
           setSelectedValue={(value) => onDropdownChange(value)}
+          zIndex={zIndex} // <- novo!
         />
       </View>
 

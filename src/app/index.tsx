@@ -6,12 +6,15 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  LogBox
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
+// import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
 
-
+LogBox.ignoreLogs([
+  "VirtualizedLists should never be nested", // Ignore nested VirtualizedLists warning
+]);
 const { width, height } = Dimensions.get("window");
 
 export default function Index() {
@@ -28,6 +31,7 @@ export default function Index() {
 
   return (
     <SafeAreaView className="flex-1 bg-primary-500">
+      
       {/* Top Section */}
       <View className="flex-1 bg-white-500 relative mt-28">
         {/* SVG with Gradient */}
