@@ -16,7 +16,7 @@ import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 import Header from "@/components/headerExames1";
 
-const API_URL = "http://15.228.154.120:8083";
+const API_URL = "http://150.161.61.1:8083";
 
 // Interface para os pacientes
 interface Patient {

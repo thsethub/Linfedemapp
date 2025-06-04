@@ -20,7 +20,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerResultado";
 
-const API_URL = "http://15.228.154.120:8083";
+const API_URL = "http://150.161.61.1:8083";
 
 export default function Resultado() {
   const {

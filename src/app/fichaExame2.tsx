@@ -24,7 +24,7 @@ import ProcedureDetails from "@/components/procedimentosEcapsulados";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
-const API_URL = "http://15.228.154.120:8083";
+const API_URL = "http://150.161.61.1:8083";
 
 // Define or import the PatientData type
 type PatientData = {
