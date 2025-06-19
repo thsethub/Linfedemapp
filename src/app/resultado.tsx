@@ -21,6 +21,7 @@ import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerResultado";
 
 const API_URL = "http://150.161.61.1:8083";
+// const API_URL = "http://192.168.1.161:8083";
 
 export default function Resultado() {
   const {
@@ -84,6 +85,19 @@ export default function Resultado() {
         },
       ]
     );
+  };
+
+    const getReferenceName = () => {
+    switch (selectedValue) {
+      case "opcao1":
+        return "Processo Estilóide da Ulna";
+      case "opcao2":
+        return "Linha Articular do Cotovelo";
+      case "opcao3":
+        return "Acrômio";
+      default:
+        return "";
+    }
   };
 
   const clearMeasurementData = () => {
@@ -172,6 +186,8 @@ export default function Resultado() {
           rightArmComprimento,
           differences,
         },
+        tipoReferencia: getReferenceName(),
+        observacaoMedicao: patientData.note || "",
       };
 
       await axios.post(
@@ -220,25 +236,69 @@ export default function Resultado() {
     }
   };
 
-  const getVolumeDifferenceText = (percentage: number) => {
+  const getVolumeDifferenceText = (percentage: number, difference: number) => {
     if (percentage < 5) {
-      return "O membro não apresenta alterações volumétricas.";
+      return (
+        <Text>
+          O membro apresenta uma diferença de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>
+            {Math.abs(difference).toFixed(2)} mL
+          </Text>
+          , mas não apresenta alterações volumétricas.
+        </Text>
+      );
     } else if (percentage >= 5 && percentage < 10) {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
-        2
-      )}%, o que pode sugerir um estágio 0 ou subclínico.`;
+      return (
+        <Text>
+          O membro apresenta uma diferença de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>
+            {Math.abs(difference).toFixed(2)} mL
+          </Text>{" "}
+          e alterações de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
+          o que pode sugerir um {" "}
+          <Text style={{ fontWeight: "bold" }}>estágio 0 ou subclínico</Text>.
+        </Text>
+      );
     } else if (percentage >= 10 && percentage < 20) {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
-        2
-      )}%, sugerindo linfedema estágio I ou leve.`;
+      return (
+        <Text>
+          O membro apresenta uma diferença de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>
+            {Math.abs(difference).toFixed(2)} mL
+          </Text>{" "}
+          e alterações de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
+          sugerindo linfedema {" "}
+          <Text style={{ fontWeight: "bold" }}>estágio I ou leve</Text>.
+        </Text>
+      );
     } else if (percentage >= 20 && percentage < 40) {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
-        2
-      )}%, sugerindo linfedema estágio II ou moderado.`;
+      return (
+        <Text>
+          O membro apresenta uma diferença de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>
+            {Math.abs(difference).toFixed(2)} mL
+          </Text>{" "}
+          e alterações de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
+          sugerindo linfedema {" "}
+          <Text style={{ fontWeight: "bold" }}>estágio II ou moderado</Text>.
+        </Text>
+      );
     } else {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
-        2
-      )}%, sugerindo linfedema estágio III ou avançado.`;
+      return (
+        <Text>
+          O membro apresenta uma diferença de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>
+            {Math.abs(difference).toFixed(2)} mL
+          </Text>{" "}
+          e alterações de volume de{" "}
+          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
+          sugerindo linfedema {" "}
+          <Text style={{ fontWeight: "bold" }}>estágio  III ou avançado</Text>.
+        </Text>
+      );
     }
   };
 
@@ -273,6 +333,7 @@ export default function Resultado() {
   const formatDifference = (difference: number) => {
     return difference >= 0 ? `+${difference}` : `${difference}`;
   };
+
 
   const calculateVolume = (comprimentoRef: string, inputs: string[]) => {
     const h = parseFloat(pontosRef); // distância entre os pontos
@@ -364,7 +425,7 @@ export default function Resultado() {
   }, [volumesReferencia, volumesAfetado]);
 
   const volumeDifferenceText = getVolumeDifferenceText(
-    volumeDifferencePercentage
+    volumeDifferencePercentage, volumeDifference
   );
   const volumeDifferenceText2 = getVolumeDifferenceText2(
     volumeDifferencePercentage
@@ -512,69 +573,8 @@ export default function Resultado() {
           <Text className="text-lg font-medium mb-2">Complementares</Text>
         </View>
 
-        {/* Dados Complementares */}
-        {[
-          {
-            label: "Apresenta sintomas de linfedema?",
-            value: patientData.lymphedemaSymptoms,
-          },
-          { label: "Sinal de Cacifo", value: patientData.cacifoSign },
-          {
-            label: "Sinal da casca de laranja",
-            value: patientData.orangePeelSign,
-          },
-          { label: "Sinal de Stemmer", value: patientData.stemmerSign },
-        ].map(({ label, value }, index) => (
-          <View
-            key={index}
-            style={{
-              marginBottom: 8,
-              // alignItems: "center", // Centraliza o texto e o valor
-            }}
-          >
-            {/* Texto principal */}
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: "bold",
-                marginBottom: 8,
-              }}
-            >
-              {label}
-            </Text>
-
-            {/* Valor estilizado */}
-            <View
-              style={{
-                width: 100,
-                height: 35,
-                borderRadius: 10,
-                backgroundColor:
-                  value === "Sim" || value === "Positivo"
-                    ? "#fde9f0" // Rosa claro para positivo
-                    : "#fde9f0", // Rosa claro para negativo
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
-                style={{
-                  color: "#b41976", // Rosa escuro para o texto
-                  fontWeight: "bold",
-                }}
-              >
-                {value === "Sim"
-                  ? "Positivo"
-                  : value === "Não"
-                  ? "Negativo"
-                  : "Não informado"}
-              </Text>
-            </View>
-          </View>
-        ))}
-
         {/* Seção para Nota */}
-        <View style={{ marginTop: 16 }}>
+        <View>
           <Text
             style={{
               fontSize: 16,
@@ -648,7 +648,7 @@ export default function Resultado() {
           <View>{renderDifferences()}</View>
 
           <Text className="text-primary-500 text-sm mt-4">
-            O segmento/membro pode apresentar alterações:{" "}
+            Os pontos podem apresentar alterações:{" "}
           </Text>
           <View className="flex-row justify-center mt-2">
             {/* Sem alterações */}
@@ -694,6 +694,9 @@ export default function Resultado() {
               </View>
             </View>
           </View>
+          <Text className="text-primary-500 font-bold text-sm mt-4">
+            Referência - Panobianco; Mamede, 2002.
+          </Text>
         </View>
         {/* Perimetria */}
         <View
@@ -831,33 +834,22 @@ export default function Resultado() {
               className={`${textClass}`}
               style={{ fontSize: 12, padding: 5 }}
             >
-              {
-                volumeDifferenceText.split(
-                  `${volumeDifferencePercentage.toFixed(2)}%`
-                )[0]
-              }
-              <Text className="font-semibold">
-                {/* Valor absoluto da diferença */}
-                {Math.abs(volumeDifference).toFixed(2)} mL
-              </Text>
-              {" e alterações de volume de "}
-              <Text className="font-semibold">
-                {volumeDifferencePercentage.toFixed(2)}%
-              </Text>
-              {
-                volumeDifferenceText.split(
-                  `${volumeDifferencePercentage.toFixed(2)}%`
-                )[1]
-              }
+              {volumeDifferenceText}
             </Text>
           </View>
+          <Text
+            className="text-primary-500 font-bold mt-2"
+            style={{ fontSize: 12 }}
+          >
+            Consenso Internacional da sociedade de linfologia, 2023.
+          </Text>
         </View>
-        {hasPatientData ? renderComplementaryData() : null}
+        {renderComplementaryData()}
         <TouchableOpacity
           onPress={handleFinalize}
           style={{
             backgroundColor: "#b41976",
-            width: "100%",
+            width: 300,
             height: 50,
             borderRadius: 10,
             alignItems: "center",
@@ -961,25 +953,61 @@ export default function Resultado() {
                 />
               )}
 
-              {/* Botão Confirmar */}
-              <TouchableOpacity
-                onPress={handleAssociateMeasurement}
+              {/* Botões Confirmar e Fechar */}
+              <View
                 style={{
-                  backgroundColor: "#b41976",
-                  width: "100%",
-                  height: 50,
-                  borderRadius: 10,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                   marginTop: 10,
                 }}
               >
-                <Text
-                  style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
+                {/* Botão Fechar */}
+                <TouchableOpacity
+                  onPress={() => setModalVisible(false)}
+                  style={{
+                    backgroundColor: "#ccc",
+                    width: "48%",
+                    height: 50,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  Confirmar
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{ color: "#333", fontSize: 16, fontWeight: "bold" }}
+                  >
+                    Fechar
+                  </Text>
+                </TouchableOpacity>
+
+                {/* Botão Confirmar */}
+                <TouchableOpacity
+                  onPress={() => {
+                    if (!selectedPatient) {
+                      Alert.alert(
+                        "Validação",
+                        "Associe ao menos um paciente antes de confirmar."
+                      );
+                    } else {
+                      handleAssociateMeasurement();
+                    }
+                  }}
+                  style={{
+                    backgroundColor: "#b41976",
+                    width: "48%",
+                    height: 50,
+                    borderRadius: 10,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
+                  >
+                    Confirmar
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>

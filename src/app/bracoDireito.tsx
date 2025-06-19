@@ -32,13 +32,19 @@ export default function bracoAfetado() {
   } = useMeasurementContext();
 
   const handleAffectedInputChange = (index: number, value: string) => {
-    const newInputs = [...rightArmInputs];
-    newInputs[index] = value;
-    setRightArmInputs(newInputs);
+    const valorFormatado = value.includes(",")
+      ? value.replace(",", ".")
+      : value;
+    const novosValores = [...rightArmInputs];
+    novosValores[index] = valorFormatado;
+    setRightArmInputs(novosValores);
   };
 
   const handleAffectedComprimentoRefChange = (value: string) => {
-    setRightArmComprimento(value);
+    const valorFormatado = value.includes(",")
+      ? value.replace(",", ".")
+      : value;
+    setRightArmComprimento(valorFormatado);
   };
 
   const calculateDifference = () => {
@@ -73,7 +79,7 @@ export default function bracoAfetado() {
   const getReferenceName = () => {
     switch (selectedValue) {
       case "opcao1":
-        return "Processo Estilóide";
+        return "Processo Estilóide da Ulna";
       case "opcao2":
         return "Linha Articular do Cotovelo";
       case "opcao3":
@@ -84,8 +90,11 @@ export default function bracoAfetado() {
   };
 
   const handleInputChange = (index: number, value: string) => {
+    const valorFormatado = value.includes(",")
+      ? value.replace(",", ".")
+      : value;
     const newInputs = [...rightArmInputs];
-    newInputs[index] = value;
+    newInputs[index] = valorFormatado;
     setRightArmInputs(newInputs);
   };
 
@@ -337,73 +346,120 @@ export default function bracoAfetado() {
         keyboardShouldPersistTaps="handled"
       >
         <View className="flex-1 justify-center items-center mt-4">
-          <View
-            className="flex-1 p-6 bg-white-500"
-            style={{
-              width: 360,
-              borderRadius: 40,
-              backgroundColor: "#FFF",
-            }}
-          >
-            <View className="flex-row mb-4">
-              <Image
-                source={require("../assets/plus-circle.png")}
+          {/* Container do processo de medição */}
+          <View className="flex-1 justify-center items-center">
+            <View
+              className="flex-1 p-6 bg-white-500"
+              style={{
+                width: 360,
+                borderRadius: 40,
+                backgroundColor: "#FFF",
+              }}
+            >
+              <View className="flex-row mb-4">
+                <Image
+                  source={require("../assets/plus-circle.png")}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    marginRight: 10,
+                    marginTop: 4.5,
+                  }}
+                />
+                <Text className="text-lg font-medium text-black-500">
+                  Processo de medição
+                </Text>
+              </View>
+              <Text className="text-lg font-medium">
+                Distância entre os pontos
+              </Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
                 style={{
-                  width: 18,
-                  height: 18,
-                  marginRight: 10,
-                  marginTop: 4.5,
+                  width: 69,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
                 }}
-              />
-              <Text className="text-lg font-medium text-black-500">
-                Dados do membro de referência
-              </Text>
-            </View>
-            <Text className="text-lg font-medium">
-              Distância entre os pontos
-            </Text>
-            <View
-              className="flex-row justify-center items-center bg-white-600"
-              style={{ width: 300, borderRadius: 40 }}
-            ></View>
-            <View
-              className="items-center justify-center"
-              style={{
-                width: 69,
-                height: 35,
-                right: 5,
-                borderRadius: 10,
-                backgroundColor: "#f8e8f1",
-              }}
-            >
-              <Text
-                className="text-primary-500 font-semibold"
-                style={{ fontSize: 12, padding: 10 }}
               >
-                {pontosRef}
-              </Text>
-            </View>
-            <Text className="text-lg font-medium">Referência</Text>
-            <View
-              className="flex-row justify-center items-center bg-white-600"
-              style={{ width: 300, borderRadius: 40 }}
-            ></View>
-            <View
-              className="items-center justify-center"
-              style={{
-                width: 200,
-                height: 35,
-                right: 5,
-                borderRadius: 10,
-                backgroundColor: "#f8e8f1",
-              }}
-            >
-              <Text
-                className="text-primary-500 font-semibold"
-                style={{ fontSize: 12, padding: 10 }}
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {pontosRef}
+                </Text>
+              </View>
+              <Text className="text-lg font-medium">Referência</Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 200,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
               >
-                {getReferenceName()}
-              </Text>
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {getReferenceName()}
+                </Text>
+              </View>
+              <Text className="text-lg font-medium">Membro de Referência</Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 150,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {referenceArm === "left" ? "Braço Esquerdo" : "Braço Direito"}
+                </Text>
+              </View>
+              <Text className="text-lg font-medium">Membro Acometido</Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 150,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {affectedArm === "left" ? "Braço Esquerdo" : "Braço Direito"}
+                </Text>
+              </View>
             </View>
           </View>
 

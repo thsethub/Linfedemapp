@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,12 @@ import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
 import { useMeasurementContext } from "../context/context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function bracoRef() {
   const { width } = useWindowDimensions();
+  const [ref, setRef] = useState("");
+  const [affected, setAffected] = useState("");
 
   const {
     pontosRef,
@@ -26,12 +29,14 @@ export default function bracoRef() {
     selectedValue,
     leftArmInputs,
     setLeftArmInputs,
+    referenceArm,
+    affectedArm,
   } = useMeasurementContext();
 
   const getReferenceName = () => {
     switch (selectedValue) {
       case "opcao1":
-        return "Processo Estilóide";
+        return "Processo Estilóide da Ulna";
       case "opcao2":
         return "Linha Articular do Cotovelo";
       case "opcao3":
@@ -41,9 +46,35 @@ export default function bracoRef() {
     }
   };
 
+  // const getAffectedName = () => {
+  //   if (affectedArm === "left") {
+  //     setAffected("Braço Esquerdo");
+  //   }
+  //   if (affectedArm === "right") {
+  //     setAffected("Braço Direito");
+  //   }
+  // }
+
+  // const getReferenceArm = () => {
+  //   if (referenceArm === "left") {
+  //     setRef("Braço Esquerdo");
+  //   }
+  //   if (referenceArm === "right") {
+  //     setRef("Braço Direito");
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   getAffectedName();
+  //   getReferenceArm();
+  // }, [affectedArm, referenceArm]);
+
   const handleInputChange = (index: number, value: string) => {
+    const valorFormatado = value.includes(",")
+      ? value.replace(",", ".")
+      : value;
     const newInputs = [...leftArmInputs];
-    newInputs[index] = value;
+    newInputs[index] = valorFormatado;
     setLeftArmInputs(newInputs);
   };
 
@@ -291,6 +322,7 @@ export default function bracoRef() {
         keyboardShouldPersistTaps="handled"
       >
         <View className="flex-1 justify-center items-center ">
+          {/* Container do processo de medição */}
           <View className="flex-1 justify-center items-center mt-4">
             <View
               className="flex-1 p-6 bg-white-500"
@@ -311,7 +343,7 @@ export default function bracoRef() {
                   }}
                 />
                 <Text className="text-lg font-medium text-black-500">
-                  Dados do membro de referência
+                  Processo de medição
                 </Text>
               </View>
               <Text className="text-lg font-medium">
@@ -358,6 +390,50 @@ export default function bracoRef() {
                   style={{ fontSize: 12, padding: 10 }}
                 >
                   {getReferenceName()}
+                </Text>
+              </View>
+              <Text className="text-lg font-medium">Membro de Referência</Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 150,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {referenceArm === "left" ? "Braço Esquerdo" : "Braço Direito"}
+                </Text>
+              </View>
+              <Text className="text-lg font-medium">Membro Acometido</Text>
+              <View
+                className="flex-row justify-center items-center bg-white-600"
+                style={{ width: 300, borderRadius: 40 }}
+              ></View>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 150,
+                  height: 35,
+                  right: 5,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {affectedArm === "left" ? "Braço Esquerdo" : "Braço Direito"}
                 </Text>
               </View>
             </View>
@@ -409,7 +485,12 @@ export default function bracoRef() {
                   }}
                   keyboardType="numeric"
                   value={leftArmComprimento}
-                  onChangeText={setLeftArmComprimento}
+                  onChangeText={(text) => {
+                    const valorFormatado = text.includes(",")
+                      ? text.replace(",", ".")
+                      : text;
+                    setLeftArmComprimento(valorFormatado);
+                  }}
                 />
               </View>
               <Text className="font-bold text-black-500">cm</Text>

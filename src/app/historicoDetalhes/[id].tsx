@@ -13,12 +13,15 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { generatePatientReport } from "@/utils/generatePatientReport";
 import Header from "@/components/headerId";
+import { useMeasurementContext } from "../../context/context";
 
+// const API_URL = "http://192.168.1.161:8083";
 const API_URL = "http://150.161.61.1:8083";
 
 export default function PatientProfileScreen() {
   const { id } = useLocalSearchParams();
 
+  const { affectedArm, pontosRef } = useMeasurementContext();
   const [patient, setPatient] = useState<any>(null);
   const [measurements, setMeasurements] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +54,7 @@ export default function PatientProfileScreen() {
         );
 
         setPatient(patientResponse.data);
+        console.log("Dados do paciente:", patientResponse.data);
 
         const measurementsResponse = await axios.get(
           `${API_URL}/api/pacientes/usuario/${userId}/${id}/mensuracoes`,
@@ -72,6 +76,7 @@ export default function PatientProfileScreen() {
   }, [id]);
 
   const handleGeneratePDF = async () => {
+    setLoading(true);
     if (!patient || measurements.length === 0) {
       Alert.alert("Erro", "Não há dados suficientes para gerar o relatório.");
       return;
@@ -86,26 +91,39 @@ export default function PatientProfileScreen() {
     } catch (error) {
       // console.error("Erro ao gerar o PDF:", error);
       Alert.alert("Erro", "Não foi possível gerar o relatório.");
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getVolumeDifferenceText = (percentage: number) => {
+  const getVolumeDifferenceText = (percentage: number, difference: number) => {
     if (percentage < 5) {
-      return "O membro não apresenta alterações volumétricas.";
+      return `O membro apresenta uma diferença de volume de ${Math.abs(
+        difference
+      ).toFixed(2)} mL, mas não apresenta alterações volumétricas.`;
     } else if (percentage >= 5 && percentage < 10) {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
+      return `O membro apresenta uma diferença de volume de ${Math.abs(
+        difference
+      ).toFixed(2)} mL e alterações de volume de ${percentage.toFixed(
         2
       )}%, o que pode sugerir um estágio 0 ou subclínico.`;
     } else if (percentage >= 10 && percentage < 20) {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
+      return `O membro apresenta uma diferença de volume de ${Math.abs(
+        difference
+      ).toFixed(2)} mL e alterações de volume de ${percentage.toFixed(
         2
       )}%, sugerindo linfedema estágio I ou leve.`;
     } else if (percentage >= 20 && percentage < 40) {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
+      return `O membro apresenta uma diferença de volume de ${Math.abs(
+        difference
+      ).toFixed(2)} mL e alterações de volume de ${percentage.toFixed(
         2
       )}%, sugerindo linfedema estágio II ou moderado.`;
     } else {
-      return `O membro apresenta alterações de volume de ${percentage.toFixed(
+      return `O membro apresenta uma diferença de volume de ${Math.abs(
+        difference
+      ).toFixed(2)} mL e alterações de volume de ${percentage.toFixed(
         2
       )}%, sugerindo linfedema estágio III ou avançado.`;
     }
@@ -128,6 +146,49 @@ export default function PatientProfileScreen() {
       </View>
     );
   }
+
+  const formatDate = (date: string): string => {
+    console.log("Data recebida:", date);
+    if (!date) return "Não informado"; // Caso a data seja inválida ou não exista
+    const [year, month, day] = date.split("-");
+    return `${day}-${month}-${year}`;
+  };
+
+  const calculateVolume = (comprimentoRef: string, inputs: string[]) => {
+    const h = parseFloat(pontosRef); // distância entre os pontos
+    if (isNaN(h)) {
+      // console.error("Invalid pontosRef value:", pontosRef);
+      return NaN;
+    }
+
+    const CA = parseFloat(comprimentoRef);
+    if (isNaN(CA)) {
+      // console.error("Invalid comprimentoRef value:", comprimentoRef);
+      return NaN;
+    }
+
+    const validInputs = inputs.filter(
+      (input) => input !== "" && input !== null
+    );
+    const volumes = validInputs.map((input, index) => {
+      const Ci = parseFloat(input);
+      if (isNaN(Ci)) {
+        // console.error(`Invalid input value at index ${index}:`, input);
+        return NaN;
+      }
+      const previousCA = index === 0 ? CA : parseFloat(validInputs[index - 1]);
+      return (
+        (h * (previousCA ** 2 + previousCA * Ci + Ci ** 2)) / (12 * Math.PI)
+      );
+    });
+
+    if (volumes.some((volume) => isNaN(volume))) {
+      // console.error("One or more volumes are NaN");
+      return NaN;
+    }
+
+    return volumes;
+  };
 
   return (
     <ScrollView className="flex-1 bg-[#f7f7f7]">
@@ -155,6 +216,7 @@ export default function PatientProfileScreen() {
         <Field label="Telefone" value={patient.telefone} />
         <Field label="Estado Civil" value={patient.estadoCivil} />
         <Field label="Ocupação" value={patient.ocupacao} />
+        <Field label="Observação" value={`${patient.observacaoPaciente || "Não informado"}`}/>
       </Section>
 
       <Section title="Dados Físicos">
@@ -259,6 +321,9 @@ export default function PatientProfileScreen() {
                 )
               : 0;
 
+            const volumeDifference =
+              totalVolumesAfetado - totalVolumesReferencia;
+              
             // Calcula a diferença entre os comprimentos dos braços
             const comprimentoDiff =
               item.leftArmComprimento && item.rightArmComprimento
@@ -268,10 +333,31 @@ export default function PatientProfileScreen() {
                   ).toFixed(2)
                 : "Não informado";
 
+            // Calcula as diferenças entre os pontos dos braços esquerdo e direito
+            const differences =
+              item.leftArmInputs && item.rightArmInputs
+                ? item.leftArmInputs.map((left: string, i: number) => {
+                    const right = item.rightArmInputs[i];
+                    if (
+                      left !== undefined &&
+                      right !== undefined &&
+                      left !== "" &&
+                      right !== ""
+                    ) {
+                      const diff = parseFloat(left) - parseFloat(right);
+                      return diff.toFixed(2) + " cm";
+                    }
+                    return "N/A";
+                  })
+                : [];
+
             // Texto de caracterização do linfedema
             const linfedemaText =
               item.volumeDifference != null
-                ? getVolumeDifferenceText(item.volumeDifference)
+                ? getVolumeDifferenceText(
+                    item.volumeDifference,
+                    volumeDifference
+                  )
                 : "Não informado";
 
             return (
@@ -281,53 +367,19 @@ export default function PatientProfileScreen() {
               >
                 {/* Data da Avaliação */}
                 <Text className="font-medium text-[#b41976]">
-                  📅 Data da Avaliação: {item.dataAvaliacao || "Não informado"}
+                  📅 Data da Avaliação:{" "}
+                  {formatDate(item.dataAvaliacao) || "Não informado"}
                 </Text>
 
-                {/* Perimetria */}
+                {/* Processo de Medição */}
                 <View className="mt-4">
-                  <Text className="font-medium text-[#b41976]">Perimetria</Text>
-                  <Text className="text-gray-700">
-                    Entradas do Braço Esquerdo:{" "}
-                    {item.leftArmInputs
-                      ? item.leftArmInputs
-                          .filter((input: string) => input !== "")
-                          .join(", ")
-                      : "Não informado"}
+                  <Text className="font-medium text-[#b41976]">
+                    Processo de Medição
                   </Text>
                   <Text className="text-gray-700">
-                    Entradas do Braço Direito:{" "}
-                    {item.rightArmInputs
-                      ? item.rightArmInputs
-                          .filter((input: string) => input !== "")
-                          .join(", ")
-                      : "Não informado"}
+                    Distância entre os pontos:{" "}
+                    {item.pontosRef || "Não informado"}
                   </Text>
-                  <Text className="text-gray-700">
-                    Entrada de Referência do Braço Esquerdo:{" "}
-                    {item.leftArmComprimento || "Não informado"} cm
-                  </Text>
-                  <Text className="text-gray-700">
-                    Entrada de Referência do Braço Direito:{" "}
-                    {item.rightArmComprimento || "Não informado"} cm
-                  </Text>
-                  <Text className="text-gray-700">
-                    Diferenças:{" "}
-                    {[`${comprimentoDiff} cm`]
-                      .concat(
-                        item.differences
-                          ? item.differences
-                              .filter((diff: number) => diff !== 0)
-                              .map((diff: number) => `${diff.toFixed(2)} cm`)
-                          : ["Não informado"]
-                      )
-                      .join(", ")}
-                  </Text>
-                </View>
-
-                {/* Volumetria */}
-                <View className="mt-4">
-                  <Text className="font-medium text-[#b41976]">Volumetria</Text>
                   <Text className="text-gray-700">
                     Braço de Referência: {item.referenceArm || "Não informado"}
                   </Text>
@@ -335,13 +387,82 @@ export default function PatientProfileScreen() {
                     Braço Afetado: {item.affectedArm || "Não informado"}
                   </Text>
                   <Text className="text-gray-700">
+                    Referência: {item.tipoReferencia || "Não informado"}
+                  </Text>
+                </View>
+                <View className="mt-4">
+                  <Text className="font-medium text-[#b41976]">Perimetria</Text>
+                  <Text className="text-gray-700">
+                    Pontos do Braço Esquerdo:{" "}
+                    {item.leftArmInputs
+                      ? [
+                          `P1: ${
+                            item.leftArmComprimento || "Não informado"
+                          } cm`,
+                          ...item.leftArmInputs
+                            .filter((input: string) => input !== "") // Define o tipo de 'input' como string
+                            .map(
+                              (input: string, index: number) =>
+                                `P${index + 2}: ${input} cm`
+                            ),
+                        ].join(", ")
+                      : "Não informado"}
+                  </Text>
+                  <Text className="text-gray-700">
+                    Pontos do Braço Direito:{" "}
+                    {item.rightArmInputs
+                      ? [
+                          `P1: ${
+                            item.rightArmComprimento || "Não informado"
+                          } cm`,
+                          ...item.rightArmInputs
+                            .filter((input: string) => input !== "") // Define o tipo de 'input' como string
+                            .map(
+                              (input: string, index: number) =>
+                                `P${index + 2}: ${input} cm`
+                            ),
+                        ].join(", ")
+                      : "Não informado"}
+                  </Text>
+                  <Text className="text-gray-700">
+                    Diferenças:{" "}
+                    {differences && differences.length > 0
+                      ? [
+                          // P1: diferença entre entrada de referência do braço afetado e de referência
+                          `P1: ${
+                            affectedArm === "left"
+                              ? (
+                                  parseFloat(item.leftArmComprimento || "0") -
+                                  parseFloat(item.rightArmComprimento || "0")
+                                ).toFixed(2)
+                              : (
+                                  parseFloat(item.rightArmComprimento || "0") -
+                                  parseFloat(item.leftArmComprimento || "0")
+                                ).toFixed(2)
+                          }`,
+                          // P2, P3, etc.: diferenças subsequentes, filtrando valores "N/A" ou inexistentes
+                          ...differences
+                            .filter(
+                              (difference: string) =>
+                                difference !== "N/A" && difference !== ""
+                            )
+                            .map(
+                              (difference: string, index: number) =>
+                                `P${index + 2}: ${difference}`
+                            ),
+                        ].join(", ")
+                      : "Não informado"}
+                  </Text>
+                </View>
+
+                {/* Volumetria */}
+                <View className="mt-4">
+                  <Text className="font-medium text-[#b41976]">Volumetria</Text>
+                  <Text className="text-gray-700">
                     Diferença de Volume:{" "}
                     {item.volumeDifference != null
                       ? `${item.volumeDifference.toFixed(2)}%`
                       : "Não informado"}
-                  </Text>
-                  <Text className="text-gray-700">
-                    Pontos de Referência: {item.pontosRef || "Não informado"}
                   </Text>
                   <Text className="text-gray-700">
                     Volumes de Referência:{" "}
@@ -372,6 +493,15 @@ export default function PatientProfileScreen() {
                   </Text>
                   <Text className="text-gray-700 font-semibold mt-2">
                     📝 {linfedemaText}
+                  </Text>
+                </View>
+                {/* Observações */}
+                <View className="mt-4">
+                  <Text className="font-medium text-[#b41976]">
+                    Observações:
+                  </Text>
+                  <Text className="text-gray-700">
+                    {item.observacaoMedicao || "Nenhuma observação informada."}
                   </Text>
                 </View>
               </View>

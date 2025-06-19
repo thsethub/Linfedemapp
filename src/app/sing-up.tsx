@@ -15,6 +15,7 @@ import { router } from "expo-router";
 import axios from "axios";
 
 const API_URL = "http://150.161.61.1:8083";
+// const API_URL = "http://192.168.1.161:8083";
 
 export default function SingUp() {
   const [name, setName] = useState("");

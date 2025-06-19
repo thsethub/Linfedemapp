@@ -9,6 +9,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   ActivityIndicator,
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native";
 import { Feather } from "@expo/vector-icons";
@@ -24,6 +25,7 @@ import ProcedureDetails from "@/components/procedimentosEcapsulados";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
+// const API_URL = "http://192.168.1.161:8083";
 const API_URL = "http://150.161.61.1:8083";
 
 // Define or import the PatientData type
@@ -141,9 +143,10 @@ export default function FichaExame2() {
               duracao: updatedPatientData.chemotherapy?.duration || null,
             }
           : null,
+        observacaoPaciente: updatedPatientData.observacaoPaciente || null,
       };
 
-      // console.log("Dados formatados para envio:", dataToSend);
+      console.log("Dados formatados para envio:", dataToSend);
 
       // Envia os dados ao backend
       const response = await axios.post(
@@ -269,6 +272,7 @@ export default function FichaExame2() {
               duracao: updatedPatientData.chemotherapy?.duration || null,
             }
           : null,
+        observacaoPaciente: updatedPatientData.observacaoPaciente || null,
       };
 
       // console.log("Dados formatados para envio:", dataToSend);
@@ -336,6 +340,7 @@ export default function FichaExame2() {
 
     // Procedimentos obrigatórios
     if (!data.procedures || data.procedures.length === 0) {
+      setLoading(false);
       Alert.alert("Atenção", "Selecione pelo menos um procedimento realizado.");
       return false;
     }
@@ -361,6 +366,7 @@ export default function FichaExame2() {
           break;
       }
       if (key && (!data[key] || !data[key].type || !data[key].duration)) {
+        setLoading(false);
         Alert.alert(
           "Atenção",
           `Preencha o tipo e a duração para o procedimento: ${proc}.`
@@ -371,6 +377,7 @@ export default function FichaExame2() {
 
     // Alterações cutâneas obrigatórias
     if (!data.skinChanges || data.skinChanges.length === 0) {
+      setLoading(false);
       Alert.alert("Atenção", "Selecione pelo menos uma alteração cutânea.");
       return false;
     }
@@ -805,6 +812,34 @@ export default function FichaExame2() {
                   </View>
                 );
               })}
+              <View className="mb-4 bottom-4">
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontWeight: "bold",
+                    marginBottom: 8,
+                  }}
+                >
+                  Observação
+                </Text>
+                <TextInput
+                  placeholder="Adicione uma observação sobre o paciente"
+                  value={patientData.observacaoPaciente || ""}
+                  onChangeText={(text) =>
+                    setPatientData({ ...patientData, observacaoPaciente: text })
+                  }
+                  style={{
+                    width: "100%",
+                    height: 40,
+                    backgroundColor: "#f8f8f8",
+                    borderRadius: 10,
+                    padding: 10,
+                    textAlignVertical: "top",
+                    fontWeight: "400",
+                  }}
+                  multiline
+                />
+              </View>
             </View>
 
             <View
@@ -856,9 +891,7 @@ export default function FichaExame2() {
             </View>
           </View>
         </ScrollView>
-        {/* Header */}
       </KeyboardAvoidingView>
-      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 }

@@ -141,6 +141,9 @@ export async function generatePatientReport(
               <tr><th>Ocupação</th><td>${
                 patient.ocupacao || "Não informado"
               }</td></tr>
+              <tr><th>Observação</th><td>${
+                patient.observacaoPaciente || "Não informado"
+              }</td></tr>
             </table>
           </div>
 
@@ -230,6 +233,9 @@ export async function generatePatientReport(
             }</p>
             <p><b>Distância entre os pontos:</b> ${
               lastMeasurement.pontosRef || "Não informado"
+            }</p>
+            <p><b>Referência:</b> ${
+              lastMeasurement.tipoReferencia || "Não informado"
             }</p>
 
             <!-- Tabela de Perimetria -->
