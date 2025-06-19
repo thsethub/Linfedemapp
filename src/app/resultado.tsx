@@ -11,6 +11,8 @@ import {
   ActivityIndicator,
   Modal,
   FlatList,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { useMeasurementContext } from "@/context/context";
@@ -87,7 +89,7 @@ export default function Resultado() {
     );
   };
 
-    const getReferenceName = () => {
+  const getReferenceName = () => {
     switch (selectedValue) {
       case "opcao1":
         return "Processo Estilóide da Ulna";
@@ -256,7 +258,7 @@ export default function Resultado() {
           </Text>{" "}
           e alterações de volume de{" "}
           <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          o que pode sugerir um {" "}
+          o que pode sugerir um{" "}
           <Text style={{ fontWeight: "bold" }}>estágio 0 ou subclínico</Text>.
         </Text>
       );
@@ -269,7 +271,7 @@ export default function Resultado() {
           </Text>{" "}
           e alterações de volume de{" "}
           <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          sugerindo linfedema {" "}
+          sugerindo linfedema{" "}
           <Text style={{ fontWeight: "bold" }}>estágio I ou leve</Text>.
         </Text>
       );
@@ -282,7 +284,7 @@ export default function Resultado() {
           </Text>{" "}
           e alterações de volume de{" "}
           <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          sugerindo linfedema {" "}
+          sugerindo linfedema{" "}
           <Text style={{ fontWeight: "bold" }}>estágio II ou moderado</Text>.
         </Text>
       );
@@ -295,8 +297,8 @@ export default function Resultado() {
           </Text>{" "}
           e alterações de volume de{" "}
           <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          sugerindo linfedema {" "}
-          <Text style={{ fontWeight: "bold" }}>estágio  III ou avançado</Text>.
+          sugerindo linfedema{" "}
+          <Text style={{ fontWeight: "bold" }}>estágio III ou avançado</Text>.
         </Text>
       );
     }
@@ -333,7 +335,6 @@ export default function Resultado() {
   const formatDifference = (difference: number) => {
     return difference >= 0 ? `+${difference}` : `${difference}`;
   };
-
 
   const calculateVolume = (comprimentoRef: string, inputs: string[]) => {
     const h = parseFloat(pontosRef); // distância entre os pontos
@@ -425,7 +426,8 @@ export default function Resultado() {
   }, [volumesReferencia, volumesAfetado]);
 
   const volumeDifferenceText = getVolumeDifferenceText(
-    volumeDifferencePercentage, volumeDifference
+    volumeDifferencePercentage,
+    volumeDifference
   );
   const volumeDifferenceText2 = getVolumeDifferenceText2(
     volumeDifferencePercentage
@@ -619,399 +621,417 @@ export default function Resultado() {
   return (
     <SafeAreaView className="flex-1 bg-white-600">
       <StatusBar style="dark" translucent />
-      <ScrollView
-        contentContainerStyle={{
-          padding: 20,
-          alignItems: "center",
-        }}
-      >
-        <Header title="Diagnóstico" />
-        <View
-          className="p-6 bg-white-500 mt-4"
-          style={{
-            width: 360,
-            borderRadius: 40,
-            backgroundColor: "#FFF",
-          }}
-        >
-          <View className="flex-row mb-4">
-            <Feather
-              name="list"
-              size={18}
-              color="black"
-              style={{ marginRight: 10, marginTop: 5 }}
-            />
-            <Text className="text-lg font-medium text-black-500">
-              Resultados
-            </Text>
-          </View>
-          <View>{renderDifferences()}</View>
 
-          <Text className="text-primary-500 text-sm mt-4">
-            Os pontos podem apresentar alterações:{" "}
-          </Text>
-          <View className="flex-row justify-center mt-2">
-            {/* Sem alterações */}
-            <View className="items-center">
-              <Text className="text-green-500 font-bold text-sm mb-1">
-                Sem alterações
-              </Text>
-              <View className="bg-green-50 rounded-md px-3 py-1">
-                <Text className="text-green-500 font-semibold text-xs">
-                  (1~2cm)
-                </Text>
-              </View>
-            </View>
-            {/* Alteração leve */}
-            <View className="items-center mr-2">
-              <Text className="text-yellow-500 font-bold text-sm mb-1">
-                Leve
-              </Text>
-              <View className="bg-yellow-50 rounded-md px-3 py-1">
-                <Text className="text-yellow-500 font-semibold text-xs">
-                  (2~3cm)
-                </Text>
-              </View>
-            </View>
-            {/* Alteração moderada */}
-            <View className="items-center mr-2">
-              <Text className="text-orange-500 font-bold text-sm mb-1">
-                Moderada
-              </Text>
-              <View className="bg-orange-50 rounded-md px-3 py-1">
-                <Text className="text-orange-500 font-semibold text-xs">
-                  (3~5cm)
-                </Text>
-              </View>
-            </View>
-            {/* Alteração grave */}
-            <View className="items-center">
-              <Text className="text-red-500 font-bold text-sm mb-1">Grave</Text>
-              <View className="bg-red-50 rounded-md px-3 py-1">
-                <Text className="text-red-500 font-semibold text-xs">
-                  ({">"}5cm)
-                </Text>
-              </View>
-            </View>
-          </View>
-          <Text className="text-primary-500 font-bold text-sm mt-4">
-            Referência - Panobianco; Mamede, 2002.
-          </Text>
-        </View>
-        {/* Perimetria */}
-        <View
-          className="p-6 bg-white-500 mt-4"
-          style={{
-            width: 360,
-            borderRadius: 40,
-            backgroundColor: "#FFF",
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0} // ajuste conforme seu header/statusbar
+      >
+        <ScrollView
+          contentContainerStyle={{
+            padding: 20,
+            alignItems: "center",
           }}
         >
-          <View className="flex-row items-center">
-            <Feather
-              name="box"
-              size={18}
-              color="black"
-              className="mt-1.5"
-              style={{ marginRight: 10 }}
-            />
-            <Text className="text-lg font-medium text-black-500 mt-1">
-              Volumetria
-            </Text>
-            <TouchableOpacity>
-              <Image
-                source={require("../assets/help-circle.png")}
-                style={{
-                  width: 18,
-                  height: 18,
-                  marginLeft: 10,
-                  marginTop: 4.5,
-                }}
-              />
-            </TouchableOpacity>
-          </View>
+          <Header title="Diagnóstico" />
           <View
-            className="flex-row items-center mt-4"
-            style={{ justifyContent: "space-between" }}
+            className="p-6 bg-white-500 mt-4"
+            style={{
+              width: 360,
+              borderRadius: 40,
+              backgroundColor: "#FFF",
+            }}
           >
-            <Text className="text-lg font-medium">
-              Vol.{" "}
-              {referenceArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
-            </Text>
-            <View
-              className="items-center justify-center"
-              style={{
-                width: 100,
-                height: 35,
-                borderRadius: 10,
-                backgroundColor: "#f8e8f1",
-              }}
-            >
-              <Text
-                className="text-primary-500 font-semibold"
-                style={{ fontSize: 12, padding: 10 }}
-              >
-                {volumeReferenciaTotal.toFixed(2)} mL
+            <View className="flex-row mb-4">
+              <Feather
+                name="list"
+                size={18}
+                color="black"
+                style={{ marginRight: 10, marginTop: 5 }}
+              />
+              <Text className="text-lg font-medium text-black-500">
+                Resultados
               </Text>
             </View>
+            <View>{renderDifferences()}</View>
+
+            <Text className="text-primary-500 text-sm mt-4">
+              Os pontos podem apresentar alterações:{" "}
+            </Text>
+            <View className="flex-row justify-center mt-2">
+              {/* Sem alterações */}
+              <View className="items-center">
+                <Text className="text-green-500 font-bold text-sm mb-1">
+                  Sem alterações
+                </Text>
+                <View className="bg-green-50 rounded-md px-3 py-1">
+                  <Text className="text-green-500 font-semibold text-xs">
+                    (1~2cm)
+                  </Text>
+                </View>
+              </View>
+              {/* Alteração leve */}
+              <View className="items-center mr-2">
+                <Text className="text-yellow-500 font-bold text-sm mb-1">
+                  Leve
+                </Text>
+                <View className="bg-yellow-50 rounded-md px-3 py-1">
+                  <Text className="text-yellow-500 font-semibold text-xs">
+                    (2~3cm)
+                  </Text>
+                </View>
+              </View>
+              {/* Alteração moderada */}
+              <View className="items-center mr-2">
+                <Text className="text-orange-500 font-bold text-sm mb-1">
+                  Moderada
+                </Text>
+                <View className="bg-orange-50 rounded-md px-3 py-1">
+                  <Text className="text-orange-500 font-semibold text-xs">
+                    (3~5cm)
+                  </Text>
+                </View>
+              </View>
+              {/* Alteração grave */}
+              <View className="items-center">
+                <Text className="text-red-500 font-bold text-sm mb-1">
+                  Grave
+                </Text>
+                <View className="bg-red-50 rounded-md px-3 py-1">
+                  <Text className="text-red-500 font-semibold text-xs">
+                    ({">"}5cm)
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <Text className="text-primary-500 font-bold text-sm mt-4">
+              Referência - Panobianco; Mamede, 2002.
+            </Text>
           </View>
-          {/* <View>
+          {/* Perimetria */}
+          <View
+            className="p-6 bg-white-500 mt-4"
+            style={{
+              width: 360,
+              borderRadius: 40,
+              backgroundColor: "#FFF",
+            }}
+          >
+            <View className="flex-row items-center">
+              <Feather
+                name="box"
+                size={18}
+                color="black"
+                className="mt-1.5"
+                style={{ marginRight: 10 }}
+              />
+              <Text className="text-lg font-medium text-black-500 mt-1">
+                Volumetria
+              </Text>
+              <TouchableOpacity>
+                <Image
+                  source={require("../assets/help-circle.png")}
+                  style={{
+                    width: 18,
+                    height: 18,
+                    marginLeft: 10,
+                    marginTop: 4.5,
+                  }}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              className="flex-row items-center mt-4"
+              style={{ justifyContent: "space-between" }}
+            >
+              <Text className="text-lg font-medium">
+                Vol.{" "}
+                {referenceArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
+              </Text>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 100,
+                  height: 35,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {volumeReferenciaTotal.toFixed(2)} mL
+                </Text>
+              </View>
+            </View>
+            {/* <View>
             {Array.isArray(volumesReferencia) &&
               renderVolumes(volumesReferencia)}
           </View> */}
-          <View
-            className="flex-row justify-center items-center bg-white-600"
-            style={{ width: 300, borderRadius: 40 }}
-          ></View>
-          <View
-            className="flex-row items-center mt-4"
-            style={{ justifyContent: "space-between" }}
-          >
-            <Text className="text-lg font-medium">
-              Vol.{" "}
-              {affectedArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
-            </Text>
             <View
-              className="items-center justify-center"
-              style={{
-                width: 100,
-                height: 35,
-                borderRadius: 10,
-                backgroundColor: "#f8e8f1",
-              }}
+              className="flex-row justify-center items-center bg-white-600"
+              style={{ width: 300, borderRadius: 40 }}
+            ></View>
+            <View
+              className="flex-row items-center mt-4"
+              style={{ justifyContent: "space-between" }}
             >
-              <Text
-                className="text-primary-500 font-semibold"
-                style={{ fontSize: 12, padding: 10 }}
-              >
-                {volumeAfetadoTotal.toFixed(2)} mL
+              <Text className="text-lg font-medium">
+                Vol.{" "}
+                {affectedArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
               </Text>
+              <View
+                className="items-center justify-center"
+                style={{
+                  width: 100,
+                  height: 35,
+                  borderRadius: 10,
+                  backgroundColor: "#f8e8f1",
+                }}
+              >
+                <Text
+                  className="text-primary-500 font-semibold"
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {volumeAfetadoTotal.toFixed(2)} mL
+                </Text>
+              </View>
             </View>
-          </View>
-          <View>
-            {/* {Array.isArray(volumesAfetado) && renderVolumes(volumesAfetado)} */}
-          </View>
-          <View
-            className="flex-row justify-center items-center bg-white-600"
-            style={{ width: 300, borderRadius: 40 }}
-          ></View>
-          <View
-            className="flex-row items-center mt-4 mb-4"
-            style={{ justifyContent: "space-between" }} // Adicionado para separar os itens
-          >
-            <Text className="text-lg font-medium">Diferença de Volume</Text>
+            <View>
+              {/* {Array.isArray(volumesAfetado) && renderVolumes(volumesAfetado)} */}
+            </View>
+            <View
+              className="flex-row justify-center items-center bg-white-600"
+              style={{ width: 300, borderRadius: 40 }}
+            ></View>
+            <View
+              className="flex-row items-center mt-4 mb-4"
+              style={{ justifyContent: "space-between" }} // Adicionado para separar os itens
+            >
+              <Text className="text-lg font-medium">Diferença de Volume</Text>
+              <View
+                className={`items-center justify-center ${bgClass}`}
+                style={{
+                  width: 75,
+                  height: 35,
+                  borderRadius: 10,
+                }}
+              >
+                <Text
+                  className={`font-semibold ${textClass}`}
+                  style={{ fontSize: 12, padding: 10 }}
+                >
+                  {volumeDifferenceText2}
+                </Text>
+              </View>
+            </View>
+            <View
+              className={`flex-row justify-center items-center ${bgClass}`}
+              style={{ width: 300, borderRadius: 40 }}
+            ></View>
+
             <View
               className={`items-center justify-center ${bgClass}`}
               style={{
-                width: 75,
-                height: 35,
+                width: 330,
+                height: 60,
+                right: 5,
                 borderRadius: 10,
               }}
             >
               <Text
-                className={`font-semibold ${textClass}`}
-                style={{ fontSize: 12, padding: 10 }}
+                className={`${textClass}`}
+                style={{ fontSize: 12, padding: 5 }}
               >
-                {volumeDifferenceText2}
+                {volumeDifferenceText}
               </Text>
             </View>
-          </View>
-          <View
-            className={`flex-row justify-center items-center ${bgClass}`}
-            style={{ width: 300, borderRadius: 40 }}
-          ></View>
-
-          <View
-            className={`items-center justify-center ${bgClass}`}
-            style={{
-              width: 330,
-              height: 60,
-              right: 5,
-              borderRadius: 10,
-            }}
-          >
             <Text
-              className={`${textClass}`}
-              style={{ fontSize: 12, padding: 5 }}
+              className="text-primary-500 font-bold mt-2"
+              style={{ fontSize: 12 }}
             >
-              {volumeDifferenceText}
+              Consenso Internacional da sociedade de linfologia, 2023.
             </Text>
           </View>
-          <Text
-            className="text-primary-500 font-bold mt-2"
-            style={{ fontSize: 12 }}
-          >
-            Consenso Internacional da sociedade de linfologia, 2023.
-          </Text>
-        </View>
-        {renderComplementaryData()}
-        <TouchableOpacity
-          onPress={handleFinalize}
-          style={{
-            backgroundColor: "#b41976",
-            width: 300,
-            height: 50,
-            borderRadius: 10,
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: 20,
-          }}
-        >
-          <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-            Finalizar
-          </Text>
-        </TouchableOpacity>
-
-        {/* Modal para Seleção de Paciente */}
-        <Modal
-          visible={modalVisible}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View
+          {renderComplementaryData()}
+          <TouchableOpacity
+            onPress={handleFinalize}
             style={{
-              flex: 1,
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              justifyContent: "center",
+              backgroundColor: "#b41976",
+              width: 300,
+              height: 50,
+              borderRadius: 10,
               alignItems: "center",
+              justifyContent: "center",
+              marginTop: 20,
             }}
+          >
+            <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
+              Finalizar
+            </Text>
+          </TouchableOpacity>
+
+          {/* Modal para Seleção de Paciente */}
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setModalVisible(false)}
           >
             <View
               style={{
-                backgroundColor: "#fff",
-                width: "90%",
-                borderRadius: 10,
-                padding: 20,
+                flex: 1,
+                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  color: "#b41976",
-                  marginBottom: 10,
-                }}
-              >
-                Selecione um Paciente
-              </Text>
-
-              {/* Barra de Pesquisa */}
               <View
                 style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: "#ccc",
+                  backgroundColor: "#fff",
+                  width: "90%",
                   borderRadius: 10,
-                  paddingHorizontal: 10,
-                  marginBottom: 10,
+                  padding: 20,
                 }}
               >
-                <TextInput
-                  placeholder="Pesquisar paciente"
-                  placeholderTextColor="#aaa"
-                  style={{ flex: 1, fontSize: 16 }}
-                  value={searchQuery}
-                  onChangeText={setSearchQuery}
-                />
-              </View>
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    color: "#b41976",
+                    marginBottom: 10,
+                  }}
+                >
+                  Selecione um Paciente
+                </Text>
 
-              {/* Lista de Pacientes */}
-              {loadingPatients ? (
-                <ActivityIndicator size="large" color="#b41976" />
-              ) : (
-                <FlatList
-                  data={filteredPatients}
-                  keyExtractor={(item) => item.id}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => setSelectedPatient(item)}
+                {/* Barra de Pesquisa */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    borderWidth: 1,
+                    borderColor: "#ccc",
+                    borderRadius: 10,
+                    paddingHorizontal: 10,
+                    marginBottom: 10,
+                  }}
+                >
+                  <TextInput
+                    placeholder="Pesquisar paciente"
+                    placeholderTextColor="#aaa"
+                    style={{ flex: 1, fontSize: 16 }}
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                  />
+                </View>
+
+                {/* Lista de Pacientes */}
+                {loadingPatients ? (
+                  <ActivityIndicator size="large" color="#b41976" />
+                ) : (
+                  <FlatList
+                    data={filteredPatients}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity
+                        onPress={() => setSelectedPatient(item)}
+                        style={{
+                          padding: 10,
+                          backgroundColor:
+                            selectedPatient?.id === item.id
+                              ? "#ffe0f0"
+                              : "#f7f7f7",
+                          borderRadius: 5,
+                          marginBottom: 5,
+                        }}
+                      >
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                          {item.fullName}
+                        </Text>
+                        <Text style={{ fontSize: 14, color: "#777" }}>
+                          Data de Nascimento:{" "}
+                          {item.birthDate || "Não informado"}
+                        </Text>
+                      </TouchableOpacity>
+                    )}
+                    ListEmptyComponent={
+                      <Text style={{ textAlign: "center", color: "#777" }}>
+                        Nenhum paciente encontrado.
+                      </Text>
+                    }
+                  />
+                )}
+
+                {/* Botões Confirmar e Fechar */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    marginTop: 10,
+                  }}
+                >
+                  {/* Botão Fechar */}
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    style={{
+                      backgroundColor: "#ccc",
+                      width: "48%",
+                      height: 50,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text
                       style={{
-                        padding: 10,
-                        backgroundColor:
-                          selectedPatient?.id === item.id
-                            ? "#ffe0f0"
-                            : "#f7f7f7",
-                        borderRadius: 5,
-                        marginBottom: 5,
+                        color: "#333",
+                        fontSize: 16,
+                        fontWeight: "bold",
                       }}
                     >
-                      <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                        {item.fullName}
-                      </Text>
-                      <Text style={{ fontSize: 14, color: "#777" }}>
-                        Data de Nascimento: {item.birthDate || "Não informado"}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                  ListEmptyComponent={
-                    <Text style={{ textAlign: "center", color: "#777" }}>
-                      Nenhum paciente encontrado.
+                      Fechar
                     </Text>
-                  }
-                />
-              )}
+                  </TouchableOpacity>
 
-              {/* Botões Confirmar e Fechar */}
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 10,
-                }}
-              >
-                {/* Botão Fechar */}
-                <TouchableOpacity
-                  onPress={() => setModalVisible(false)}
-                  style={{
-                    backgroundColor: "#ccc",
-                    width: "48%",
-                    height: 50,
-                    borderRadius: 10,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    style={{ color: "#333", fontSize: 16, fontWeight: "bold" }}
+                  {/* Botão Confirmar */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (!selectedPatient) {
+                        Alert.alert(
+                          "Validação",
+                          "Associe ao menos um paciente antes de confirmar."
+                        );
+                      } else {
+                        handleAssociateMeasurement();
+                      }
+                    }}
+                    style={{
+                      backgroundColor: "#b41976",
+                      width: "48%",
+                      height: 50,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                   >
-                    Fechar
-                  </Text>
-                </TouchableOpacity>
-
-                {/* Botão Confirmar */}
-                <TouchableOpacity
-                  onPress={() => {
-                    if (!selectedPatient) {
-                      Alert.alert(
-                        "Validação",
-                        "Associe ao menos um paciente antes de confirmar."
-                      );
-                    } else {
-                      handleAssociateMeasurement();
-                    }
-                  }}
-                  style={{
-                    backgroundColor: "#b41976",
-                    width: "48%",
-                    height: 50,
-                    borderRadius: 10,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
-                  >
-                    Confirmar
-                  </Text>
-                </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "#fff",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Confirmar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        </Modal>
-      </ScrollView>
+          </Modal>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
