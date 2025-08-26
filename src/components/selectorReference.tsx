@@ -41,7 +41,7 @@ const ReferenceSelector: React.FC<ReferenceSelectorProps> = ({
                 styles.label,
                 selectedValue === item.value && styles.selectedLabel,
               ]}
-              numberOfLines={2} // Permite quebra de linha
+              numberOfLines={2}
             >
               {item.label}
             </Text>
@@ -64,45 +64,47 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   optionsContainer: {
-    flexDirection: "row", // Alinha os itens horizontalmente
-    justifyContent: "space-between", // Espaça os itens igualmente
-    flexWrap: "nowrap", // Impede a quebra de linha
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "nowrap",
     width: "100%",
   },
   optionWrapper: {
     alignItems: "center",
-    marginHorizontal: 4, // Espaçamento horizontal entre os itens
-    marginBottom: 16, // Espaçamento entre linhas
-    width: 100, // Largura fixa para alinhar os itens
+    marginHorizontal: 4,
+    marginBottom: 16,
+    width: 100,
   },
   option: {
     alignItems: "center",
     justifyContent: "center",
-    padding: 8,
+    // padding: 8, // Removido para a imagem preencher todo o espaço
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#cdcdcd",
     backgroundColor: "#f8f8f8",
     width: 80,
     height: 80,
+    overflow: "hidden", // Adicionado para cortar a imagem nos cantos arredondados
   },
   selectedOption: {
     borderColor: "#B41976",
     backgroundColor: "#FCE4EC",
   },
   image: {
-    width: 80, // Tamanho ajustado da imagem
-    height: 80,
+    width: "100%", // Alterado para preencher o container
+    height: "100%", // Alterado para preencher o container
+    resizeMode: "cover", // Adicionado para a imagem não distorcer
   },
   label: {
-    fontSize: 12, // Reduzido o tamanho da fonte
+    fontSize: 12,
     fontWeight: "600",
     color: "#000",
     textAlign: "center",
-    marginTop: 4, // Espaçamento menor entre a caixa e o texto
+    marginTop: 4,
   },
   selectedLabel: {
-    color: "#B41976", // Cor destacada para o item selecionado
+    color: "#B41976",
     fontWeight: "bold",
   },
 });

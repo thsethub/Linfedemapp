@@ -17,6 +17,7 @@ import DatePicker from "@/components/datepicker"; // Importa o componente DatePi
 import { router } from "expo-router";
 import { useMeasurementContext } from "@/context/context";
 import Header from "@/components/headerFicha1";
+import { Entypo } from "@expo/vector-icons";
 
 export default function FichaExame1() {
   const { patientData, setPatientData } = useMeasurementContext();
@@ -248,6 +249,31 @@ export default function FichaExame1() {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
+      {/* Botão flutuante de ajuda (não fixo, acompanha o scroll) */}
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 60,
+          right: 30,
+          width: 50,
+          height: 50,
+          backgroundColor: "#b41976",
+          borderRadius: 30,
+          justifyContent: "center",
+          alignItems: "center",
+          // Adicionando sombra
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 5,
+        }}
+        onPress={() => {
+          router.navigate("/faq");
+        }}
+      >
+        <Entypo name="help" size={24} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

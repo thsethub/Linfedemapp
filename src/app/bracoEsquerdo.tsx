@@ -14,7 +14,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
 import { useMeasurementContext } from "../context/context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { Entypo } from "@expo/vector-icons";
 
 export default function bracoRef() {
   const { width } = useWindowDimensions();
@@ -259,7 +259,6 @@ export default function bracoRef() {
   return (
     <SafeAreaView className="flex-1 bg-white-600 mt-8">
       <StatusBar style="dark" translucent />
-
       {/* Botão de Voltar */}
       <TouchableOpacity
         onPress={() => {
@@ -280,7 +279,6 @@ export default function bracoRef() {
         source={require("../assets/busto-fem-direito.png")}
         style={{ width: 200, height: 200, alignSelf: "center" }}
       />
-
       {/* Barra de navegação */}
       <View className="flex-row justify-center items-center bg-white-500">
         <TouchableOpacity
@@ -312,7 +310,6 @@ export default function bracoRef() {
         </TouchableOpacity>
       </View>
       {/* Fim da barra de navegação */}
-
       <KeyboardAwareScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -571,7 +568,30 @@ export default function bracoRef() {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
-      {/* FlatList dos componentes */}
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 60,
+          right: 30,
+          width: 50,
+          height: 50,
+          backgroundColor: "#b41976",
+          borderRadius: 30,
+          justifyContent: "center",
+          alignItems: "center",
+          // Adicionando sombra
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 5,
+        }}
+        onPress={() => {
+          router.navigate("/faq");
+        }}
+      >
+        <Entypo name="help" size={24} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

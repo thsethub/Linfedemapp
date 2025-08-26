@@ -14,6 +14,7 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import Feather from "@expo/vector-icons/Feather";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Entypo } from "@expo/vector-icons";
 
 export default function bracoAfetado() {
   const { width } = useWindowDimensions(); // Obtém a largura da tela
@@ -607,6 +608,30 @@ export default function bracoAfetado() {
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 60,
+          right: 30,
+          width: 50,
+          height: 50,
+          backgroundColor: "#b41976",
+          borderRadius: 30,
+          justifyContent: "center",
+          alignItems: "center",
+          // Adicionando sombra
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 5,
+        }}
+        onPress={() => {
+          router.navigate("/faq");
+        }}
+      >
+        <Entypo name="help" size={24} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

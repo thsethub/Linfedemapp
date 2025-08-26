@@ -13,8 +13,8 @@ import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
-// const API_URL = "http://192.168.1.161:8083";
-const API_URL = "http://150.161.61.1:8083";
+// const API_URL = "http://192.168.15.108:8081";
+const API_URL = "https://3f276be13750.ngrok-free.app";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -66,18 +66,31 @@ export default function SignIn() {
         password,
       });
 
-      const { token } = response.data;
-
-      await SecureStore.setItemAsync("access_token", token);
-      router.push("/home");
+      // Se o status for 200, login bem-sucedido
+      if (response.status === 200 && response.data.token) {
+        await SecureStore.setItemAsync("access_token", response.data.token);
+        router.push("/home");
+      } else {
+        // Caso raro: resposta inesperada
+        Alert.alert("Erro", "Resposta inesperada do servidor.");
+      }
     } catch (error) {
-      const errorMessage =
-        axios.isAxiosError(error) && error.response?.data?.message
-          ? error.response.data.message
-          : "Erro ao fazer login.";
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data;
 
-      // console.error("Erro ao fazer login:", error);
-      Alert.alert("Erro", errorMessage);
+        if (status === 404 && typeof message === "string") {
+          Alert.alert("Erro", "Usuário não encontrado.");
+        } else if (status === 401 && typeof message === "string") {
+          Alert.alert("Erro", "Senha incorreta.");
+        } else if (typeof message === "string") {
+          Alert.alert("Erro", message);
+        } else {
+          Alert.alert("Erro", "Erro ao fazer login.");
+        }
+      } else {
+        Alert.alert("Erro", "Erro inesperado.");
+      }
     } finally {
       setIsAuthenticating(false);
     }
@@ -135,7 +148,9 @@ export default function SignIn() {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          router.push("/recuperar_senha");
+        }}>
           <Text className="text-right">
             <Text className="text-primary-500">Esqueceu a senha?</Text>
           </Text>

@@ -15,8 +15,8 @@ import { generatePatientReport } from "@/utils/generatePatientReport";
 import Header from "@/components/headerId";
 import { useMeasurementContext } from "../../context/context";
 
-// const API_URL = "http://192.168.1.161:8083";
-const API_URL = "http://150.161.61.1:8083";
+const API_URL = "https://3f276be13750.ngrok-free.app";
+// const API_URL = "http://192.168.15.108:8081";
 
 export default function PatientProfileScreen() {
   const { id } = useLocalSearchParams();

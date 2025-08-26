@@ -12,7 +12,7 @@ import {
   TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { Entypo, Feather } from "@expo/vector-icons";
 import { useMeasurementContext } from "@/context/context";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -25,8 +25,8 @@ import ProcedureDetails from "@/components/procedimentosEcapsulados";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
-// const API_URL = "http://192.168.1.161:8083";
-const API_URL = "http://150.161.61.1:8083";
+// const API_URL = "http://192.168.15.108:8081";
+const API_URL = "https://3f276be13750.ngrok-free.app";
 
 // Define or import the PatientData type
 type PatientData = {
@@ -892,6 +892,31 @@ export default function FichaExame2() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+            <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 60,
+          right: 30,
+          width: 50,
+          height: 50,
+          backgroundColor: "#b41976",
+          borderRadius: 30,
+          justifyContent: "center",
+          alignItems: "center",
+          // Adicionando sombra
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 5,
+        }}
+        onPress={() => {
+          router.navigate("/faq");
+        }}
+      >
+        <Entypo name="help" size={24} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

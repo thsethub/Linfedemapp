@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -11,6 +11,7 @@ import {
 // import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested", // Ignore nested VirtualizedLists warning
@@ -28,6 +29,10 @@ export default function Index() {
   //     alert("Erro ao remover o token.");
   //   }
   // };
+
+  // useEffect(() => {
+  //   clearToken();
+  // }, []);
 
   return (
     <SafeAreaView className="flex-1 bg-primary-500">
@@ -150,7 +155,12 @@ export default function Index() {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="mt-16">
+        <TouchableOpacity
+          className="mt-16"
+          onPress={() => {
+            router.push("/faq");
+          }}
+        >
           <Text className="text-center">
             <Text className="text-primary-500">Preciso de ajuda</Text>
           </Text>

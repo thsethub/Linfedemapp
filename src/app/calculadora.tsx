@@ -2,6 +2,7 @@ import Dropdown from "@/components/dropdown";
 import Header from "@/components/headerCalculadora";
 import ReferenceSelector from "@/components/selectorReference";
 import { useMeasurementContext } from "@/context/context";
+import { Entypo } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -60,17 +61,17 @@ export default function Calculadora() {
                   {
                     label: "Processo Estilóide da Ulna",
                     value: "opcao1",
-                    image: require("../assets/busto-fem-esquerdo.png"),
+                    image: require("../assets/estiloide2.png"),
                   },
                   {
                     label: "Linha Articular do Cotovelo",
                     value: "opcao2",
-                    image: require("../assets/busto-fem-esquerdo.png"),
+                    image: require("../assets/linha_articular2.png"),
                   },
                   {
                     label: "Acrômio",
                     value: "opcao3",
-                    image: require("../assets/busto-fem-esquerdo.png"),
+                    image: require("../assets/acromio2.png"),
                   },
                 ]}
                 selectedValue={selectedValue}
@@ -151,7 +152,7 @@ export default function Calculadora() {
                 className="mt-4 items-center justify-center"
                 style={{
                   width: 330,
-                  height: 60,
+                  height: 70,
                   right: 5,
                   borderRadius: 10,
                   backgroundColor: "#f8e8f1",
@@ -161,9 +162,9 @@ export default function Calculadora() {
                   className="text-primary-500"
                   style={{ fontSize: 12, padding: 10 }}
                 >
-                  Realize as medições no membro da paciente com um total de
-                  <Text className="font-semibold"> [{pontosRef}] pontos </Text>
-                  para o exame.
+                  Realize as medições no membro da paciente iniciando no ponto
+                  de referência escolhido e a cada
+                  <Text className="font-semibold"> [{pontosRef}]. </Text>
                 </Text>
               </View>
             </View>
@@ -190,6 +191,31 @@ export default function Calculadora() {
           </View>
         }
       />
+
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          bottom: 60,
+          right: 30,
+          width: 50,
+          height: 50,
+          backgroundColor: "#b41976",
+          borderRadius: 30,
+          justifyContent: "center",
+          alignItems: "center",
+          // Adicionando sombra
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 6,
+          elevation: 5,
+        }}
+        onPress={() => {
+          router.navigate("/faq");
+        }}
+      >
+        <Entypo name="help" size={24} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }

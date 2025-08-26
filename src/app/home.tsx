@@ -194,7 +194,7 @@ export default function Home() {
 
       <TouchableOpacity
         onPress={() => {
-          router.navigate("/");
+          router.navigate("/faq");
         }}
         style={{
           position: "absolute",
@@ -226,7 +226,7 @@ export default function Home() {
           elevation: 5,
         }}
         onPress={() => {
-          // router.navigate("/faq");
+          router.navigate("/faq");
         }}
       >
         <Entypo name="help" size={24} color="white" />

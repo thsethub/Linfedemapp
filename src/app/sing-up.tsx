@@ -14,8 +14,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { router } from "expo-router";
 import axios from "axios";
 
-const API_URL = "http://150.161.61.1:8083";
-// const API_URL = "http://192.168.1.161:8083";
+const API_URL = "https://3f276be13750.ngrok-free.app";
+// const API_URL = "http://192.168.15.108:8081";
 
 export default function SingUp() {
   const [name, setName] = useState("");
@@ -173,7 +173,7 @@ export default function SingUp() {
             onChangeText={setOrigem}
           />
           <TextInput
-            placeholder="Titulação (Ex: Graduação, mestrado, etc.)"
+            placeholder="Profissão"
             placeholderTextColor="#666"
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
             value={titulacao}
@@ -220,7 +220,7 @@ export default function SingUp() {
           <TouchableOpacity
             className="mt-10"
             onPress={() => {
-              router.push("/");
+              router.push("/faq");
             }}
           >
             <Text className="text-center">
