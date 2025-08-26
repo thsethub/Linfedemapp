@@ -16,7 +16,7 @@ import * as SecureStore from "expo-secure-store";
 import FaqAccordion from "@/components/FaqAccordion";
 import { Linking } from "react-native";
 
-const API_URL = "https://3f276be13750.ngrok-free.app";
+const API_URL = "http://150.161.61.1:8083";
 
 const faqData = [
   {

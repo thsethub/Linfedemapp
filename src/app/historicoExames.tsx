@@ -17,7 +17,7 @@ import { StatusBar } from "expo-status-bar";
 import Header from "@/components/headerExames1";
 
 // const API_URL = "http://192.168.15.108:8081";
-const API_URL = "https://3f276be13750.ngrok-free.app";
+const API_URL = "http://150.161.61.1:8083";
 
 // Interface para os pacientes
 interface Patient {
