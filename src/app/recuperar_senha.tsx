@@ -20,7 +20,7 @@ import axios from "axios";
 cssInterop(TextInput, { className: "style" });
 
 // URL da API
-const API_URL = "http://150.161.61.1:8083";
+const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
 
 export default function RecuperarSenha() {
   const [email, setEmail] = useState("");

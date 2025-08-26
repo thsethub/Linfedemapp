@@ -14,7 +14,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { router } from "expo-router";
 import axios from "axios";
 
-const API_URL = "http://150.161.61.1:8083";
+const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
 // const API_URL = "http://192.168.15.108:8081";
 
 export default function SingUp() {

@@ -26,7 +26,7 @@ import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
 // const API_URL = "http://192.168.15.108:8081";
-const API_URL = "http://150.161.61.1:8083";
+const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
 
 // Define or import the PatientData type
 type PatientData = {
