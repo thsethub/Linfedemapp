@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TextInput } from "react-native";
 import Dropdown from "@/components/dropdown2"; // Ajuste o caminho conforme necessário
+import { useTranslation } from "@/context/LanguageContext";
 
 interface ProcedureDetailsProps {
   title: string;
@@ -23,6 +24,8 @@ const ProcedureDetails: React.FC<ProcedureDetailsProps> = ({
   onDurationChange,
   zIndex,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <View
       style={{
@@ -36,7 +39,7 @@ const ProcedureDetails: React.FC<ProcedureDetailsProps> = ({
       <View style={{ flex: 1, marginRight: 12 }}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title}</Text>
         <Dropdown
-          title="Selecione o tipo"
+          title={t("patient.selectType")}
           items={dropdownItems}
           selectedValue={selectedValue}
           setSelectedValue={(value) => onDropdownChange(value)}
@@ -47,7 +50,7 @@ const ProcedureDetails: React.FC<ProcedureDetailsProps> = ({
       {/* Bloco "Há quanto tempo?" */}
       <View style={{ alignItems: "center" }}>
         <Text style={{ fontSize: 14, fontWeight: "500", marginBottom: 10 }}>
-          Há quanto tempo?
+          {t("patient.howLongAgo")}
         </Text>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <TextInput
@@ -65,7 +68,7 @@ const ProcedureDetails: React.FC<ProcedureDetailsProps> = ({
               paddingVertical: 4,
             }}
           />
-          <Text>Meses</Text>
+          <Text>{t("patientDetails.values.months")}</Text>
         </View>
       </View>
     </View>

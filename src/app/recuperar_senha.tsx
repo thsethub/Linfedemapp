@@ -16,13 +16,16 @@ import { cssInterop } from "nativewind";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import axios from "axios";
+import { useTranslation } from "../context/LanguageContext";
 
 cssInterop(TextInput, { className: "style" });
 
 // URL da API
-const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+const API_URL = "http://192.168.0.105:8083";
 
 export default function RecuperarSenha() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -49,7 +52,7 @@ export default function RecuperarSenha() {
 
   const handleSubmitEmail = async () => {
     if (!email.trim()) {
-      Alert.alert("Erro", "Por favor, digite seu e-mail.");
+      Alert.alert(t("common.error"), t("auth.forgotPassword.enterEmail"));
       return;
     }
     setIsLoading(true);
@@ -61,9 +64,9 @@ export default function RecuperarSenha() {
         axios.isAxiosError(error) && error.response
           ? typeof error.response.data === "string"
             ? error.response.data
-            : "Não foi possível enviar o e-mail."
-          : "Não foi possível conectar ao servidor. Verifique sua rede.";
-      Alert.alert("Erro", errorMessage);
+            : t("auth.forgotPassword.emailSendError")
+          : t("auth.forgotPassword.networkError");
+      Alert.alert(t("common.error"), errorMessage);
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -73,7 +76,7 @@ export default function RecuperarSenha() {
   const handleVerifyCode = async () => {
     const finalCode = code.join("");
     if (finalCode.length < 6) {
-      Alert.alert("Erro", "O código deve ter 6 dígitos.");
+      Alert.alert(t("common.error"), t("auth.forgotPassword.codeRequired"));
       return;
     }
     setIsVerifying(true);
@@ -88,9 +91,9 @@ export default function RecuperarSenha() {
         axios.isAxiosError(error) && error.response
           ? typeof error.response.data === "string"
             ? error.response.data
-            : "Código inválido ou expirado."
-          : "Não foi possível conectar ao servidor.";
-      Alert.alert("Erro de Verificação", errorMessage);
+            : t("auth.forgotPassword.invalidCode")
+          : t("auth.forgotPassword.networkError");
+      Alert.alert(t("auth.forgotPassword.verificationError"), errorMessage);
       console.error(error);
     } finally {
       setIsVerifying(false);
@@ -100,13 +103,13 @@ export default function RecuperarSenha() {
   const handleUpdatePassword = async () => {
     if (newPassword.length < 6) {
       Alert.alert(
-        "Senha curta",
-        "A nova senha deve ter pelo menos 6 caracteres."
+        t("auth.forgotPassword.shortPassword"),
+        t("auth.forgotPassword.passwordMinLength")
       );
       return;
     }
     if (newPassword !== confirmPassword) {
-      Alert.alert("Erro", "As senhas não coincidem.");
+      Alert.alert(t("common.error"), t("auth.forgotPassword.passwordMismatch"));
       return;
     }
     setIsUpdating(true);
@@ -118,8 +121,8 @@ export default function RecuperarSenha() {
         newPassword: newPassword,
       });
       Alert.alert(
-        "Sucesso!",
-        "Sua senha foi atualizada. Por favor, faça o login.",
+        t("common.success") + "!",
+        t("auth.forgotPassword.passwordUpdated"),
         [{ text: "OK", onPress: handleBackToLogin }]
       );
     } catch (error) {
@@ -127,9 +130,9 @@ export default function RecuperarSenha() {
         axios.isAxiosError(error) && error.response
           ? typeof error.response.data === "string"
             ? error.response.data
-            : "Não foi possível atualizar a senha."
-          : "Não foi possível conectar ao servidor.";
-      Alert.alert("Erro", errorMessage);
+            : t("auth.forgotPassword.passwordUpdateError")
+          : t("auth.forgotPassword.networkError");
+      Alert.alert(t("common.error"), errorMessage);
       console.error(error);
     } finally {
       setIsUpdating(false);
@@ -181,27 +184,28 @@ export default function RecuperarSenha() {
                 </Text>
               </View>
               <Text className="text-white-500 text-3xl font-bold">
-                Nova senha
+                {t("auth.forgotPassword.newPasswordTitle")}
               </Text>
             </View>
 
             <View className="px-6 py-8 flex-1">
               <Text className="text-gray-600 leading-relaxed mb-8">
-                Quase pronto! Digite sua nova senha para finalizar a
-                recuperação.
+                {t("auth.forgotPassword.newPasswordSubtitle")}
               </Text>
 
               <View className="space-y-6">
                 {/* Nova Senha */}
                 <View>
                   <Text className="text-gray-700 font-medium mb-3">
-                    Nova senha
+                    {t("auth.forgotPassword.newPassword")}
                   </Text>
                   <View className="flex-row items-center bg-gray-100 rounded-xl px-4">
                     <Feather name="lock" size={20} color="#9ca3af" />
                     <TextInput
                       className="flex-1 h-14 ml-3 text-gray-700"
-                      placeholder="Digite sua nova senha"
+                      placeholder={t(
+                        "auth.forgotPassword.newPasswordPlaceholder"
+                      )}
                       placeholderTextColor="#9ca3af"
                       secureTextEntry={!showNewPassword}
                       value={newPassword}
@@ -222,13 +226,15 @@ export default function RecuperarSenha() {
                 {/* Confirmar Senha */}
                 <View>
                   <Text className="text-gray-700 font-medium mb-3">
-                    Confirmar senha
+                    {t("auth.forgotPassword.confirmPassword")}
                   </Text>
                   <View className="flex-row items-center bg-gray-100 rounded-xl px-4">
                     <Feather name="lock" size={20} color="#9ca3af" />
                     <TextInput
                       className="flex-1 h-14 ml-3 text-gray-700"
-                      placeholder="Confirme sua nova senha"
+                      placeholder={t(
+                        "auth.forgotPassword.confirmPasswordPlaceholder"
+                      )}
                       placeholderTextColor="#9ca3af"
                       secureTextEntry={!showConfirmPassword}
                       value={confirmPassword}
@@ -250,7 +256,7 @@ export default function RecuperarSenha() {
                     confirmPassword &&
                     newPassword !== confirmPassword && (
                       <Text className="text-primary-500 text-sm mt-2">
-                        As senhas não coincidem.
+                        {t("auth.forgotPassword.passwordMismatch")}
                       </Text>
                     )}
                 </View>
@@ -270,7 +276,7 @@ export default function RecuperarSenha() {
                   <ActivityIndicator color="white" />
                 ) : (
                   <Text className="text-white-500 font-bold text-base">
-                    Atualizar senha
+                    {t("auth.forgotPassword.updatePassword")}
                   </Text>
                 )}
               </TouchableOpacity>
@@ -278,7 +284,7 @@ export default function RecuperarSenha() {
             <View className="items-center pb-8 px-6">
               <TouchableOpacity>
                 <Text className="text-primary-500 font-medium">
-                  Preciso de ajuda
+                  {t("faq.needHelp")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -310,7 +316,7 @@ export default function RecuperarSenha() {
                 </Text>
               </View>
               <Text className="text-white-500 text-3xl font-bold">
-                Digite o código
+                {t("auth.forgotPassword.enterCodeTitle")}
               </Text>
             </View>
 
@@ -319,21 +325,23 @@ export default function RecuperarSenha() {
                 <Feather name="check-circle" size={40} color="#16a34a" />
               </View>
               <Text className="text-xl font-semibold text-gray-800 mb-4">
-                Verifique seu e-mail
+                {t("auth.forgotPassword.checkEmail")}
               </Text>
               <Text className="text-gray-600 mb-2 text-center">
-                Enviamos um código de verificação para:
+                {t("auth.forgotPassword.codeSentTo")}
               </Text>
               <Text className="text-primary-500 font-medium mb-8">{email}</Text>
 
               <Text className="text-gray-700 font-medium mb-3">
-                Código de verificação
+                {t("auth.forgotPassword.verificationCode")}
               </Text>
               <View className="flex-row justify-between w-full max-w-xs">
                 {code.map((digit, index) => (
                   <TextInput
                     key={index}
-                    ref={(el) => (inputsRef.current[index] = el)}
+                    ref={(el) => {
+                      inputsRef.current[index] = el;
+                    }}
                     className="w-12 h-14 bg-gray-100 rounded-lg text-2xl text-center font-bold text-gray-700 border border-gray-200 focus:border-primary-500"
                     keyboardType="number-pad"
                     maxLength={1}
@@ -353,16 +361,18 @@ export default function RecuperarSenha() {
                   <ActivityIndicator color="white" />
                 ) : (
                   <Text className="text-white-500 font-bold text-base">
-                    Verificar código
+                    {t("auth.forgotPassword.verifyCode")}
                   </Text>
                 )}
               </TouchableOpacity>
 
               <View className="mt-8 flex-row justify-center">
-                <Text className="text-gray-600">Não recebeu o código? </Text>
+                <Text className="text-gray-600">
+                  {t("auth.forgotPassword.didntReceiveCode")}{" "}
+                </Text>
                 <TouchableOpacity onPress={() => setIsSubmitted(false)}>
                   <Text className="text-primary-500 font-medium">
-                    Enviar novamente
+                    {t("auth.forgotPassword.resendCode")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -370,7 +380,7 @@ export default function RecuperarSenha() {
             <View className="items-center pb-8 px-6">
               <TouchableOpacity>
                 <Text className="text-primary-500 font-medium">
-                  Preciso de ajuda
+                  {t("faq.needHelp")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -400,21 +410,23 @@ export default function RecuperarSenha() {
               </Text>
             </View>
             <Text className="text-white-500 text-3xl font-bold">
-              Esqueceu a senha?
+              {t("auth.forgotPassword.title")}
             </Text>
           </View>
 
           <View className="flex-1 px-6 py-8">
             <Text className="text-gray-600 leading-relaxed mb-8">
-              Digite seu e-mail e enviaremos as instruções de recuperação.
+              {t("auth.forgotPassword.subtitle")}
             </Text>
             <View>
-              <Text className="text-gray-700 font-medium mb-3">E-mail</Text>
+              <Text className="text-gray-700 font-medium mb-3">
+                {t("auth.login.email")}
+              </Text>
               <View className="flex-row items-center bg-gray-100 rounded-xl px-4">
                 <Feather name="mail" size={20} color="#9ca3af" />
                 <TextInput
                   className="flex-1 h-14 ml-3 text-gray-700"
-                  placeholder="Digite seu e-mail"
+                  placeholder={t("auth.forgotPassword.emailPlaceholder")}
                   placeholderTextColor="#9ca3af"
                   keyboardType="email-address"
                   autoCapitalize="none"
@@ -433,16 +445,18 @@ export default function RecuperarSenha() {
                   <ActivityIndicator color="white" />
                 ) : (
                   <Text className="text-white-500 font-bold text-base">
-                    Enviar instruções
+                    {t("auth.forgotPassword.sendInstructions")}
                   </Text>
                 )}
               </TouchableOpacity>
 
               <View className="mt-8 flex-row justify-center">
-                <Text className="text-gray-600">Lembrou da senha? </Text>
+                <Text className="text-gray-600">
+                  {t("auth.forgotPassword.rememberedPassword")}{" "}
+                </Text>
                 <TouchableOpacity onPress={handleBackToLogin}>
                   <Text className="text-primary-500 font-medium">
-                    Entrar agora
+                    {t("auth.forgotPassword.signInNow")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -451,7 +465,7 @@ export default function RecuperarSenha() {
           <View className="items-center pb-8 px-6">
             <TouchableOpacity>
               <Text className="text-primary-500 font-medium">
-                Preciso de ajuda
+                {t("faq.needHelp")}
               </Text>
             </TouchableOpacity>
           </View>

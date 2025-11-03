@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -6,12 +6,13 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
-  LogBox
+  LogBox,
 } from "react-native";
 // import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { useLanguage, useTranslation } from "../context/LanguageContext";
 
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested", // Ignore nested VirtualizedLists warning
@@ -19,24 +20,42 @@ LogBox.ignoreLogs([
 const { width, height } = Dimensions.get("window");
 
 export default function Index() {
-
-  // const clearToken = async () => {
-  //   try {
-  //     await SecureStore.deleteItemAsync("access_token"); // Remove o token armazenado
-  //     alert("Token removido com sucesso!");
-  //   } catch (error) {
-  //     console.error("Erro ao remover o token:", error);
-  //     alert("Erro ao remover o token.");
-  //   }
-  // };
+  const { isLanguageSelected } = useLanguage();
+  const { t } = useTranslation();
 
   // useEffect(() => {
-  //   clearToken();
+  //   const clearToken = async () => {
+  //     await SecureStore.deleteItemAsync("access_token");
+  //     console.log("Token limpo para testes.");
+  //   };
+  //   clearToken(); // Chama a função para limpar o token
   // }, []);
+
+  // Função para limpar o idioma manualmente para facilitar testes
+  const handleClearLanguage = async () => {
+    await SecureStore.deleteItemAsync("appLanguage");
+    console.log("Idioma limpo para testes.");
+    router.replace("/select-language");
+  };
+
+  // useEffect(() => {
+  //   handleClearLanguage();
+  // }, []);
+
+  // Verificar se o idioma foi selecionado e redirecionar conforme necessário
+  useEffect(() => {
+    if (!isLanguageSelected) {
+      router.replace("/select-language");
+    }
+  }, [isLanguageSelected]);
+
+  // Se o idioma não foi selecionado, não renderizar nada (vai para a tela de seleção)
+  if (!isLanguageSelected) {
+    return null;
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-primary-500">
-      
       {/* Top Section */}
       <View className="flex-1 bg-white-500 relative mt-28">
         {/* SVG with Gradient */}
@@ -120,15 +139,17 @@ export default function Index() {
       </View>
 
       <View className="flex-1 bg-white-500 px-6 py-10">
-        <Text className="text-black-500 font-regular mb-4">LINFEDEMAPP</Text>
-        <Text className="text-black-500 text-4xl font-semibold mb-2">
-          Tecnologia a
+        <Text className="text-black-500 font-regular mb-4">
+          {t("welcome.appName")}
         </Text>
         <Text className="text-black-500 text-4xl font-semibold mb-2">
-          serviço da saúde
+          {t("welcome.title")}
+        </Text>
+        <Text className="text-black-500 text-4xl font-semibold mb-2">
+          {t("welcome.subtitle")}
         </Text>
         <Text className="text-black-500 font-regular">
-          Avaliação automatizada do linfedema com precisão e segurança
+          {t("welcome.description")}
         </Text>
 
         <TouchableOpacity
@@ -139,7 +160,7 @@ export default function Index() {
           }}
         >
           <Text className="text-white-500 font-bold text-center text-xl">
-            Entrar
+            {t("buttons.enter")}
           </Text>
         </TouchableOpacity>
 
@@ -150,8 +171,8 @@ export default function Index() {
           }}
         >
           <Text className="text-center">
-            <Text className="text-black-500">Não tem uma conta? </Text>
-            <Text className="text-primary-500">Registrar agora</Text>
+            <Text className="text-black-500">{t("buttons.noAccount")}</Text>
+            <Text className="text-primary-500">{t("buttons.register")}</Text>
           </Text>
         </TouchableOpacity>
 
@@ -162,7 +183,7 @@ export default function Index() {
           }}
         >
           <Text className="text-center">
-            <Text className="text-primary-500">Preciso de ajuda</Text>
+            <Text className="text-primary-500">{t("buttons.help")}</Text>
           </Text>
         </TouchableOpacity>
       </View>

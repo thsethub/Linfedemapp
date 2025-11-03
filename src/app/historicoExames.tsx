@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,9 +16,10 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 import Header from "@/components/headerExames1";
+import { useTranslation } from "@/context/LanguageContext";
 
-// const API_URL = "http://192.168.15.108:8081";
-const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+const API_URL = "http://192.168.0.105:8083";
+// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
 
 // Interface para os pacientes
 interface Patient {
@@ -38,6 +40,7 @@ interface PatientData {
 }
 
 export default function HistoricoExames() {
+  const { t } = useTranslation();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [patients, setPatients] = useState<PatientData[]>([]);
@@ -49,7 +52,7 @@ export default function HistoricoExames() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        Alert.alert(t("common.error"), t("results.authTokenNotFound"));
         return;
       }
 
@@ -75,7 +78,7 @@ export default function HistoricoExames() {
       setPatients(patientsResponse.data);
     } catch (error) {
       // console.error("Erro ao buscar pacientes:", error);
-      Alert.alert("Erro", "Não foi possível carregar os pacientes.");
+      Alert.alert(t("common.error"), t("examHistory.loadError"));
     } finally {
       setLoading(false);
     }
@@ -91,41 +94,48 @@ export default function HistoricoExames() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        Alert.alert(t("common.error"), t("results.authTokenNotFound"));
         return;
       }
 
       // Confirmação antes de deletar
-      Alert.alert("Confirmação", "Tem certeza que deseja deletar o paciente?", [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Deletar",
-          style: "destructive",
-          onPress: async () => {
-            try {
-              await axios.delete(`${API_URL}/api/pacientes/${patientId}`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-
-              // Recarrega a lista de pacientes após a exclusão
-              fetchPatients();
-
-              Alert.alert("Sucesso", "Paciente deletado com sucesso!");
-            } catch (error) {
-              // console.error("Erro ao deletar paciente:", error);
-              Alert.alert("Erro", "Não foi possível deletar o paciente.");
-            }
+      Alert.alert(
+        t("examHistory.confirmDelete"),
+        t("examHistory.confirmDeleteMessage"),
+        [
+          {
+            text: t("common.cancel"),
+            style: "cancel",
           },
-        },
-      ]);
+          {
+            text: t("examHistory.delete"),
+            style: "destructive",
+            onPress: async () => {
+              try {
+                await axios.delete(`${API_URL}/api/pacientes/${patientId}`, {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+
+                // Recarrega a lista de pacientes após a exclusão
+                fetchPatients();
+
+                Alert.alert(
+                  t("common.success"),
+                  t("examHistory.deleteSuccess")
+                );
+              } catch (error) {
+                // console.error("Erro ao deletar paciente:", error);
+                Alert.alert(t("common.error"), t("examHistory.deleteError"));
+              }
+            },
+          },
+        ]
+      );
     } catch (error) {
       // console.error("Erro ao deletar paciente:", error);
-      Alert.alert("Erro", "Não foi possível deletar o paciente.");
+      Alert.alert(t("common.error"), t("examHistory.deleteError"));
     }
   };
 
@@ -134,11 +144,19 @@ export default function HistoricoExames() {
     item.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // if (loading) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <ActivityIndicator size="large" color="#b41976" />
+  //     </View>
+  //   );
+  // }
+
   if (loading) {
     return (
-      <View style={styles.container}>
+      <SafeAreaView className="flex-1 justify-center items-center bg-white-500">
         <ActivityIndicator size="large" color="#b41976" />
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -147,7 +165,7 @@ export default function HistoricoExames() {
       <StatusBar style="dark" translucent />
       {/* Cabeçalho */}
       <View style={styles.header}>
-        <Header title="Histórico Clínico" />
+        <Header title={t("examHistory.title")} />
       </View>
 
       {/* Barra de Pesquisa */}
@@ -161,7 +179,7 @@ export default function HistoricoExames() {
         <TextInput
           className="font-semibold"
           style={styles.searchBar}
-          placeholder="Pesquisar paciente"
+          placeholder={t("examHistory.searchPlaceholder")}
           placeholderTextColor="#aaa"
           value={searchQuery}
           onChangeText={setSearchQuery}
@@ -177,7 +195,8 @@ export default function HistoricoExames() {
             <View style={styles.cardContent}>
               <Text style={styles.cardTitle}>{item.fullName}</Text>
               <Text style={styles.cardDate}>
-                Data de Nascimento: {item.birthDate || "Não informado"}
+                {t("examHistory.birthDate")}:{" "}
+                {item.birthDate || t("common.notProvided")}
               </Text>
             </View>
             <View style={styles.cardActions}>
@@ -196,7 +215,7 @@ export default function HistoricoExames() {
                   color="#b41976"
                 />
                 <Text style={styles.openButtonText}>
-                  Abrir Histórico Clínico
+                  {t("examHistory.openHistory")}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -204,14 +223,16 @@ export default function HistoricoExames() {
                 onPress={() => deletePatient(item.id)}
               >
                 <Ionicons name="trash-outline" size={16} color="#ff0000" />
-                <Text style={styles.deleteButtonText}>Deletar</Text>
+                <Text style={styles.deleteButtonText}>
+                  {t("examHistory.delete")}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
         )}
         ListEmptyComponent={
           <Text className="text-black-500 text-center">
-            Nenhum paciente encontrado.
+            {t("examHistory.noPatients")}
           </Text>
         }
       />

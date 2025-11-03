@@ -12,7 +12,7 @@ import {
   Modal,
   FlatList,
   KeyboardAvoidingView,
-  Platform
+  Platform,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { useMeasurementContext } from "@/context/context";
@@ -21,12 +21,13 @@ import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import Header from "@/components/headerResultado";
+import { useTranslation } from "@/context/LanguageContext";
 
-const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
-// const API_URL = "http://192.168.15.108:8081";
-
+// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+const API_URL = "http://192.168.0.105:8083";
 
 export default function Resultado() {
+  const { t } = useTranslation();
   const {
     differences,
     pontosRef,
@@ -66,11 +67,11 @@ export default function Resultado() {
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const handleFinalize = () => {
     Alert.alert(
-      "Finalizar Medição",
-      "Deseja associar esta medição a um paciente?",
+      t("results.finalizeMeasurement"),
+      t("results.associateToPatient"),
       [
         {
-          text: "Não",
+          text: t("common.no"),
           onPress: () => {
             // Limpa os dados de medição e navega para a tela inicial
             clearMeasurementData();
@@ -79,7 +80,7 @@ export default function Resultado() {
           style: "cancel",
         },
         {
-          text: "Sim",
+          text: t("common.yes"),
           onPress: () => {
             // Exibe o modal para selecionar um paciente
             fetchPatients();
@@ -93,11 +94,11 @@ export default function Resultado() {
   const getReferenceName = () => {
     switch (selectedValue) {
       case "opcao1":
-        return "Processo Estilóide da Ulna";
+        return t("arms.references.styloidProcess");
       case "opcao2":
-        return "Linha Articular do Cotovelo";
+        return t("arms.references.articularLine");
       case "opcao3":
-        return "Acrômio";
+        return t("arms.references.acromion");
       default:
         return "";
     }
@@ -121,7 +122,7 @@ export default function Resultado() {
       setLoadingPatients(true);
       const token = await SecureStore.getItemAsync("access_token");
       if (!token) {
-        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
@@ -141,7 +142,7 @@ export default function Resultado() {
       setPatients(patientsResponse.data);
     } catch (error) {
       // console.error("Erro ao buscar pacientes:", error);
-      Alert.alert("Erro", "Não foi possível carregar os pacientes.");
+      Alert.alert(t("common.error"), t("results.errorLoadingPatients"));
     } finally {
       setLoadingPatients(false);
     }
@@ -153,20 +154,20 @@ export default function Resultado() {
     }
     setLoadingAssociation(true);
     if (!selectedPatient) {
-      Alert.alert("Erro", "Selecione um paciente para associar a medição.");
+      Alert.alert(t("common.error"), t("results.selectPatientError"));
       return;
     }
 
     try {
       const token = await SecureStore.getItemAsync("access_token");
       if (!token) {
-        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
       const convertArmValue = (value: string) => {
-        if (value === "left") return "Esquerdo";
-        if (value === "right") return "Direito";
+        if (value === "left") return t("arms.left");
+        if (value === "right") return t("arms.right");
         return value; // Retorna o valor original se não for "left" ou "right"
       };
 
@@ -201,14 +202,14 @@ export default function Resultado() {
         }
       );
 
-      Alert.alert("Sucesso", "Medição associada ao paciente com sucesso!");
+      Alert.alert(t("common.success"), t("results.measurementAssociated"));
       setModalVisible(false);
       setLoadingAssociation(false);
       clearMeasurementData();
       router.push("/home");
     } catch (error) {
       // console.error("Erro ao associar medição:", error);
-      Alert.alert("Erro", "Não foi possível associar a medição.");
+      Alert.alert(t("common.error"), t("results.errorAssociatingMeasurement"));
       setLoadingAssociation(false);
     }
   };
@@ -240,68 +241,88 @@ export default function Resultado() {
   };
 
   const getVolumeDifferenceText = (percentage: number, difference: number) => {
+    const formattedDifference = Math.abs(difference).toFixed(2);
+    const formattedPercentage = percentage.toFixed(2);
+
+    // Função auxiliar para renderizar texto com partes em negrito
+    const renderTextWithBold = (text: string, boldParts: string[]) => {
+      let result = text;
+      let components: (string | React.ReactElement)[] = [result];
+
+      boldParts.forEach((boldPart, index) => {
+        const newComponents: (string | React.ReactElement)[] = [];
+        components.forEach((component) => {
+          if (typeof component === "string") {
+            const parts = component.split(boldPart);
+            parts.forEach((part, i) => {
+              if (i > 0) {
+                newComponents.push(
+                  <Text
+                    key={`bold-${index}-${i}`}
+                    style={{ fontWeight: "bold" }}
+                  >
+                    {boldPart}
+                  </Text>
+                );
+              }
+              if (part) newComponents.push(part);
+            });
+          } else {
+            newComponents.push(component);
+          }
+        });
+        components = newComponents;
+      });
+
+      return <Text>{components}</Text>;
+    };
+
     if (percentage < 5) {
-      return (
-        <Text>
-          O membro apresenta uma diferença de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>
-            {Math.abs(difference).toFixed(2)} mL
-          </Text>
-          , mas não apresenta alterações volumétricas.
-        </Text>
+      const text = t("results.volumeAnalysis.noChanges").replace(
+        "{difference}",
+        `${formattedDifference} mL`
       );
+      return renderTextWithBold(text, [`${formattedDifference} mL`]);
     } else if (percentage >= 5 && percentage < 10) {
-      return (
-        <Text>
-          O membro apresenta uma diferença de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>
-            {Math.abs(difference).toFixed(2)} mL
-          </Text>{" "}
-          e alterações de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          o que pode sugerir um{" "}
-          <Text style={{ fontWeight: "bold" }}>estágio 0 ou subclínico</Text>.
-        </Text>
-      );
+      const text = t("results.volumeAnalysis.stage0")
+        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{percentage}", `${formattedPercentage}%`);
+      const stage = text.includes("estágio") ? "estágio 0" : "estadio 0";
+      return renderTextWithBold(text, [
+        `${formattedDifference} mL`,
+        `${formattedPercentage}%`,
+        stage,
+      ]);
     } else if (percentage >= 10 && percentage < 20) {
-      return (
-        <Text>
-          O membro apresenta uma diferença de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>
-            {Math.abs(difference).toFixed(2)} mL
-          </Text>{" "}
-          e alterações de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          sugerindo linfedema{" "}
-          <Text style={{ fontWeight: "bold" }}>estágio I ou leve</Text>.
-        </Text>
-      );
+      const text = t("results.volumeAnalysis.stage1")
+        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{percentage}", `${formattedPercentage}%`);
+      const stage = text.includes("estágio") ? "estágio I" : "estadio I";
+      return renderTextWithBold(text, [
+        `${formattedDifference} mL`,
+        `${formattedPercentage}%`,
+        stage,
+      ]);
     } else if (percentage >= 20 && percentage < 40) {
-      return (
-        <Text>
-          O membro apresenta uma diferença de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>
-            {Math.abs(difference).toFixed(2)} mL
-          </Text>{" "}
-          e alterações de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          sugerindo linfedema{" "}
-          <Text style={{ fontWeight: "bold" }}>estágio II ou moderado</Text>.
-        </Text>
-      );
+      const text = t("results.volumeAnalysis.stage2")
+        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{percentage}", `${formattedPercentage}%`);
+      const stage = text.includes("estágio") ? "estágio II" : "estadio II";
+      return renderTextWithBold(text, [
+        `${formattedDifference} mL`,
+        `${formattedPercentage}%`,
+        stage,
+      ]);
     } else {
-      return (
-        <Text>
-          O membro apresenta uma diferença de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>
-            {Math.abs(difference).toFixed(2)} mL
-          </Text>{" "}
-          e alterações de volume de{" "}
-          <Text style={{ fontWeight: "bold" }}>{percentage.toFixed(2)}%</Text>,
-          sugerindo linfedema{" "}
-          <Text style={{ fontWeight: "bold" }}>estágio III ou avançado</Text>.
-        </Text>
-      );
+      const text = t("results.volumeAnalysis.stage3")
+        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{percentage}", `${formattedPercentage}%`);
+      const stage = text.includes("estágio") ? "estágio III" : "estadio III";
+      return renderTextWithBold(text, [
+        `${formattedDifference} mL`,
+        `${formattedPercentage}%`,
+        stage,
+      ]);
     }
   };
 
@@ -320,17 +341,7 @@ export default function Resultado() {
   };
 
   const getVolumeDifferenceText2 = (percentage: number) => {
-    if (percentage < 5) {
-      return "Alerta!";
-    } else if (percentage >= 5 && percentage < 10) {
-      return "Alerta!";
-    } else if (percentage >= 10 && percentage < 20) {
-      return "Alerta!";
-    } else if (percentage >= 20 && percentage < 40) {
-      return "Alerta!";
-    } else {
-      return "Alerta!";
-    }
+    return t("results.alert");
   };
 
   const formatDifference = (difference: number) => {
@@ -492,13 +503,13 @@ export default function Resultado() {
     if (selectedValue === "opcao1") {
       if (pontosRef === "5cm") {
         numInputs = 9;
-        label = "Pontos acima da referência";
+        label = t("arms.pointsAboveReference");
       } else if (pontosRef === "7cm") {
         numInputs = 7;
-        label = "Pontos acima da referência";
+        label = t("arms.pointsAboveReference");
       } else if (pontosRef === "10cm") {
         numInputs = 4;
-        label = "Pontos acima da referência";
+        label = t("arms.pointsAboveReference");
       }
     } else if (selectedValue === "opcao2") {
       if (pontosRef === "5cm") {
@@ -511,13 +522,13 @@ export default function Resultado() {
     } else if (selectedValue === "opcao3") {
       if (pontosRef === "5cm") {
         numInputs = 9;
-        label = "Pontos abaixo da referência";
+        label = t("arms.pointsBelowReference");
       } else if (pontosRef === "7cm") {
         numInputs = 7;
-        label = "Pontos abaixo da referência";
+        label = t("arms.pointsBelowReference");
       } else if (pontosRef === "10cm") {
         numInputs = 4;
-        label = "Pontos abaixo da referência";
+        label = t("arms.pointsBelowReference");
       }
     }
 
@@ -573,7 +584,9 @@ export default function Resultado() {
             className="w-6 h-6 mt-0.5"
             style={{ marginBottom: 10, marginRight: 10 }}
           />
-          <Text className="text-lg font-medium mb-2">Complementares</Text>
+          <Text className="text-lg font-medium mb-2">
+            {t("results.complementary")}
+          </Text>
         </View>
 
         {/* Seção para Nota */}
@@ -585,10 +598,10 @@ export default function Resultado() {
               marginBottom: 8,
             }}
           >
-            Nota
+            {t("results.note")}
           </Text>
           <TextInput
-            placeholder="Deixe um comentário"
+            placeholder={t("results.notePlaceholder")}
             value={patientData.note || ""}
             onChangeText={(text) =>
               setPatientData({ ...patientData, note: text })
@@ -634,7 +647,7 @@ export default function Resultado() {
             alignItems: "center",
           }}
         >
-          <Header title="Diagnóstico" />
+          <Header title={t("results.diagnosis")} />
           <View
             className="p-6 bg-white-500 mt-4"
             style={{
@@ -651,19 +664,19 @@ export default function Resultado() {
                 style={{ marginRight: 10, marginTop: 5 }}
               />
               <Text className="text-lg font-medium text-black-500">
-                Resultados
+                {t("results.results")}
               </Text>
             </View>
             <View>{renderDifferences()}</View>
 
             <Text className="text-primary-500 text-sm mt-4">
-              A perimetria de cada ponto mensurado pode sugerir:{" "}
+              {t("results.perimetryExplanation")}
             </Text>
             <View className="flex-row justify-center mt-2">
               {/* Sem alterações */}
               <View className="items-center">
                 <Text className="text-green-500 font-bold text-sm mb-1">
-                  Sem alterações
+                  {t("results.levels.noChanges")}
                 </Text>
                 <View className="bg-green-50 rounded-md px-3 py-1">
                   <Text className="text-green-500 font-semibold text-xs">
@@ -674,7 +687,7 @@ export default function Resultado() {
               {/* Alteração leve */}
               <View className="items-center mr-2">
                 <Text className="text-yellow-500 font-bold text-sm mb-1">
-                  Leve
+                  {t("results.levels.mild")}
                 </Text>
                 <View className="bg-yellow-50 rounded-md px-3 py-1">
                   <Text className="text-yellow-500 font-semibold text-xs">
@@ -685,7 +698,7 @@ export default function Resultado() {
               {/* Alteração moderada */}
               <View className="items-center mr-2">
                 <Text className="text-orange-500 font-bold text-sm mb-1">
-                  Moderada
+                  {t("results.levels.moderate")}
                 </Text>
                 <View className="bg-orange-50 rounded-md px-3 py-1">
                   <Text className="text-orange-500 font-semibold text-xs">
@@ -696,7 +709,7 @@ export default function Resultado() {
               {/* Alteração grave */}
               <View className="items-center">
                 <Text className="text-red-500 font-bold text-sm mb-1">
-                  Grave
+                  {t("results.levels.severe")}
                 </Text>
                 <View className="bg-red-50 rounded-md px-3 py-1">
                   <Text className="text-red-500 font-semibold text-xs">
@@ -706,7 +719,7 @@ export default function Resultado() {
               </View>
             </View>
             <Text className="text-primary-500 font-bold text-sm mt-4">
-              Referência - Panobianco; Mamede, 2002.
+              {t("results.references.panobianco")}
             </Text>
           </View>
           {/* Perimetria */}
@@ -727,7 +740,7 @@ export default function Resultado() {
                 style={{ marginRight: 10 }}
               />
               <Text className="text-lg font-medium text-black-500 mt-1">
-                Volumetria
+                {t("results.volumetry")}
               </Text>
               <TouchableOpacity>
                 <Image
@@ -746,8 +759,10 @@ export default function Resultado() {
               style={{ justifyContent: "space-between" }}
             >
               <Text className="text-lg font-medium">
-                Vol.{" "}
-                {referenceArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
+                {t("results.volume")}{" "}
+                {referenceArm === "right"
+                  ? t("arms.rightArm")
+                  : t("arms.leftArm")}{" "}
               </Text>
               <View
                 className="items-center justify-center"
@@ -779,8 +794,10 @@ export default function Resultado() {
               style={{ justifyContent: "space-between" }}
             >
               <Text className="text-lg font-medium">
-                Vol.{" "}
-                {affectedArm === "right" ? "Braço Direito" : "Braço Esquerdo"}{" "}
+                {t("results.volume")}{" "}
+                {affectedArm === "right"
+                  ? t("arms.rightArm")
+                  : t("arms.leftArm")}{" "}
               </Text>
               <View
                 className="items-center justify-center"
@@ -810,7 +827,9 @@ export default function Resultado() {
               className="flex-row items-center mt-4 mb-4"
               style={{ justifyContent: "space-between" }} // Adicionado para separar os itens
             >
-              <Text className="text-lg font-medium">Diferença de Volume</Text>
+              <Text className="text-lg font-medium">
+                {t("results.volumeDifference")}
+              </Text>
               <View
                 className={`items-center justify-center ${bgClass}`}
                 style={{
@@ -852,7 +871,7 @@ export default function Resultado() {
               className="text-primary-500 font-bold mt-2"
               style={{ fontSize: 12 }}
             >
-              Consenso Internacional da sociedade de linfologia, 2023.
+              {t("results.references.lymphologyConsensus")}
             </Text>
           </View>
           {renderComplementaryData()}
@@ -869,7 +888,7 @@ export default function Resultado() {
             }}
           >
             <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-              Finalizar
+              {t("results.finalize")}
             </Text>
           </TouchableOpacity>
 
@@ -904,7 +923,7 @@ export default function Resultado() {
                     marginBottom: 10,
                   }}
                 >
-                  Selecione um Paciente
+                  {t("results.selectPatient")}
                 </Text>
 
                 {/* Barra de Pesquisa */}
@@ -920,7 +939,7 @@ export default function Resultado() {
                   }}
                 >
                   <TextInput
-                    placeholder="Pesquisar paciente"
+                    placeholder={t("results.searchPatient")}
                     placeholderTextColor="#aaa"
                     style={{ flex: 1, fontSize: 16 }}
                     value={searchQuery}
@@ -952,14 +971,14 @@ export default function Resultado() {
                           {item.fullName}
                         </Text>
                         <Text style={{ fontSize: 14, color: "#777" }}>
-                          Data de Nascimento:{" "}
-                          {item.birthDate || "Não informado"}
+                          {t("results.birthDate")}:{" "}
+                          {item.birthDate || t("common.notProvided")}
                         </Text>
                       </TouchableOpacity>
                     )}
                     ListEmptyComponent={
                       <Text style={{ textAlign: "center", color: "#777" }}>
-                        Nenhum paciente encontrado.
+                        {t("results.noPatientFound")}
                       </Text>
                     }
                   />
@@ -992,7 +1011,7 @@ export default function Resultado() {
                         fontWeight: "bold",
                       }}
                     >
-                      Fechar
+                      {t("common.close")}
                     </Text>
                   </TouchableOpacity>
 
@@ -1001,8 +1020,8 @@ export default function Resultado() {
                     onPress={() => {
                       if (!selectedPatient) {
                         Alert.alert(
-                          "Validação",
-                          "Associe ao menos um paciente antes de confirmar."
+                          t("common.validation"),
+                          t("results.associatePatientBeforeConfirm")
                         );
                       } else {
                         handleAssociateMeasurement();
@@ -1024,7 +1043,7 @@ export default function Resultado() {
                         fontWeight: "bold",
                       }}
                     >
-                      Confirmar
+                      {t("common.confirm")}
                     </Text>
                   </TouchableOpacity>
                 </View>

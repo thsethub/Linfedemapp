@@ -18,8 +18,10 @@ import { router } from "expo-router";
 import { useMeasurementContext } from "@/context/context";
 import Header from "@/components/headerFicha1";
 import { Entypo } from "@expo/vector-icons";
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function FichaExame1() {
+  const { t } = useTranslation();
   const { patientData, setPatientData } = useMeasurementContext();
   const [isDatePickerVisible, setDatePickerVisible] = useState(false); // Controle do DatePicker
   const [selectedDate, setSelectedDate] = useState(patientData.birthDate || ""); // Data formatada
@@ -78,7 +80,7 @@ export default function FichaExame1() {
       >
         <View className="flex-1 justify-center items-center">
           {/* Header */}
-          <Header title="Ficha do Paciente" />
+          <Header title={t("patient.title")} />
 
           {/* Formulário */}
           <View
@@ -95,21 +97,27 @@ export default function FichaExame1() {
                 className="w-6 h-6"
                 style={{ marginBottom: 10, marginRight: 10 }}
               />
-              <Text className="text-lg font-semibold">Dados da paciente</Text>
+              <Text className="text-lg font-semibold">
+                {t("patient.patientData")}
+              </Text>
             </View>
 
             {/* Nome completo */}
-            <Text className="text-lg font-medium mb-2">Nome completo</Text>
+            <Text className="text-lg font-medium mb-2">
+              {t("patient.fullName")}
+            </Text>
             <TextInput
               className="bg-white-600 text-black rounded-md p-2 mb-4"
-              placeholder="Nome"
+              placeholder={t("patient.fullNamePlaceholder")}
               placeholderTextColor="#A9A9A9"
               value={patientData.fullName}
               onChangeText={(value) => handleInputChange("fullName", value)}
             />
 
             {/* Data de nascimento */}
-            <Text className="text-lg font-medium mb-2">Data de nascimento</Text>
+            <Text className="text-lg font-medium mb-2">
+              {t("patient.birthDate")}
+            </Text>
             <TouchableOpacity
               onPress={() => setDatePickerVisible(true)} // Abre o DatePicker
               className="bg-white-600 rounded-md p-2 mb-4 border border-gray-300"
@@ -119,7 +127,7 @@ export default function FichaExame1() {
                   selectedDate ? "text-black" : "text-gray-400"
                 } text-base`}
               >
-                {selectedDate || "Selecione a data"}
+                {selectedDate || t("patient.selectDate")}
               </Text>
             </TouchableOpacity>
 
@@ -132,20 +140,24 @@ export default function FichaExame1() {
             />
 
             {/* Endereço */}
-            <Text className="text-lg font-medium mb-2">Endereço</Text>
+            <Text className="text-lg font-medium mb-2">
+              {t("patient.address")}
+            </Text>
             <TextInput
               className="bg-white-600 rounded-md p-2 mb-4"
-              placeholder="Endereço"
+              placeholder={t("patient.addressPlaceholder")}
               placeholderTextColor="#A9A9A9"
               value={patientData.address}
               onChangeText={(value) => handleInputChange("address", value)}
             />
 
             {/* Telefone */}
-            <Text className="text-lg font-medium mb-2">Telefone</Text>
+            <Text className="text-lg font-medium mb-2">
+              {t("patient.phone")}
+            </Text>
             <TextInput
               className="bg-white-600 rounded-md p-2 mb-4"
-              placeholder="(__) ____-____"
+              placeholder={t("patient.phonePlaceholder")}
               placeholderTextColor="#A9A9A9"
               keyboardType="numeric"
               value={patientData.phone}
@@ -157,11 +169,13 @@ export default function FichaExame1() {
             {/* Peso corporal e Altura */}
             <View className="flex-row justify-between mb-4">
               <View className="w-[48%]">
-                <Text className="text-lg font-medium mb-2">Peso corporal</Text>
+                <Text className="text-lg font-medium mb-2">
+                  {t("patient.weight")}
+                </Text>
                 <View className="flex-row items-center">
                   <TextInput
                     className="bg-white-600 text-black rounded-md p-2 flex-1"
-                    placeholder="Ex: 70"
+                    placeholder={t("patient.weightPlaceholder")}
                     placeholderTextColor="#A9A9A9"
                     keyboardType="numeric"
                     value={patientData.weight}
@@ -172,11 +186,13 @@ export default function FichaExame1() {
               </View>
 
               <View className="w-[48%]">
-                <Text className="text-lg font-medium mb-2">Altura</Text>
+                <Text className="text-lg font-medium mb-2">
+                  {t("patient.height")}
+                </Text>
                 <View className="flex-row items-center">
                   <TextInput
                     className="bg-white-600 text-black rounded-md p-2 flex-1"
-                    placeholder="Ex: 170"
+                    placeholder={t("patient.heightPlaceholder")}
                     placeholderTextColor="#A9A9A9"
                     keyboardType="numeric"
                     value={patientData.height}
@@ -189,12 +205,21 @@ export default function FichaExame1() {
 
             {/* Nível de atividade física */}
             <Dropdown
-              title="Nível de atividade física"
+              title={t("patient.activityLevel")}
               items={[
-                { label: "Sedentária", value: "Sedentária" },
-                { label: "Irregular", value: "Irregular" },
-                { label: "Ativa", value: "Ativa" },
-                { label: "Muito ativa", value: "Muito ativa" },
+                {
+                  label: t("patient.activityLevels.sedentary"),
+                  value: "sedentary",
+                },
+                {
+                  label: t("patient.activityLevels.irregular"),
+                  value: "irregular",
+                },
+                { label: t("patient.activityLevels.active"), value: "active" },
+                {
+                  label: t("patient.activityLevels.veryActive"),
+                  value: "veryActive",
+                },
               ]}
               selectedValue={patientData.activityLevel}
               setSelectedValue={(value) =>
@@ -204,12 +229,24 @@ export default function FichaExame1() {
 
             {/* Estado civil */}
             <Dropdown
-              title="Estado civil"
+              title={t("patient.maritalStatus")}
               items={[
-                { label: "Solteira", value: "Solteira" },
-                { label: "Casada", value: "Casada" },
-                { label: "Viúva", value: "Viúva" },
-                { label: "Divorciada", value: "Divorciada" },
+                {
+                  label: t("patient.maritalStatuses.single"),
+                  value: "single",
+                },
+                {
+                  label: t("patient.maritalStatuses.married"),
+                  value: "married",
+                },
+                {
+                  label: t("patient.maritalStatuses.widowed"),
+                  value: "widowed",
+                },
+                {
+                  label: t("patient.maritalStatuses.divorced"),
+                  value: "divorced",
+                },
               ]}
               selectedValue={patientData.maritalStatus}
               setSelectedValue={(value) =>
@@ -218,10 +255,12 @@ export default function FichaExame1() {
             />
 
             {/* Profissão/Ocupação */}
-            <Text className="text-lg font-medium mb-2">Profissão/Ocupação</Text>
+            <Text className="text-lg font-medium mb-2">
+              {t("patient.occupation")}
+            </Text>
             <TextInput
               className="bg-white-600 rounded-md p-2 mb-4"
-              placeholder="Digite a profissão/ocupação"
+              placeholder={t("patient.occupationPlaceholder")}
               placeholderTextColor="#A9A9A9"
               value={patientData.occupation}
               onChangeText={(value) => handleInputChange("occupation", value)}
@@ -244,7 +283,7 @@ export default function FichaExame1() {
             }}
           >
             <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-              Próximo
+              {t("patient.next")}
             </Text>
           </TouchableOpacity>
         </View>

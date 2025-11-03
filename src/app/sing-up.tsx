@@ -13,11 +13,13 @@ import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { router } from "expo-router";
 import axios from "axios";
+import { useTranslation } from "../context/LanguageContext";
 
-const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
-// const API_URL = "http://192.168.15.108:8081";
+// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+const API_URL = "http://192.168.0.105:8083";
 
 export default function SingUp() {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [idade, setIdade] = useState("");
   const [origem, setOrigem] = useState("");
@@ -44,17 +46,17 @@ export default function SingUp() {
       !password ||
       !confirmPassword
     ) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      Alert.alert(t("common.error"), t("auth.register.fillAllFields"));
       return;
     }
 
     if (!validateEmail(email)) {
-      Alert.alert("Erro", "Por favor, insira um e-mail válido.");
+      Alert.alert(t("common.error"), t("auth.register.invalidEmail"));
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert("Erro", "As senhas não coincidem. Por favor, verifique.");
+      Alert.alert(t("common.error"), t("auth.register.passwordMismatch"));
       return;
     }
 
@@ -78,17 +80,16 @@ export default function SingUp() {
       });
 
       if (response.status === 200 || response.status === 201) {
-        Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+        Alert.alert(t("common.success"), t("auth.register.successMessage"));
         router.push("/sing-in");
       } else {
-        Alert.alert("Erro", "Erro ao realizar o cadastro.");
+        Alert.alert(t("common.error"), t("auth.register.errorMessage"));
       }
     } catch (error: any) {
       // console.error("Erro na requisição:", error);
       const message =
-        error.response?.data?.message ||
-        "Não foi possível realizar o cadastro.";
-      Alert.alert("Erro", message);
+        error.response?.data?.message || t("auth.register.networkError");
+      Alert.alert(t("common.error"), message);
     } finally {
       setIsRegistering(false);
     }
@@ -98,7 +99,9 @@ export default function SingUp() {
     return (
       <View className="flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#b41976ff" />
-        <Text className="mt-4 text-black-500">Realizando cadastro...</Text>
+        <Text className="mt-4 text-black-500">
+          {t("auth.register.registering")}
+        </Text>
       </View>
     );
   }
@@ -119,7 +122,7 @@ export default function SingUp() {
           LINFEDEMAPP
         </Text>
         <Text className="text-white-500 font-semibold text-3xl">
-          Seja bem-vindo(a)!
+          {t("auth.register.welcomeTitle")}
         </Text>
       </View>
 
@@ -131,18 +134,20 @@ export default function SingUp() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={{ paddingHorizontal: 20, paddingVertical: 20 }}>
-          <Text className="text-black-500 font-bold mb-6">Cadastro</Text>
+          <Text className="text-black-500 font-bold mb-6">
+            {t("auth.register.title")}
+          </Text>
 
           {/* Input Fields */}
           <TextInput
-            placeholder="Nome completo"
+            placeholder={t("auth.register.name")}
             placeholderTextColor="#666"
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
             value={name}
             onChangeText={setName}
           />
           <TextInput
-            placeholder="E-mail"
+            placeholder={t("auth.register.email")}
             placeholderTextColor="#666"
             keyboardType="email-address"
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
@@ -150,7 +155,7 @@ export default function SingUp() {
             onChangeText={setEmail}
           />
           <TextInput
-            placeholder="Idade"
+            placeholder={t("auth.register.age")}
             placeholderTextColor="#666"
             keyboardType="numeric"
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
@@ -158,7 +163,7 @@ export default function SingUp() {
             onChangeText={setIdade}
           />
           <TextInput
-            placeholder="Telefone"
+            placeholder={t("auth.register.phone")}
             placeholderTextColor="#666"
             keyboardType="phone-pad"
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
@@ -166,21 +171,21 @@ export default function SingUp() {
             onChangeText={setTelefone}
           />
           <TextInput
-            placeholder="Origem (Ex: País, Estado, etc.)"
+            placeholder={t("auth.register.origin")}
             placeholderTextColor="#666"
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
             value={origem}
             onChangeText={setOrigem}
           />
           <TextInput
-            placeholder="Profissão"
+            placeholder={t("auth.register.profession")}
             placeholderTextColor="#666"
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
             value={titulacao}
             onChangeText={setTitulacao}
           />
           <TextInput
-            placeholder="Senha"
+            placeholder={t("auth.register.password")}
             placeholderTextColor="#666"
             secureTextEntry
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
@@ -188,7 +193,7 @@ export default function SingUp() {
             onChangeText={setPassword}
           />
           <TextInput
-            placeholder="Confirmar senha"
+            placeholder={t("auth.register.confirmPassword")}
             placeholderTextColor="#666"
             secureTextEntry
             className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
@@ -201,7 +206,7 @@ export default function SingUp() {
             onPress={handleRegister}
           >
             <Text className="text-white-500 font-bold text-center text-xl">
-              Cadastrar
+              {t("auth.register.registerButton")}
             </Text>
           </TouchableOpacity>
 
@@ -212,8 +217,12 @@ export default function SingUp() {
             }}
           >
             <Text className="text-center mt-2">
-              <Text className="text-black-500">Já tem uma conta? </Text>
-              <Text className="text-primary-500">Entrar agora</Text>
+              <Text className="text-black-500">
+                {t("auth.register.hasAccount")}{" "}
+              </Text>
+              <Text className="text-primary-500">
+                {t("auth.register.signIn")}
+              </Text>
             </Text>
           </TouchableOpacity>
 
@@ -224,7 +233,7 @@ export default function SingUp() {
             }}
           >
             <Text className="text-center">
-              <Text className="text-primary-500">Preciso de ajuda</Text>
+              <Text className="text-primary-500">{t("faq.needHelp")}</Text>
             </Text>
           </TouchableOpacity>
         </View>

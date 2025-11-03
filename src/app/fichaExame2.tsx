@@ -24,9 +24,10 @@ import axios from "axios";
 import ProcedureDetails from "@/components/procedimentosEcapsulados";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { useTranslation } from "@/context/LanguageContext";
 
-// const API_URL = "http://192.168.15.108:8081";
-const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+const API_URL = "http://10.103.242.236:8083";
+// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
 
 // Define or import the PatientData type
 type PatientData = {
@@ -42,6 +43,7 @@ type PatientData = {
 };
 
 export default function FichaExame2() {
+  const { t } = useTranslation();
   const { patientData, setPatientData, clearAllData } = useMeasurementContext();
   const [loading, setLoading] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
@@ -458,20 +460,19 @@ export default function FichaExame2() {
 
   const questions: { question: string; field: keyof typeof patientData }[] = [
     {
-      question:
-        "Apresenta queixas de alterações musculoesqueléticas após o tratamento?",
+      question: t("patient.questions.musculoskeletalComplaints"),
       field: "musculoskeletalComplaints",
     },
     {
-      question: "Apresenta sintomas de linfedema?",
+      question: t("patient.questions.lymphedemaSymptoms"),
       field: "lymphedemaSymptoms",
     },
-    { question: "Sinal de Cacifo", field: "cacifoSign" },
+    { question: t("patient.questions.cacifoSign"), field: "cacifoSign" },
     {
-      question: "Sinal da casca de laranja",
+      question: t("patient.questions.orangePeelSign"),
       field: "orangePeelSign",
     },
-    { question: "Sinal de Stemmer", field: "stemmerSign" },
+    { question: t("patient.questions.stemmerSign"), field: "stemmerSign" },
   ];
 
   if (loading) {
@@ -501,7 +502,7 @@ export default function FichaExame2() {
           keyboardShouldPersistTaps="handled"
         >
           <View className="flex-1 justify-center items-center">
-            <Header title="Ficha do Paciente" />
+            <Header title={t("patient.title")} />
 
             {/* Formulário */}
             <View
@@ -518,20 +519,22 @@ export default function FichaExame2() {
                   className="w-6 h-6 mt-0.5"
                   style={{ marginBottom: 10, marginRight: 10 }}
                 />
-                <Text className="text-lg font-medium">Dados da paciente</Text>
+                <Text className="text-lg font-medium">
+                  {t("patient.patientData")}
+                </Text>
               </View>
 
               {/* Data do diagnóstico */}
               <Text className="text-lg font-medium mb-2">
-                Data do diagnóstico do câncer
+                {t("patient.cancerDiagnosisDate")}
               </Text>
               <View className="flex-row mb-4 ">
                 {/* SinglePicker para o mês */}
                 <SinglePicker
-                  title="Mês"
+                  title={t("patient.month")}
                   type="month"
                   initialValue={patientData.cancerDiagnosisDate?.split("/")[0]}
-                  placeholder="Mês"
+                  placeholder={t("patient.month")}
                   onConfirm={(value) =>
                     handleDateSelection(
                       value,
@@ -541,10 +544,10 @@ export default function FichaExame2() {
                 />
 
                 <SinglePicker
-                  title="Ano"
+                  title={t("patient.year")}
                   type="year"
                   initialValue={patientData.cancerDiagnosisDate?.split("/")[1]}
-                  placeholder="Ano"
+                  placeholder={t("patient.year")}
                   onConfirm={(value) =>
                     handleDateSelection(
                       patientData.cancerDiagnosisDate?.split("/")[0],
@@ -556,87 +559,112 @@ export default function FichaExame2() {
 
               {/* Procedimentos realizados */}
               <Text className="text-lg font-medium mb-2">
-                Procedimentos realizados
+                {t("patient.proceduresPerformed")}
               </Text>
               <View className="flex-row flex-wrap mb-4">
                 {[
-                  "Quimioterapia",
-                  "Radioterapia",
-                  "Cirurgia",
-                  "Esvaziamento axilar",
-                  "Hormonoterapia",
-                ].map((procedure) => (
-                  <TouchableOpacity
-                    key={procedure}
-                    onPress={() =>
-                      handleToggleSelection(
-                        procedure,
-                        patientData.procedures,
-                        "procedures"
-                      )
-                    }
-                    className={`px-4 py-2 rounded-full mr-2 mb-2 ${
-                      patientData.procedures.includes(procedure)
-                        ? "bg-primary-500"
-                        : "bg-white-500 border border-gray-300"
-                    }`}
-                  >
-                    <Text
-                      className={`font-medium ${
-                        patientData.procedures.includes(procedure)
-                          ? "text-white-500"
-                          : "text-black-100"
+                  t("patient.procedures.chemotherapy"),
+                  t("patient.procedures.radiotherapy"),
+                  t("patient.procedures.surgery"),
+                  t("patient.procedures.axillaryDissection"),
+                  t("patient.procedures.hormoneTherapy"),
+                ].map((procedure, index) => {
+                  const originalProcedures = [
+                    "chemotherapy",
+                    "radiotherapy",
+                    "surgery",
+                    "axillaryDissection",
+                    "hormoneTherapy",
+                  ];
+                  const originalProcedure = originalProcedures[index];
+                  return (
+                    <TouchableOpacity
+                      key={originalProcedure}
+                      onPress={() =>
+                        handleToggleSelection(
+                          originalProcedure,
+                          patientData.procedures,
+                          "procedures"
+                        )
+                      }
+                      className={`px-4 py-2 rounded-full mr-2 mb-2 ${
+                        patientData.procedures.includes(originalProcedure)
+                          ? "bg-primary-500"
+                          : "bg-white-500 border border-gray-300"
                       }`}
                     >
-                      {procedure}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <Text
+                        className={`font-medium ${
+                          patientData.procedures.includes(originalProcedure)
+                            ? "text-white-500"
+                            : "text-black-100"
+                        }`}
+                      >
+                        {procedure}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
 
               {/* Alterações cutâneas */}
               <Text className="text-lg font-medium mb-2">
-                Já teve alterações cutâneas?
+                {t("patient.skinChanges")}
               </Text>
               <View className="flex-row flex-wrap mb-4">
                 {[
-                  "Edema",
-                  "Retração cutânea",
-                  "Dor",
-                  "Inversão de Mamilo",
-                  "Hiperemia",
-                  "Descamação mamilar",
-                  "Radiodermite",
-                  "Ulceração mamilar",
-                  "Infecção",
-                  "Outra(s)",
-                ].map((change) => (
-                  <TouchableOpacity
-                    key={change}
-                    onPress={() =>
-                      handleToggleSelection(
-                        change,
-                        patientData.skinChanges,
-                        "skinChanges"
-                      )
-                    }
-                    className={`px-4 py-2 rounded-full mr-2 mb-2 ${
-                      patientData.skinChanges.includes(change)
-                        ? "bg-primary-500"
-                        : "bg-white-500 border border-gray-300"
-                    }`}
-                  >
-                    <Text
-                      className={`font-medium ${
-                        patientData.skinChanges.includes(change)
-                          ? "text-white-500"
-                          : "text-black-100"
+                  t("patient.skinChangeTypes.edema"),
+                  t("patient.skinChangeTypes.skinRetraction"),
+                  t("patient.skinChangeTypes.pain"),
+                  t("patient.skinChangeTypes.nippleInversion"),
+                  t("patient.skinChangeTypes.hyperemia"),
+                  t("patient.skinChangeTypes.nippleDesquamation"),
+                  t("patient.skinChangeTypes.radiodermatitis"),
+                  t("patient.skinChangeTypes.nippleUlceration"),
+                  t("patient.skinChangeTypes.infection"),
+                  t("patient.skinChangeTypes.others"),
+                ].map((change, index) => {
+                  const originalChanges = [
+                    "edema",
+                    "skinRetraction",
+                    "pain",
+                    "nippleInversion",
+                    "hyperemia",
+                    "nippleDesquamation",
+                    "radiodermatitis",
+                    "nippleUlceration",
+                    "infection",
+                    "others",
+                  ];
+                  const originalChange = originalChanges[index];
+                  return (
+                    <TouchableOpacity
+                      key={originalChange}
+                      onPress={() =>
+                        handleToggleSelection(
+                          originalChange,
+                          patientData.skinChanges,
+                          "skinChanges"
+                        )
+                      }
+                      className={`px-4 py-2 rounded-full mr-2 mb-2 ${
+                        patientData.skinChanges.includes(originalChange)
+                          ? "bg-primary-500"
+                          : "bg-white-500 border border-gray-300"
                       }`}
                     >
-                      {change}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <Text
+                        className={`font-medium ${
+                          patientData.skinChanges.includes(originalChange)
+                            ? "text-white-500"
+                            : "text-black-100"
+                        }`}
+                      >
+                        {change}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
             </View>
 
@@ -655,7 +683,9 @@ export default function FichaExame2() {
                   className="w-6 h-6 mt-0.5"
                   style={{ marginBottom: 10, marginRight: 10 }}
                 />
-                <Text className="text-lg font-medium mb-2">Complementares</Text>
+                <Text className="text-lg font-medium mb-2">
+                  {t("patient.complementary")}
+                </Text>
               </View>
               {questions.map(({ question, field }, index) => (
                 <View key={index} className="mb-4">
@@ -670,7 +700,7 @@ export default function FichaExame2() {
                           <View className="w-3.5 h-3.5 rounded-full bg-primary-500" />
                         )}
                       </View>
-                      <Text>Sim</Text>
+                      <Text>{t("patient.common.yes")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       className="flex-row items-center"
@@ -681,7 +711,9 @@ export default function FichaExame2() {
                           <View className="w-3.5 h-3.5 rounded-full bg-black-100" />
                         )}
                       </View>
-                      <Text className="text-black-100">Não</Text>
+                      <Text className="text-black-100">
+                        {t("patient.common.no")}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -704,7 +736,9 @@ export default function FichaExame2() {
                   color="black"
                   style={{ marginRight: 10, marginBottom: 4, marginLeft: 2 }}
                 />
-                <Text className="text-lg font-medium mb-2">Detalhes</Text>
+                <Text className="text-lg font-medium mb-2">
+                  {t("patient.details")}
+                </Text>
               </View>
 
               {/* Renderização dinâmica dos procedimentos selecionados */}
@@ -718,67 +752,103 @@ export default function FichaExame2() {
 
                 // Configurações específicas para cada procedimento
                 switch (procedure) {
-                  case "Quimioterapia":
+                  case "chemotherapy":
                     dropdownItems = [
-                      { label: "Neoadjuvante", value: "Neoadjuvante" },
-                      { label: "Adjuvante", value: "Adjuvante" },
-                      { label: "Neo + Adjuvante", value: "Neo + Adjuvante" },
+                      {
+                        label: t("patient.procedureTypes.neoadjuvant"),
+                        value: "neoadjuvant",
+                      },
+                      {
+                        label: t("patient.procedureTypes.adjuvant"),
+                        value: "adjuvant",
+                      },
+                      {
+                        label: t("patient.procedureTypes.neoAdjuvant"),
+                        value: "neoAdjuvant",
+                      },
                     ];
                     selectedValue = patientData.chemotherapy?.type || "";
                     duration = patientData.chemotherapy?.duration || "";
                     field = "chemotherapy";
                     break;
 
-                  case "Radioterapia":
+                  case "radiotherapy":
                     dropdownItems = [
-                      { label: "Neoadjuvante", value: "Neoadjuvante" },
-                      { label: "Adjuvante", value: "Adjuvante" },
-                      { label: "Neo + Adjuvante", value: "Neo + Adjuvante" },
+                      {
+                        label: t("patient.procedureTypes.neoadjuvant"),
+                        value: "neoadjuvant",
+                      },
+                      {
+                        label: t("patient.procedureTypes.adjuvant"),
+                        value: "adjuvant",
+                      },
+                      {
+                        label: t("patient.procedureTypes.neoAdjuvant"),
+                        value: "neoAdjuvant",
+                      },
                     ];
                     selectedValue = patientData.radiotherapy?.type || "";
                     duration = patientData.radiotherapy?.duration || "";
                     field = "radiotherapy";
                     break;
 
-                  case "Hormonoterapia":
+                  case "hormoneTherapy":
                     dropdownItems = [
-                      { label: "Neoadjuvante", value: "Neoadjuvante" },
-                      { label: "Adjuvante", value: "Adjuvante" },
-                      { label: "Neo + Adjuvante", value: "Neo + Adjuvante" },
+                      {
+                        label: t("patient.procedureTypes.neoadjuvant"),
+                        value: "neoadjuvant",
+                      },
+                      {
+                        label: t("patient.procedureTypes.adjuvant"),
+                        value: "adjuvant",
+                      },
+                      {
+                        label: t("patient.procedureTypes.neoAdjuvant"),
+                        value: "neoAdjuvant",
+                      },
                     ];
                     selectedValue = patientData.hormoneTherapy?.type || "";
                     duration = patientData.hormoneTherapy?.duration || "";
                     field = "hormoneTherapy";
                     break;
 
-                  case "Cirurgia":
+                  case "surgery":
                     dropdownItems = [
                       {
-                        label: "Mastectomia simples",
-                        value: "Mastectomia simples",
+                        label: t("patient.procedureTypes.simpleMastectomy"),
+                        value: "simpleMastectomy",
                       },
                       {
-                        label: "Mastectomia modificada",
-                        value: "Mastectomia modificada",
+                        label: t("patient.procedureTypes.modifiedMastectomy"),
+                        value: "modifiedMastectomy",
                       },
                       {
-                        label: "Mastectomia radical",
-                        value: "Mastectomia radical",
+                        label: t("patient.procedureTypes.radicalMastectomy"),
+                        value: "radicalMastectomy",
                       },
-                      { label: "Quadrantectomia", value: "Quadrantectomia" },
+                      {
+                        label: t("patient.procedureTypes.quadrantectomy"),
+                        value: "quadrantectomy",
+                      },
                     ];
                     selectedValue = patientData.surgery?.type || "";
                     duration = patientData.surgery?.duration || "";
                     field = "surgery";
                     break;
 
-                  case "Esvaziamento axilar":
+                  case "axillaryDissection":
                     dropdownItems = [
-                      { label: "Total", value: "Total" },
-                      { label: "Seletivo", value: "Seletivo" },
                       {
-                        label: "Não sabe informar",
-                        value: "Não sabe informar",
+                        label: t("patient.procedureTypes.total"),
+                        value: "total",
+                      },
+                      {
+                        label: t("patient.procedureTypes.selective"),
+                        value: "selective",
+                      },
+                      {
+                        label: t("patient.procedureTypes.dontKnow"),
+                        value: "dontKnow",
                       },
                     ];
                     selectedValue = patientData.axillaryDissection?.type || "";
@@ -790,10 +860,21 @@ export default function FichaExame2() {
                     break;
                 }
 
+                // Traduzir título do procedimento
+                const procedureTitles: Record<string, string> = {
+                  chemotherapy: t("patient.procedures.chemotherapy"),
+                  radiotherapy: t("patient.procedures.radiotherapy"),
+                  surgery: t("patient.procedures.surgery"),
+                  axillaryDissection: t(
+                    "patient.procedures.axillaryDissection"
+                  ),
+                  hormoneTherapy: t("patient.procedures.hormoneTherapy"),
+                };
+
                 return (
                   <View key={procedure} style={{ zIndex }}>
                     <ProcedureDetails
-                      title={procedure}
+                      title={procedureTitles[procedure] || procedure}
                       dropdownItems={dropdownItems}
                       selectedValue={selectedValue}
                       onDropdownChange={(value) =>
@@ -820,10 +901,10 @@ export default function FichaExame2() {
                     marginBottom: 8,
                   }}
                 >
-                  Observação
+                  {t("patient.observation")}
                 </Text>
                 <TextInput
-                  placeholder="Adicione uma observação sobre o paciente"
+                  placeholder={t("patient.observationPlaceholder")}
                   value={patientData.observacaoPaciente || ""}
                   onChangeText={(text) =>
                     setPatientData({ ...patientData, observacaoPaciente: text })
@@ -866,7 +947,7 @@ export default function FichaExame2() {
                 <Text
                   style={{ color: "#b41976", fontSize: 16, fontWeight: "bold" }}
                 >
-                  Salvar
+                  {t("patient.save")}
                 </Text>
               </TouchableOpacity>
 
@@ -885,7 +966,7 @@ export default function FichaExame2() {
                 <Text
                   style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}
                 >
-                  Prosseguir
+                  {t("patient.proceed")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -893,7 +974,7 @@ export default function FichaExame2() {
         </ScrollView>
       </KeyboardAvoidingView>
 
-            <TouchableOpacity
+      <TouchableOpacity
         style={{
           position: "absolute",
           bottom: 60,

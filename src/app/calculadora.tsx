@@ -2,6 +2,7 @@ import Dropdown from "@/components/dropdown";
 import Header from "@/components/headerCalculadora";
 import ReferenceSelector from "@/components/selectorReference";
 import { useMeasurementContext } from "@/context/context";
+import { useTranslation } from "@/context/LanguageContext";
 import { Entypo } from "@expo/vector-icons";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
@@ -11,6 +12,7 @@ import { View, Text, TouchableOpacity, FlatList, Image } from "react-native";
 import { SafeAreaView } from "react-native";
 
 export default function Calculadora() {
+  const { t } = useTranslation();
   const {
     pontosRef,
     setPontosRef,
@@ -26,7 +28,7 @@ export default function Calculadora() {
     <SafeAreaView className="flex-1 bg-white-600 mt-8">
       <StatusBar style="dark" translucent />
 
-      <Header title="Calculadora" />
+      <Header title={t("calculator.title")} />
 
       <FlatList
         data={[]}
@@ -50,26 +52,26 @@ export default function Calculadora() {
                   style={{ marginRight: 10, marginTop: 4.5 }}
                 />
                 <Text className="text-lg font-medium text-black-500">
-                  Referência
+                  {t("calculator.reference.title")}
                 </Text>
               </View>
 
               {/* Seleção de referência */}
               <ReferenceSelector
-                title="Tipo de Referência"
+                title={t("calculator.reference.typeTitle")}
                 items={[
                   {
-                    label: "Processo Estilóide da Ulna",
+                    label: t("calculator.reference.styloidProcess"),
                     value: "opcao1",
                     image: require("../assets/estiloide2.png"),
                   },
                   {
-                    label: "Linha Articular do Cotovelo",
+                    label: t("calculator.reference.articularLine"),
                     value: "opcao2",
                     image: require("../assets/linha_articular2.png"),
                   },
                   {
-                    label: "Acrômio",
+                    label: t("calculator.reference.acromion"),
                     value: "opcao3",
                     image: require("../assets/acromio2.png"),
                   },
@@ -80,10 +82,16 @@ export default function Calculadora() {
 
               {/* Dropdown para selecionar o membro acometido */}
               <Dropdown
-                title="Membro Acometido"
+                title={t("calculator.affectedLimb.title")}
                 items={[
-                  { label: "Braço Direito", value: "right" },
-                  { label: "Braço Esquerdo", value: "left" },
+                  {
+                    label: t("calculator.affectedLimb.rightArm"),
+                    value: "right",
+                  },
+                  {
+                    label: t("calculator.affectedLimb.leftArm"),
+                    value: "left",
+                  },
                 ]}
                 selectedValue={affectedArm}
                 setSelectedValue={(value) => {
@@ -112,11 +120,11 @@ export default function Calculadora() {
                   }}
                 />
                 <Text className="text-lg font-medium text-black-500">
-                  Número de pontos
+                  {t("calculator.points.title")}
                 </Text>
               </View>
               <Text className="text-lg font-medium mb-4">
-                Distância dos pontos
+                {t("calculator.points.distance")}
               </Text>
               <View
                 className="flex-row justify-center items-center bg-white-600"
@@ -162,8 +170,7 @@ export default function Calculadora() {
                   className="text-primary-500"
                   style={{ fontSize: 12, padding: 10 }}
                 >
-                  Realize as medições no membro da paciente iniciando no ponto
-                  de referência escolhido e a cada
+                  {t("calculator.points.instruction")}
                   <Text className="font-semibold"> [{pontosRef}]. </Text>
                 </Text>
               </View>
@@ -185,7 +192,7 @@ export default function Calculadora() {
               <Text
                 style={{ color: "#b41976", fontSize: 16, fontWeight: "bold" }}
               >
-                Próximo
+                {t("calculator.next")}
               </Text>
             </TouchableOpacity>
           </View>

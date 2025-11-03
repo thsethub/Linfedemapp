@@ -1,0 +1,456 @@
+{
+  "languageSelector": {
+    "title": "Selecciona tu idioma",
+    "subtitle": "Elige tu idioma preferido",
+    "brazil": "Brasil",
+    "spanish": "Español",
+    "continue": "Continuar"
+  },
+  "welcome": {
+    "appName": "LINFEDEMAPP",
+    "title": "Tecnología al",
+    "subtitle": "servicio de la salud",
+    "description": "Evaluación automatizada del linfedema con precisión y seguridad"
+  },
+  "buttons": {
+    "enter": "Entrar",
+    "register": "Regístrate ahora.",
+    "help": "Necesito ayuda",
+    "noAccount": "¿No tienes una cuenta? "
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar Sesión",
+      "welcome": "¡Bienvenido(a) de vuelta!",
+      "email": "E-mail",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "loginButton": "Iniciar Sesión",
+      "noAccount": "¿No tienes una cuenta? ",
+      "signUp": "Regístrate ahora"
+    },
+    "register": {
+      "title": "Registro",
+      "welcomeTitle": "¡Bienvenido(a)!",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "age": "Edad",
+      "phone": "Teléfono",
+      "origin": "Origen (Ej: País, Estado, etc.)",
+      "profession": "Profesión",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "registerButton": "Registrarse",
+      "registering": "Realizando registro...",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signIn": "Iniciar sesión",
+      "fillAllFields": "Por favor, completa todos los campos.",
+      "invalidEmail": "Por favor, ingresa un correo electrónico válido.",
+      "passwordMismatch": "Las contraseñas no coinciden. Por favor, verifica.",
+      "successMessage": "¡Registro realizado con éxito!",
+      "errorMessage": "Error al realizar el registro.",
+      "networkError": "No fue posible realizar el registro."
+    },
+    "forgotPassword": {
+      "title": "¿Olvidaste tu contraseña?",
+      "subtitle": "Ingresa tu correo electrónico y te enviaremos las instrucciones de recuperación.",
+      "emailPlaceholder": "Ingresa tu correo electrónico",
+      "sendInstructions": "Enviar instrucciones",
+      "rememberedPassword": "¿Recordaste tu contraseña?",
+      "signInNow": "Iniciar sesión",
+      "enterEmail": "Por favor, ingresa tu correo electrónico.",
+      "emailSendError": "No fue posible enviar el correo electrónico.",
+      "networkError": "No fue posible conectar al servidor. Verifica tu red.",
+      "enterCodeTitle": "Ingresa el código",
+      "checkEmail": "Verifica tu correo electrónico",
+      "codeSentTo": "Enviamos un código de verificación a:",
+      "verificationCode": "Código de verificación",
+      "verifyCode": "Verificar código",
+      "didntReceiveCode": "¿No recibiste el código?",
+      "resendCode": "Enviar nuevamente",
+      "codeRequired": "El código debe tener 6 dígitos.",
+      "invalidCode": "Código inválido o expirado.",
+      "verificationError": "Error de Verificación",
+      "newPasswordTitle": "Nueva contraseña",
+      "newPasswordSubtitle": "¡Casi listo! Ingresa tu nueva contraseña para finalizar la recuperación.",
+      "newPassword": "Nueva contraseña",
+      "newPasswordPlaceholder": "Ingresa tu nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "confirmPasswordPlaceholder": "Confirma tu nueva contraseña",
+      "passwordMismatch": "Las contraseñas no coinciden.",
+      "updatePassword": "Actualizar contraseña",
+      "shortPassword": "Contraseña corta",
+      "passwordMinLength": "La nueva contraseña debe tener al menos 6 caracteres.",
+      "passwordUpdated": "Tu contraseña fue actualizada. Por favor, inicia sesión.",
+      "passwordUpdateError": "No fue posible actualizar la contraseña."
+    }
+  },
+  "home": {
+    "banner": {
+      "title1": "Mantente al día con",
+      "title2": "las novedades!",
+      "seeMore": "Ver más"
+    },
+    "profile": {
+      "title": "Mi Cuenta",
+      "professional": "Perfil",
+      "professionalSub": "Profesional"
+    },
+    "settings": {
+      "title": "Ajustes",
+      "subtitle": "de la App"
+    },
+    "exams": {
+      "performTitle": "Realizar exámenes",
+      "completedTitle": "Exámenes completados",
+      "examForm": "Formulario",
+      "examFormSub": "Examen",
+      "calculator": "Calculadora",
+      "calculatorSub": "Linfedema",
+      "history": "Historial",
+      "historySub": "Exámenes"
+    }
+  },
+  "profile": {
+    "title": "Perfil Profesional",
+    "specialty": "Fisioterapeuta",
+    "email": "Correo electrónico",
+    "phone": "Teléfono",
+    "institution": "Institución",
+    "editProfile": "Editar Perfil",
+    "logout": "Cerrar Sesión"
+  },
+  "common": {
+    "hello": "Hola",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "back": "Volver",
+    "language": "Idioma",
+    "settings": "Configuración",
+    "yes": "Sí",
+    "no": "No",
+    "close": "Cerrar",
+    "validation": "Validación",
+    "notProvided": "No informado",
+    "select": "Seleccionar"
+  },
+  "settings": {
+    "general": "General",
+    "languageSubtitle": "Español",
+    "account": "Cuenta",
+    "profile": "Perfil",
+    "profileSubtitle": "Gestionar información personal",
+    "notifications": "Notificaciones",
+    "notificationsSubtitle": "Configurar alertas y recordatorios",
+    "support": "Soporte",
+    "help": "Ayuda y FAQ",
+    "helpSubtitle": "Preguntas frecuentes y soporte",
+    "about": "Acerca de la App",
+    "aboutSubtitle": "Versión 1.0.0",
+    "logout": "Cerrar Sesión"
+  },
+  "patient": {
+    "title": "Ficha del Paciente",
+    "patientData": "Datos de la paciente",
+    "fullName": "Nombre completo",
+    "fullNamePlaceholder": "Nombre",
+    "birthDate": "Fecha de nacimiento",
+    "selectDate": "Selecciona la fecha",
+    "address": "Dirección",
+    "addressPlaceholder": "Dirección",
+    "phone": "Teléfono",
+    "phonePlaceholder": "(__) ____-____",
+    "weight": "Peso corporal",
+    "weightPlaceholder": "Ej: 70",
+    "height": "Altura",
+    "heightPlaceholder": "Ej: 170",
+    "activityLevel": "Nivel de actividad física",
+    "maritalStatus": "Estado civil",
+    "occupation": "Profesión/Ocupación",
+    "occupationPlaceholder": "Digite la profesión/ocupación",
+    "next": "Siguiente",
+    "cancerDiagnosisDate": "Fecha del diagnóstico del cáncer",
+    "month": "Mes",
+    "year": "Año",
+    "proceduresPerformed": "Procedimientos realizados",
+    "skinChanges": "¿Ha tenido alteraciones cutáneas?",
+    "complementary": "Complementarios",
+    "details": "Detalles",
+    "observation": "Observación",
+    "observationPlaceholder": "Agregue una observación sobre la paciente",
+    "save": "Guardar",
+    "proceed": "Continuar",
+    "selectType": "Seleccione el tipo",
+    "howLongAgo": "¿Hace cuánto tiempo?",
+    "activityLevels": {
+      "sedentary": "Sedentaria",
+      "irregular": "Irregular",
+      "active": "Activa",
+      "veryActive": "Muy activa"
+    },
+    "maritalStatuses": {
+      "single": "Soltera",
+      "married": "Casada",
+      "widowed": "Viuda",
+      "divorced": "Divorciada"
+    },
+    "procedures": {
+      "chemotherapy": "Quimioterapia",
+      "radiotherapy": "Radioterapia",
+      "surgery": "Cirugía",
+      "axillaryDissection": "Vaciamiento axilar",
+      "hormoneTherapy": "Hormonoterapia"
+    },
+    "procedureTypes": {
+      "neoadjuvant": "Neoadyuvante",
+      "adjuvant": "Adyuvante",
+      "neoAdjuvant": "Neo + Adyuvante",
+      "simpleMastectomy": "Mastectomía simple",
+      "modifiedMastectomy": "Mastectomía modificada",
+      "radicalMastectomy": "Mastectomía radical",
+      "quadrantectomy": "Cuadrantectomía",
+      "total": "Total",
+      "selective": "Selectivo",
+      "dontKnow": "No sabe informar"
+    },
+    "skinChangeTypes": {
+      "edema": "Edema",
+      "skinRetraction": "Retracción cutánea",
+      "pain": "Dolor",
+      "nippleInversion": "Inversión del pezón",
+      "hyperemia": "Hiperemia",
+      "nippleDesquamation": "Descamación del pezón",
+      "radiodermatitis": "Radiodermatitis",
+      "nippleUlceration": "Ulceración del pezón",
+      "infection": "Infección",
+      "others": "Otra(s)"
+    },
+    "questions": {
+      "musculoskeletalComplaints": "¿Presenta quejas de alteraciones musculoesqueléticas después del tratamiento?",
+      "lymphedemaSymptoms": "¿Presenta síntomas de linfedema?",
+      "cacifoSign": "Signo de Cacifo",
+      "orangePeelSign": "Signo de la cáscara de naranja",
+      "stemmerSign": "Signo de Stemmer"
+    },
+    "common": {
+      "yes": "Sí",
+      "no": "No",
+      "select": "Seleccionar"
+    }
+  },
+  "calculator": {
+    "title": "Calculadora",
+    "reference": {
+      "title": "Referencia",
+      "typeTitle": "Tipo de Referencia",
+      "styloidProcess": "Proceso Estiloides del Cúbito",
+      "articularLine": "Línea Articular del Codo",
+      "acromion": "Acromion"
+    },
+    "affectedLimb": {
+      "title": "Miembro Afectado",
+      "rightArm": "Brazo Derecho",
+      "leftArm": "Brazo Izquierdo"
+    },
+    "points": {
+      "title": "Número de puntos",
+      "distance": "Distancia de los puntos",
+      "instruction": "Realice las mediciones en el miembro de la paciente comenzando en el punto de referencia elegido y cada"
+    },
+    "next": "Siguiente"
+  },
+  "arms": {
+    "left": "Izquierdo",
+    "right": "Derecho",
+    "leftArm": "Brazo Izquierdo",
+    "rightArm": "Brazo Derecho",
+    "measurementProcess": "Proceso de medición",
+    "distanceBetweenPoints": "Distancia entre los puntos",
+    "reference": "Referencia",
+    "referenceLimb": "Miembro de Referencia",
+    "affectedLimb": "Miembro Afectado",
+    "referencePerimeter": "Perímetro del punto de referencia (0cm)",
+    "perimetry": "Perimetría",
+    "pointsAboveReference": "Puntos arriba de la referencia",
+    "pointsBelowReference": "Puntos abajo de la referencia",
+    "point": "Punto",
+    "calculate": "Calcular",
+    "measurementInstruction": "Preste atención para realizar las mediciones en el miembro de la paciente a partir de la posición de referencia elegida arriba durante el examen.",
+    "validationMessage": "Por favor, complete al menos una medición válida para ambos miembros antes de continuar.",
+    "references": {
+      "styloidProcess": "Proceso Estiloides del Cúbito",
+      "articularLine": "Línea Articular del Codo",
+      "acromion": "Acromion"
+    }
+  },
+  "results": {
+    "diagnosis": "Diagnóstico",
+    "results": "Resultados",
+    "perimetryExplanation": "La perimetría de cada punto medido puede sugerir: ",
+    "levels": {
+      "noChanges": "Sin alteraciones",
+      "mild": "Leve",
+      "moderate": "Moderada",
+      "severe": "Grave"
+    },
+    "volumetry": "Volumetría",
+    "volume": "Vol.",
+    "volumeDifference": "Diferencia de Volumen",
+    "complementary": "Complementarios",
+    "note": "Nota",
+    "notePlaceholder": "Deje un comentario",
+    "finalize": "Finalizar",
+    "finalizeMeasurement": "Finalizar Medición",
+    "associateToPatient": "¿Desea asociar esta medición a un paciente?",
+    "authTokenNotFound": "Token de autenticación no encontrado.",
+    "errorLoadingPatients": "No fue posible cargar los pacientes.",
+    "selectPatientError": "Seleccione un paciente para asociar la medición.",
+    "measurementAssociated": "¡Medición asociada al paciente con éxito!",
+    "errorAssociatingMeasurement": "No fue posible asociar la medición.",
+    "selectPatient": "Seleccione un Paciente",
+    "searchPatient": "Buscar paciente",
+    "birthDate": "Fecha de Nacimiento",
+    "noPatientFound": "No se encontró ningún paciente.",
+    "associatePatientBeforeConfirm": "Asocie al menos un paciente antes de confirmar.",
+    "volumeAnalysis": {
+      "noChanges": "El miembro presenta una diferencia de volumen de {difference} mL, pero no presenta alteraciones volumétricas.",
+      "stage0": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, lo que puede sugerir un estadio 0 o subclínico.",
+      "stage1": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio I o leve.",
+      "stage2": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio II o moderado.",
+      "stage3": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio III o avanzado."
+    },
+    "alert": "¡Alerta!",
+    "references": {
+      "panobianco": "Referencia - Panobianco; Mamede, 2002.",
+      "lymphologyConsensus": "Consenso Internacional de la sociedad de linfología, 2023."
+    }
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "needHelp": "¿Cómo puedo ayudar?",
+    "supportText": "En la pantalla de soporte, podrá encontrar las respuestas a todas sus dudas sobre la aplicación.",
+    "questions": {
+      "q1": {
+        "question": "¿Qué es el linfedema?",
+        "answer": "El linfedema es una condición en la que se acumula líquido linfático en los tejidos, causando hinchazón, generalmente en los brazos o las piernas. Esta condición puede surgir cuando los vasos linfáticos están obstruidos o no funcionan correctamente."
+      },
+      "q2": {
+        "question": "¿Cuáles son las causas del linfedema?",
+        "answer": "El linfedema puede ser primario, causado por problemas congénitos en el sistema linfático, o secundario, que es el más común y puede resultar de tratamientos contra el cáncer, cirugías, infecciones o traumas. El retiro de ganglios linfáticos durante cirugías oncológicas es una de las causas más frecuentes de linfedema secundario."
+      },
+      "q3": {
+        "question": "¿Cuáles son los síntomas del linfedema?",
+        "answer": "Los síntomas del linfedema incluyen hinchazón en el área afectada, sensación de pesadez, rigidez en las articulaciones, dolor e incomodidad. La piel también puede engrosarse (fibrosis) y ser más susceptible a infecciones, como la erisipela."
+      },
+      "q4": {
+        "question": "¿Cómo se diagnostica el linfedema?",
+        "answer": "El diagnóstico del linfedema se realiza principalmente mediante examen clínico, en el que el profesional de la salud evalúa el historial del paciente y examina la hinchazón. Exámenes de imagen, como la linfografía o la linfocintilografía, pueden usarse para confirmar el diagnóstico y evaluar la gravedad de la condición."
+      },
+      "q5": {
+        "question": "¿Cuál es el tratamiento para el linfedema?",
+        "answer": "Aunque no tiene cura, el linfedema puede controlarse eficazmente con el tratamiento adecuado. Los métodos incluyen el drenaje linfático manual (DLM), el uso de vendajes compresivos y prendas de compresión, ejercicios específicos y, en algunos casos, cirugía. El tratamiento tiene como objetivo reducir la hinchazón y mejorar la calidad de vida del paciente."
+      },
+      "q6": {
+        "question": "¿Es posible prevenir el linfedema?",
+        "answer": "Algunos casos de linfedema pueden prevenirse, especialmente en personas que han tenido cirugías oncológicas. Medidas preventivas incluyen evitar lesiones en el miembro afectado, mantener un peso saludable, practicar actividades físicas de forma adecuada y usar prendas de compresión según la orientación médica. Es importante que los pacientes de riesgo reciban orientación de un fisioterapeuta u otro profesional de la salud."
+      }
+    }
+  },
+  "examHistory": {
+    "title": "Historial Clínico",
+    "searchPlaceholder": "Buscar paciente",
+    "birthDate": "Fecha de Nacimiento",
+    "openHistory": "Abrir Historial Clínico",
+    "delete": "Eliminar",
+    "noPatients": "No se encontró ningún paciente.",
+    "confirmDelete": "Confirmación",
+    "confirmDeleteMessage": "¿Está seguro de que desea eliminar el paciente?",
+    "deleteSuccess": "¡Paciente eliminado con éxito!",
+    "deleteError": "No fue posible eliminar el paciente.",
+    "loadError": "No fue posible cargar los pacientes."
+  },
+  "patientDetails": {
+    "title": "Historial Clínico",
+    "generatePDF": "Generar PDF",
+    "noDataFound": "No se encontraron datos para este paciente.",
+    "tabs": {
+      "chart": "Gráfico",
+      "details": "Detalles"
+    },
+    "chart": {
+      "title": "Evolución Volumétrica",
+      "referenceLimb": "Miembro de Referencia",
+      "affectedLimb": "Miembro Afectado"
+    },
+    "sections": {
+      "personalInfo": "Información Personal",
+      "physicalData": "Datos Físicos",
+      "procedures": "Procedimientos",
+      "skinChanges": "Alteraciones Cutáneas",
+      "signsSymptoms": "Signos y Síntomas",
+      "evolutionHistory": "Historial Evolutivo"
+    },
+    "fields": {
+      "birthDate": "Fecha de Nacimiento",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "maritalStatus": "Estado Civil",
+      "occupation": "Ocupación",
+      "observation": "Observación",
+      "bodyWeight": "Peso Corporal",
+      "height": "Altura",
+      "activityLevel": "Nivel de Actividad Física",
+      "proceduresPerformed": "Procedimientos Realizados",
+      "radiotherapy": "Radioterapia",
+      "chemotherapy": "Quimioterapia",
+      "hormonotherapy": "Hormonoterapia",
+      "surgery": "Cirugía",
+      "axillaryDissection": "Disección Axilar",
+      "hormonotherapyDetails": "Detalles de Hormonoterapia",
+      "musculoskeletalComplaints": "Quejas Musculoesqueléticas",
+      "lymphedemaSymptoms": "Síntomas de Linfedema",
+      "pittingSign": "Signo de Fóvea",
+      "orangePeelSign": "Signo de Piel de Naranja",
+      "stemmerSign": "Signo de Stemmer",
+      "evaluationDate": "Fecha de Evaluación",
+      "measurementProcess": "Proceso de Medición",
+      "distanceBetweenPoints": "Distancia entre los puntos",
+      "referenceArm": "Brazo de Referencia",
+      "affectedArm": "Brazo Afectado",
+      "reference": "Referencia",
+      "perimetry": "Perimetría",
+      "leftArmPoints": "Puntos del Brazo Izquierdo",
+      "rightArmPoints": "Puntos del Brazo Derecho",
+      "differences": "Diferencias",
+      "volumetry": "Volumetría",
+      "volumeDifference": "Diferencia de Volumen",
+      "referenceVolumes": "Volúmenes de Referencia",
+      "affectedVolumes": "Volúmenes Afectados",
+      "totalReferenceVolume": "Volumen Total de Referencia",
+      "totalAffectedVolume": "Volumen Total Afectado",
+      "observations": "Observaciones"
+    },
+    "values": {
+      "notProvided": "No informado",
+      "notApplicable": "N/A",
+      "noProcedures": "Ningún procedimiento informado",
+      "noSkinChanges": "Ninguna alteración cutánea informada",
+      "noMeasurements": "Ninguna medición encontrada.",
+      "noObservations": "Ninguna observación informada.",
+      "incompleteInfo": "Información incompleta",
+      "kg": "kg",
+      "cm": "cm",
+      "ml": "mL",
+      "months": "meses"
+    },
+    "errors": {
+      "patientIdNotFound": "ID del paciente no encontrado.",
+      "loadError": "No fue posible cargar los datos del paciente.",
+      "pdfError": "No fue posible generar el informe.",
+      "insufficientData": "No hay datos suficientes para generar el informe."
+    }
+  }
+}

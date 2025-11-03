@@ -13,10 +13,12 @@ import { SafeAreaView } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
 import { useMeasurementContext } from "../context/context";
+import { useTranslation } from "@/context/LanguageContext";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Entypo } from "@expo/vector-icons";
 
 export default function bracoRef() {
+  const { t } = useTranslation();
   const { width } = useWindowDimensions();
   const [ref, setRef] = useState("");
   const [affected, setAffected] = useState("");
@@ -36,11 +38,11 @@ export default function bracoRef() {
   const getReferenceName = () => {
     switch (selectedValue) {
       case "opcao1":
-        return "Processo Estilóide da Ulna";
+        return t("arms.references.styloidProcess");
       case "opcao2":
-        return "Linha Articular do Cotovelo";
+        return t("arms.references.articularLine");
       case "opcao3":
-        return "Acrômio";
+        return t("arms.references.acromion");
       default:
         return "";
     }
@@ -85,13 +87,13 @@ export default function bracoRef() {
     if (selectedValue === "opcao1") {
       if (pontosRef === "5cm") {
         numInputs = 9;
-        label = "Pontos acima da referência";
+        label = t("arms.pointsAboveReference");
       } else if (pontosRef === "7cm") {
         numInputs = 7;
-        label = "Pontos acima da referência";
+        label = t("arms.pointsAboveReference");
       } else if (pontosRef === "10cm") {
         numInputs = 4;
-        label = "Pontos acima da referência";
+        label = t("arms.pointsAboveReference");
       }
     } else if (selectedValue === "opcao2") {
       if (pontosRef === "5cm") {
@@ -104,13 +106,13 @@ export default function bracoRef() {
     } else if (selectedValue === "opcao3") {
       if (pontosRef === "5cm") {
         numInputs = 9;
-        label = "Pontos abaixo da referência";
+        label = t("arms.pointsBelowReference");
       } else if (pontosRef === "7cm") {
         numInputs = 7;
-        label = "Pontos abaixo da referência";
+        label = t("arms.pointsBelowReference");
       } else if (pontosRef === "10cm") {
         numInputs = 4;
-        label = "Pontos abaixo da referência";
+        label = t("arms.pointsBelowReference");
       }
     }
 
@@ -122,7 +124,7 @@ export default function bracoRef() {
         {selectedValue === "opcao2" && (
           <>
             <Text className="text-lg font-medium mb-4">
-              Pontos acima da referência
+              {t("arms.pointsAboveReference")}
             </Text>
             {Array.from({ length: numInputs / 2 }, (_, index) => (
               <View
@@ -130,7 +132,7 @@ export default function bracoRef() {
                 className="text-lg flex-row items-center mb-6"
                 style={{ position: "relative" }}
               >
-                <Text>{`Ponto ${index + 1} (${
+                <Text>{`${t("arms.point")} ${index + 1} (${
                   (index + 1) * parseInt(pontosRef)
                 }cm)`}</Text>
                 <View
@@ -165,7 +167,7 @@ export default function bracoRef() {
               </View>
             ))}
             <Text className="text-lg font-medium mb-4">
-              Pontos abaixo da referência
+              {t("arms.pointsBelowReference")}
             </Text>
             {Array.from({ length: numInputs / 2 }, (_, index) => (
               <View
@@ -173,7 +175,7 @@ export default function bracoRef() {
                 className="text-lg flex-row items-center mb-6"
                 style={{ position: "relative" }}
               >
-                <Text>{`Ponto ${index + 1} (${
+                <Text>{`${t("arms.point")} ${index + 1} (${
                   (index + 1) * parseInt(pontosRef)
                 }cm)`}</Text>
                 <View
@@ -218,7 +220,7 @@ export default function bracoRef() {
               className="text-lg flex-row items-center mb-6"
               style={{ position: "relative" }}
             >
-              <Text>{`Ponto ${index + 1} (${
+              <Text>{`${t("arms.point")} ${index + 1} (${
                 (index + 1) * parseInt(pontosRef)
               }cm)`}</Text>
               <View
@@ -292,7 +294,9 @@ export default function bracoRef() {
             borderBottomColor: "#b41976",
           }}
         >
-          <Text className="text-lg font-medium text-primary-500">Esquerdo</Text>
+          <Text className="text-lg font-medium text-primary-500">
+            {t("arms.left")}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -306,7 +310,9 @@ export default function bracoRef() {
             borderBottomColor: "transparent",
           }}
         >
-          <Text className="text-lg font-medium text-black-400">Direito</Text>
+          <Text className="text-lg font-medium text-black-400">
+            {t("arms.right")}
+          </Text>
         </TouchableOpacity>
       </View>
       {/* Fim da barra de navegação */}
@@ -340,11 +346,11 @@ export default function bracoRef() {
                   }}
                 />
                 <Text className="text-lg font-medium text-black-500">
-                  Processo de medição
+                  {t("arms.measurementProcess")}
                 </Text>
               </View>
               <Text className="text-lg font-medium">
-                Distância entre os pontos
+                {t("arms.distanceBetweenPoints")}
               </Text>
               <View
                 className="flex-row justify-center items-center bg-white-600"
@@ -367,7 +373,7 @@ export default function bracoRef() {
                   {pontosRef}
                 </Text>
               </View>
-              <Text className="text-lg font-medium">Referência</Text>
+              <Text className="text-lg font-medium">{t("arms.reference")}</Text>
               <View
                 className="flex-row justify-center items-center bg-white-600"
                 style={{ width: 300, borderRadius: 40 }}
@@ -389,7 +395,9 @@ export default function bracoRef() {
                   {getReferenceName()}
                 </Text>
               </View>
-              <Text className="text-lg font-medium">Membro de Referência</Text>
+              <Text className="text-lg font-medium">
+                {t("arms.referenceLimb")}
+              </Text>
               <View
                 className="flex-row justify-center items-center bg-white-600"
                 style={{ width: 300, borderRadius: 40 }}
@@ -408,10 +416,14 @@ export default function bracoRef() {
                   className="text-primary-500 font-semibold"
                   style={{ fontSize: 12, padding: 10 }}
                 >
-                  {referenceArm === "left" ? "Braço Esquerdo" : "Braço Direito"}
+                  {referenceArm === "left"
+                    ? t("arms.leftArm")
+                    : t("arms.rightArm")}
                 </Text>
               </View>
-              <Text className="text-lg font-medium">Membro Acometido</Text>
+              <Text className="text-lg font-medium">
+                {t("arms.affectedLimb")}
+              </Text>
               <View
                 className="flex-row justify-center items-center bg-white-600"
                 style={{ width: 300, borderRadius: 40 }}
@@ -430,7 +442,9 @@ export default function bracoRef() {
                   className="text-primary-500 font-semibold"
                   style={{ fontSize: 12, padding: 10 }}
                 >
-                  {affectedArm === "left" ? "Braço Esquerdo" : "Braço Direito"}
+                  {affectedArm === "left"
+                    ? t("arms.leftArm")
+                    : t("arms.rightArm")}
                 </Text>
               </View>
             </View>
@@ -453,13 +467,13 @@ export default function bracoRef() {
                 style={{ marginRight: 10, marginTop: 4.5 }}
               />
               <Text className="text-lg font-medium text-black-500">
-                Referência
+                {t("arms.reference")}
               </Text>
             </View>
 
             {/* Perímetro do Membro para Referência */}
             <Text className="text-lg font-medium mb-4">
-              Perímetro do ponto de referência (0cm)
+              {t("arms.referencePerimeter")}
             </Text>
             <View className="text-lg flex-row items-center justify-center">
               <View
@@ -506,8 +520,7 @@ export default function bracoRef() {
                 className="text-primary-500"
                 style={{ fontSize: 12, padding: 10 }}
               >
-                Atente-se para realizar as medições no membro da paciente a
-                partir da posição de referência escolhida acima durante o exame.
+                {t("arms.measurementInstruction")}
               </Text>
             </View>
           </View>
@@ -532,7 +545,7 @@ export default function bracoRef() {
                 }}
               />
               <Text className="text-lg font-medium text-black-500">
-                Perimetria
+                {t("arms.perimetry")}
               </Text>
               <TouchableOpacity>
                 <Image
@@ -563,7 +576,7 @@ export default function bracoRef() {
             <Text
               style={{ color: "#b41976", fontSize: 16, fontWeight: "bold" }}
             >
-              Próximo
+              {t("calculator.next")}
             </Text>
           </TouchableOpacity>
         </View>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useTranslation } from "@/context/LanguageContext";
 
 interface DropdownProps {
   title: string;
@@ -17,6 +18,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   setSelectedValue,
   zIndex = 1000, // <- valor padrão
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
@@ -31,7 +33,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             typeof callback === "function" ? callback(selectedValue) : callback
           )
         }
-        placeholder="Selecionar"
+        placeholder={t("common.select")}
         placeholderStyle={styles.placeholderStyle}
         style={styles.dropdown}
         dropDownContainerStyle={[styles.dropdownContainer, { zIndex: 1000 }]}
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 16
+    marginBottom: 16,
   },
   title: {
     fontWeight: "600",

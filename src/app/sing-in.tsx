@@ -12,11 +12,13 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import { useTranslation } from "../context/LanguageContext";
 
-// const API_URL = "http://192.168.15.108:8081";
-const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+const API_URL = "http://192.168.0.105:8083";
+// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
 
 export default function SignIn() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
@@ -127,32 +129,38 @@ export default function SignIn() {
           LINFEDEMAPP
         </Text>
         <Text className="text-white-500 font-semibold text-3xl">
-          Bem-vindo(a) de volta!
+          {t("auth.login.welcome") || "Bem-vindo(a) de volta!"}
         </Text>
       </View>
 
       <View className="flex-1 bg-white-500 px-6 py-10">
-        <Text className="text-black-500 font-bold mb-6">Login</Text>
+        <Text className="text-black-500 font-bold mb-6">
+          {t("auth.login.title")}
+        </Text>
 
         <TextInput
-          placeholder="E-mail"
+          placeholder={t("auth.login.email")}
           keyboardType="email-address"
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={email}
           onChangeText={setEmail}
         />
         <TextInput
-          placeholder="Senha"
+          placeholder={t("auth.login.password")}
           secureTextEntry
           className="border-b-4 border-white-600 mb-4 p-2 bg-white-600 rounded-lg"
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity onPress={() => {
-          router.push("/recuperar_senha");
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/recuperar_senha");
+          }}
+        >
           <Text className="text-right">
-            <Text className="text-primary-500">Esqueceu a senha?</Text>
+            <Text className="text-primary-500">
+              {t("auth.login.forgotPassword")}
+            </Text>
           </Text>
         </TouchableOpacity>
 
@@ -161,7 +169,7 @@ export default function SignIn() {
           onPress={handleLogin}
         >
           <Text className="text-white-500 font-bold text-center text-xl">
-            Entrar
+            {t("auth.login.loginButton")}
           </Text>
         </TouchableOpacity>
 
@@ -171,8 +179,8 @@ export default function SignIn() {
           }}
         >
           <Text className="text-center mt-2">
-            <Text className="text-black-500">Não tem uma conta? </Text>
-            <Text className="text-primary-500">Registrar agora</Text>
+            <Text className="text-black-500">{t("auth.login.noAccount")}</Text>
+            <Text className="text-primary-500">{t("auth.login.signUp")}</Text>
           </Text>
         </TouchableOpacity>
       </View>

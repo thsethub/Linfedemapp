@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useTranslation } from "@/context/LanguageContext";
 
 interface DropdownProps {
   title: string; // Nome acima do dropdown
@@ -16,10 +17,10 @@ const Dropdown: React.FC<DropdownProps> = ({
   selectedValue,
   setSelectedValue,
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
-    
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       <DropDownPicker
@@ -32,7 +33,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             typeof callback === "function" ? callback(selectedValue) : callback
           )
         }
-        placeholder="Selecionar"
+        placeholder={t("common.select")}
         placeholderStyle={styles.placeholderStyle}
         style={styles.dropdown}
         dropDownContainerStyle={styles.dropdownContainer}
