@@ -52,7 +52,7 @@ echo "[$(date)] Iniciando Expo com --tunnel..."
 echo ""
 
 # Rodar expo e capturar output para extrair URL do tunnel
-npx expo start --tunnel --non-interactive 2>&1 | while IFS= read -r line; do
+CI=1 npx expo start --tunnel 2>&1 | while IFS= read -r line; do
   echo "$line"
   echo "[$(date)] $line" >> /var/log/linfedemapp/expo.log
   
