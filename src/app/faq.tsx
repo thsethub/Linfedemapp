@@ -16,9 +16,7 @@ import * as SecureStore from "expo-secure-store";
 import FaqAccordion from "@/components/FaqAccordion";
 import { Linking } from "react-native";
 import { useTranslation } from "@/context/LanguageContext";
-
-// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
-const API_URL = "http://10.103.242.236:8083";
+import { API_URL } from "@/config/api";
 
 export default function Faq() {
   const { t } = useTranslation();

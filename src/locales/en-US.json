@@ -1,0 +1,82 @@
+{
+  "languageSelector": {
+    "title": "Select your language",
+    "subtitle": "Choose your preferred language",
+    "brazil": "Brazil",
+    "spanish": "Spanish",
+    "english": "English",
+    "continue": "Continue"
+  },
+  "welcome": {
+    "appName": "LINFEDEMAPP",
+    "title": "Technology",
+    "subtitle": "at the service of healthcare",
+    "description": "Automated lymphedema assessment with accuracy and safety"
+  },
+  "buttons": {
+    "enter": "Sign in",
+    "register": "Register now",
+    "help": "I need help",
+    "noAccount": "Don't have an account? "
+  },
+  "common": {
+    "hello": "Hello",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "back": "Back",
+    "language": "Language",
+    "settings": "Settings",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "validation": "Validation",
+    "notProvided": "Not provided",
+    "select": "Select"
+  },
+  "settings": {
+    "general": "General",
+    "languageSubtitle": "English (US)",
+    "account": "Account",
+    "profile": "Profile",
+    "profileSubtitle": "Manage personal information",
+    "notifications": "Notifications",
+    "notificationsSubtitle": "Configure alerts and reminders",
+    "support": "Support",
+    "help": "Help and FAQ",
+    "helpSubtitle": "Frequently asked questions and support",
+    "about": "About the App",
+    "aboutSubtitle": "Version 1.0.0",
+    "logout": "Sign out"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "welcome": "Welcome back!",
+      "email": "E-mail",
+      "password": "Password",
+      "forgotPassword": "Forgot your password?",
+      "loginButton": "Sign in",
+      "noAccount": "Don't have an account? ",
+      "signUp": "Register now"
+    },
+    "register": {
+      "title": "Sign up",
+      "welcomeTitle": "Welcome!",
+      "name": "Full name",
+      "email": "E-mail",
+      "age": "Age",
+      "phone": "Phone",
+      "origin": "Origin (e.g., Country, State, etc.)",
+      "profession": "Profession",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "registerButton": "Register",
+      "registering": "Registering...",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in now"
+    }
+  }
+}

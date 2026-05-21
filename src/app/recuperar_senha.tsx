@@ -17,12 +17,9 @@ import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import axios from "axios";
 import { useTranslation } from "../context/LanguageContext";
+import { API_URL } from "../config/api";
 
 cssInterop(TextInput, { className: "style" });
-
-// URL da API
-// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
-const API_URL = "http://192.168.0.105:8083";
 
 export default function RecuperarSenha() {
   const { t } = useTranslation();

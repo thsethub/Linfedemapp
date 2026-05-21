@@ -43,7 +43,9 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       );
       if (
         savedLanguage &&
-        (savedLanguage === "pt-BR" || savedLanguage === "es-ES")
+        (savedLanguage === "pt-BR" ||
+          savedLanguage === "es-ES" ||
+          savedLanguage === "en-US")
       ) {
         setCurrentLanguage(savedLanguage as Language);
         setIsLanguageSelected(true);
@@ -73,8 +75,15 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   };
 
   const t = (key: string): string => {
-    const translations = languages[currentLanguage];
-    return getNestedTranslation(translations, key);
+    const currentTranslations = languages[currentLanguage];
+    const fallbackTranslations = languages["pt-BR"];
+    const translatedText = getNestedTranslation(currentTranslations, key);
+
+    if (translatedText !== key) {
+      return translatedText;
+    }
+
+    return getNestedTranslation(fallbackTranslations, key);
   };
 
   const value: LanguageContextType = {

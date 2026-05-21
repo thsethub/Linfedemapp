@@ -11,20 +11,25 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
-import { useLanguage, useTranslation } from "../context/LanguageContext";
+import { useLanguage } from "../context/LanguageContext";
 import { countries, Language } from "../locales";
 
 const { height } = Dimensions.get("window");
 
 export default function LanguageSelector() {
   const { setLanguage } = useLanguage();
-  const { t } = useTranslation();
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
 
-  // Função para obter textos baseados na seleção atual ou fallback para português
-  const getLocalizedText = (ptText: string, esText: string) => {
+  const getLocalizedText = (
+    ptText: string,
+    esText: string,
+    enText: string
+  ) => {
     if (selectedLanguage === "es-ES") {
       return esText;
+    }
+    if (selectedLanguage === "en-US") {
+      return enText;
     }
     return ptText;
   };
@@ -32,10 +37,15 @@ export default function LanguageSelector() {
   const handleConfirm = async () => {
     if (!selectedLanguage) {
       Alert.alert(
-        getLocalizedText("Seleção necessária", "Selección necesaria"),
+        getLocalizedText(
+          "Seleção necessária",
+          "Selección necesaria",
+          "Selection required"
+        ),
         getLocalizedText(
           "Por favor, selecione um idioma.",
-          "Por favor, selecciona un idioma."
+          "Por favor, selecciona un idioma.",
+          "Please select a language."
         )
       );
       return;
@@ -46,10 +56,11 @@ export default function LanguageSelector() {
     } catch (error) {
       console.error("Erro ao salvar idioma:", error);
       Alert.alert(
-        getLocalizedText("Erro", "Error"),
+        getLocalizedText("Erro", "Error", "Error"),
         getLocalizedText(
           "Não foi possível salvar sua preferência de idioma.",
-          "No fue posible guardar tu preferencia de idioma."
+          "No fue posible guardar tu preferencia de idioma.",
+          "Could not save your language preference."
         )
       );
     }
@@ -71,12 +82,17 @@ export default function LanguageSelector() {
         <View style={styles.sheetHandle} />
         <Text style={styles.appName}>LINFEDEMAPP</Text>
         <Text style={styles.sheetTitle}>
-          {getLocalizedText("Selecione seu idioma", "Selecciona tu idioma")}
+          {getLocalizedText(
+            "Selecione seu idioma",
+            "Selecciona tu idioma",
+            "Select your language"
+          )}
         </Text>
         <Text style={styles.sheetSubtitle}>
           {getLocalizedText(
             "Escolha o idioma que prefere usar no aplicativo.",
-            "Elige el idioma que prefieres usar en la aplicación."
+            "Elige el idioma que prefieres usar en la aplicación.",
+            "Choose the language you prefer to use in the app."
           )}
         </Text>
 
@@ -137,7 +153,7 @@ export default function LanguageSelector() {
           disabled={!selectedLanguage}
         >
           <Text style={styles.confirmButtonText}>
-            {getLocalizedText("Confirmar", "Confirmar")}
+            {getLocalizedText("Confirmar", "Confirmar", "Confirm")}
           </Text>
         </TouchableOpacity>
       </View>

@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useTranslation, useLanguage } from "../context/LanguageContext";
 import { Feather } from "@expo/vector-icons";
+import { Language } from "../locales";
 
 const languages = [
   {
@@ -27,6 +28,13 @@ const languages = [
     flag: "🌐",
     country: "ES",
   },
+  {
+    code: "en-US",
+    name: "English",
+    nativeName: "English (US)",
+    flag: "🇺🇸",
+    country: "US",
+  },
 ];
 
 export default function Settings() {
@@ -36,10 +44,20 @@ export default function Settings() {
 
   const handleLanguageChange = async (languageCode: string) => {
     try {
-      await setLanguage(languageCode as "pt-BR" | "es-ES");
+      await setLanguage(languageCode as Language);
     } catch (error) {
       console.error("Erro ao alterar idioma:", error);
     }
+  };
+
+  const getLocalizedText = (ptText: string, esText: string, enText: string) => {
+    if (currentLanguage === "es-ES") {
+      return esText;
+    }
+    if (currentLanguage === "en-US") {
+      return enText;
+    }
+    return ptText;
   };
 
   const getCurrentLanguageDisplay = () => {
@@ -196,9 +214,11 @@ export default function Settings() {
                 {t("common.language") || "Idioma"}
               </Text>
               <Text className="text-gray-600 text-sm mt-1">
-                {currentLanguage === "es-ES"
-                  ? "Selecciona tu idioma preferido"
-                  : "Selecione seu idioma preferido"}
+                {getLocalizedText(
+                  "Selecione seu idioma preferido",
+                  "Selecciona tu idioma preferido",
+                  "Select your preferred language"
+                )}
               </Text>
             </View>
 
@@ -217,9 +237,11 @@ export default function Settings() {
                 style={{ marginTop: 2, marginRight: 12 }}
               />
               <Text className="text-gray-800 text-sm flex-1">
-                {currentLanguage === "es-ES"
-                  ? "El cambio de idioma se aplicará inmediatamente en toda la aplicación"
-                  : "A alteração do idioma será aplicada imediatamente em todo o aplicativo"}
+                {getLocalizedText(
+                  "A alteração do idioma será aplicada imediatamente em todo o aplicativo",
+                  "El cambio de idioma se aplicará inmediatamente en toda la aplicación",
+                  "Language changes are applied immediately across the app"
+                )}
               </Text>
             </View>
           </View>

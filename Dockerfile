@@ -1,20 +1,32 @@
-# Use uma imagem base do Node.js
 FROM node:22
 
-# Defina o diretório de trabalho no container
 WORKDIR /usr/src/app
 
-# Copie o arquivo package.json e yarn.lock para o diretório de trabalho
-COPY package.json package-lock.json ./
+# Instalar curl para healthcheck e captura de URLs
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
-# Instale as dependências
+# Variáveis de ambiente
+ENV EXPO_PUBLIC_API_URL=http://defisio-api:8083
+ENV EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+ENV REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+
+# Instalar dependências
+COPY package.json package-lock.json ./
 RUN npm install --legacy-peer-deps
 
-# Copie o restante do código da aplicação para o diretório de trabalho
+# Instalar @expo/ngrok globalmente para tunnel
+RUN npm install -g @expo/ngrok@^4.1.0
+
+# Copiar código fonte
 COPY . .
 
-# Exponha as portas padrão do Expo SDK 53
+# Copiar e dar permissão ao entrypoint
+COPY entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+# Criar diretório de logs
+RUN mkdir -p /var/log/linfedemapp
+
 EXPOSE 8081
 
-# Comando para iniciar o servidor do Expo
-CMD ["sudo", "npx", "expo", "start"]
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]

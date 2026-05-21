@@ -1,7 +1,8 @@
 import ptBR from "./pt-BR.json";
 import esES from "./es-ES.json";
+import enUS from "./en-US.json";
 
-export type Language = "pt-BR" | "es-ES";
+export type Language = "pt-BR" | "es-ES" | "en-US";
 
 export interface CountryInfo {
   code: Language;
@@ -13,6 +14,7 @@ export interface CountryInfo {
 export const languages: Record<Language, any> = {
   "pt-BR": ptBR,
   "es-ES": esES,
+  "en-US": enUS,
 };
 
 export const countries: CountryInfo[] = [
@@ -27,6 +29,12 @@ export const countries: CountryInfo[] = [
     name: "Español",
     flag: "🌐",
     country: "Español",
+  },
+  {
+    code: "en-US",
+    name: "English",
+    flag: "🇺🇸",
+    country: "United States",
   },
 ];
 

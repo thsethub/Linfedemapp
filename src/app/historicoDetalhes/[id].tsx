@@ -24,9 +24,7 @@ import {
   translateSkinChangeType,
 } from "@/utils/translatePatientData";
 import { Feather } from "@expo/vector-icons";
-
-// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
-const API_URL = "http://192.168.0.105:8083";
+import { API_URL } from "@/config/api";
 
 export default function PatientProfileScreen() {
   const { t } = useTranslation();

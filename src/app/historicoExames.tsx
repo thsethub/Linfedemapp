@@ -17,9 +17,7 @@ import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
 import Header from "@/components/headerExames1";
 import { useTranslation } from "@/context/LanguageContext";
-
-const API_URL = "http://192.168.0.105:8083";
-// const API_URL = "https://ac8b5f7d0939.ngrok-free.app";
+import { API_URL } from "@/config/api";
 
 // Interface para os pacientes
 interface Patient {
