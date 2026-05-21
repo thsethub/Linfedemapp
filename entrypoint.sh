@@ -51,33 +51,21 @@ echo "[$(date)] API_NGROK_URL=$API_URL"
 echo "[$(date)] Iniciando Expo com --tunnel..."
 echo ""
 
-# Rodar expo e capturar output para extrair URL do tunnel
-CI=1 npx expo start --tunnel 2>&1 | while IFS= read -r line; do
-  echo "$line"
-  echo "[$(date)] $line" >> /var/log/linfedemapp/expo.log
-  
-  # Capturar URL do tunnel quando aparecer
-  if echo "$line" | grep -q "tunnel ready"; then
-    TUNNEL_URL=$(echo "$line" | grep -o 'https://[^ ]*')
-    if [ -n "$TUNNEL_URL" ]; then
-      echo ""
-      echo "=========================================================="
-      echo "  APP TUNNEL URL:"
-      echo "  $TUNNEL_URL"
-      echo "=========================================================="
-      echo ""
-      echo "[$(date)] APP_TUNNEL_URL=$TUNNEL_URL" >> /var/log/linfedemapp/urls.log
-    fi
-  fi
-  
-  # Capturar URL exp:// quando aparecer
-  if echo "$line" | grep -qE "exp://|https://exp"; then
+(
+  RETRIES=0
+  EXP_URL=""
+  while [ -z "$EXP_URL" ] && [ $RETRIES -lt 60 ]; do
+    sleep 3
+    EXP_URL=$(grep -oE "exp://[a-zA-Z0-9_.-]+(:[0-9]+)?(/[^ ]*)?" /var/log/linfedemapp/expo.log 2>/dev/null | head -1 || true)
+    RETRIES=$((RETRIES + 1))
+  done
+  if [ -n "$EXP_URL" ]; then
     echo ""
     echo "=========================================================="
-    echo "  EXPO URL DETECTADA:"
-    echo "  $line"
+    echo "  APP TUNNEL URL: $EXP_URL"
     echo "=========================================================="
-    echo ""
-    echo "[$(date)] EXPO_URL=$line" >> /var/log/linfedemapp/urls.log
+    echo "[$(date)] APP_TUNNEL_URL=$EXP_URL" >> /var/log/linfedemapp/urls.log
   fi
-done
+) &
+
+npx expo start --tunnel </dev/null 2>&1 | tee -a /var/log/linfedemapp/expo.log
