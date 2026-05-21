@@ -18,7 +18,7 @@ RETRY=0
 API_URL=""
 
 while [ -z "$API_URL" ] && [ $RETRY -lt $MAX_RETRIES ]; do
-  API_URL=$(curl -sf http://defisio-api:4040/api/tunnels 2>/dev/null | grep -o '"public_url":"https://[^"]*' | grep -o 'https://[^"]*' | head -1 || true)
+  API_URL=$(grep 'API_NGROK_URL=https://' /var/log/defisio/urls.log 2>/dev/null | tail -1 | grep -o 'https://[^ ]*' || true)
   if [ -z "$API_URL" ]; then
     RETRY=$((RETRY + 1))
     echo "[$(date)] Tentativa $RETRY/$MAX_RETRIES - Aguardando ngrok da API..."
