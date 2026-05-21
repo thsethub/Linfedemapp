@@ -56,16 +56,19 @@ echo ""
   EXP_URL=""
   while [ -z "$EXP_URL" ] && [ $RETRIES -lt 60 ]; do
     sleep 3
-    EXP_URL=$(grep -oE "exp://[a-zA-Z0-9_.-]+(:[0-9]+)?(/[^ ]*)?" /var/log/linfedemapp/expo.log 2>/dev/null | head -1 || true)
+    HTTPS_URL=$(curl -sf http://localhost:4040/api/tunnels 2>/dev/null | grep -o '"public_url":"https://[^"]*' | grep -o 'https://[^"]*' | head -1 || true)
+    if [ -n "$HTTPS_URL" ]; then
+      EXP_URL="exp://${HTTPS_URL#https://}"
+      echo ""
+      echo "=========================================================="
+      echo "  APP TUNNEL URL: $EXP_URL"
+      echo "  (também acessível via $HTTPS_URL)"
+      echo "=========================================================="
+      echo "[$(date)] APP_TUNNEL_URL=$EXP_URL" >> /var/log/linfedemapp/urls.log
+      echo "[$(date)] APP_TUNNEL_HTTPS=$HTTPS_URL" >> /var/log/linfedemapp/urls.log
+    fi
     RETRIES=$((RETRIES + 1))
   done
-  if [ -n "$EXP_URL" ]; then
-    echo ""
-    echo "=========================================================="
-    echo "  APP TUNNEL URL: $EXP_URL"
-    echo "=========================================================="
-    echo "[$(date)] APP_TUNNEL_URL=$EXP_URL" >> /var/log/linfedemapp/urls.log
-  fi
 ) &
 
 npx expo start --tunnel </dev/null 2>&1 | tee -a /var/log/linfedemapp/expo.log
