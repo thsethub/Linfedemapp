@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   SafeAreaView,
+  ScrollView,
   View,
   Text,
   TouchableOpacity,
@@ -96,8 +97,12 @@ export default function LanguageSelector() {
           )}
         </Text>
 
-        {/* Language Options */}
-        <View style={styles.optionsContainer}>
+        {/* Language Options - Scrollable */}
+        <ScrollView
+          style={styles.optionsScroll}
+          contentContainerStyle={styles.optionsContent}
+          showsVerticalScrollIndicator={false}
+        >
           {countries.map((country) => {
             const isSelected = selectedLanguage === country.code;
 
@@ -141,21 +146,23 @@ export default function LanguageSelector() {
               </TouchableOpacity>
             );
           })}
-        </View>
+        </ScrollView>
 
-        {/* Confirm Button */}
-        <TouchableOpacity
-          style={[
-            styles.confirmButton,
-            !selectedLanguage && styles.confirmButtonDisabled,
-          ]}
-          onPress={handleConfirm}
-          disabled={!selectedLanguage}
-        >
-          <Text style={styles.confirmButtonText}>
-            {getLocalizedText("Confirmar", "Confirmar", "Confirm")}
-          </Text>
-        </TouchableOpacity>
+        {/* Confirm Button - Fixed at Bottom */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={[
+              styles.confirmButton,
+              !selectedLanguage && styles.confirmButtonDisabled,
+            ]}
+            onPress={handleConfirm}
+            disabled={!selectedLanguage}
+          >
+            <Text style={styles.confirmButtonText}>
+              {getLocalizedText("Confirmar", "Confirmar", "Confirm")}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -222,8 +229,18 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 24,
   },
-  optionsContainer: {
+  optionsScroll: {
     flex: 1,
+  },
+  optionsContent: {
+    paddingBottom: 8,
+  },
+  buttonContainer: {
+    paddingTop: 12,
+    paddingBottom: 24,
+    borderTopWidth: 1,
+    borderTopColor: "#f3f4f6",
+    backgroundColor: "white",
   },
   optionCard: {
     flexDirection: "row",
@@ -293,8 +310,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: "center",
-    marginBottom: 24,
-    marginTop: 12,
     elevation: 2,
     shadowColor: "#b41976",
     shadowOffset: { width: 0, height: 4 },
