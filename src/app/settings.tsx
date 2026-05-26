@@ -6,12 +6,14 @@ import {
   StatusBar,
   ScrollView,
   Switch,
+  Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useTranslation, useLanguage } from "../context/LanguageContext";
 import { Feather } from "@expo/vector-icons";
 import { Language } from "../locales";
+import * as SecureStore from "expo-secure-store";
 
 const languages = [
   {
@@ -41,6 +43,7 @@ export default function Settings() {
   const { t } = useTranslation();
   const { currentLanguage, setLanguage } = useLanguage();
   const [notifications, setNotifications] = useState(true);
+  const [aboutModalVisible, setAboutModalVisible] = useState(false);
 
   const handleLanguageChange = async (languageCode: string) => {
     try {
@@ -51,12 +54,8 @@ export default function Settings() {
   };
 
   const getLocalizedText = (ptText: string, esText: string, enText: string) => {
-    if (currentLanguage === "es-ES") {
-      return esText;
-    }
-    if (currentLanguage === "en-US") {
-      return enText;
-    }
+    if (currentLanguage === "es-ES") return esText;
+    if (currentLanguage === "en-US") return enText;
     return ptText;
   };
 
@@ -168,7 +167,7 @@ export default function Settings() {
               <Feather name="arrow-left" size={24} color="#374151" />
             </TouchableOpacity>
             <Text className="text-xl font-semibold text-gray-900">
-              {t("common.settings") || "Configuración"}
+              {t("common.settings") || "Configurações"}
             </Text>
           </View>
         </View>
@@ -178,7 +177,7 @@ export default function Settings() {
           {/* General Section */}
           <View className="mb-8">
             <Text className="text-lg font-medium text-gray-900 mb-4">
-              {t("settings.general") || "General"}
+              {t("settings.general") || "Geral"}
             </Text>
 
             {/* Current Language Display */}
@@ -249,7 +248,7 @@ export default function Settings() {
           {/* Account Section */}
           <View className="mb-8">
             <Text className="text-lg font-medium text-gray-900 mb-4">
-              {t("settings.account") || "Cuenta"}
+              {t("settings.account") || "Conta"}
             </Text>
 
             <SettingCard
@@ -257,17 +256,17 @@ export default function Settings() {
               title={t("settings.profile") || "Perfil"}
               subtitle={
                 t("settings.profileSubtitle") ||
-                "Gestionar información personal"
+                "Gerenciar informações pessoais"
               }
-              // onPress={() => router.push("/profile")}
+              onPress={() => router.push("/profile")}
             />
 
             <SettingCard
               icon="bell"
-              title={t("settings.notifications") || "Notificaciones"}
+              title={t("settings.notifications") || "Notificações"}
               subtitle={
                 t("settings.notificationsSubtitle") ||
-                "Configurar alertas y recordatorios"
+                "Configurar alertas e lembretes"
               }
               showArrow={false}
               rightComponent={
@@ -284,25 +283,23 @@ export default function Settings() {
           {/* Support Section */}
           <View className="mb-8">
             <Text className="text-lg font-medium text-gray-900 mb-4">
-              {t("settings.support") || "Soporte"}
+              {t("settings.support") || "Suporte"}
             </Text>
 
             <SettingCard
               icon="help-circle"
-              title={t("settings.help") || "Ayuda y FAQ"}
+              title={t("settings.help") || "Ajuda e FAQ"}
               subtitle={
-                t("settings.helpSubtitle") || "Preguntas frecuentes y soporte"
+                t("settings.helpSubtitle") || "Perguntas frequentes e suporte"
               }
               onPress={() => router.push("/faq")}
             />
 
             <SettingCard
               icon="info"
-              title={t("settings.about") || "Acerca de la App"}
-              subtitle={t("settings.aboutSubtitle") || "Versión 1.0.0"}
-              onPress={() => {
-                // Implementar tela sobre o app
-              }}
+              title={t("settings.about") || "Sobre o App"}
+              subtitle={t("settings.aboutSubtitle") || "Versão 1.0.0"}
+              onPress={() => setAboutModalVisible(true)}
             />
           </View>
 
@@ -315,20 +312,96 @@ export default function Settings() {
               shadowOpacity: 0.08,
               shadowRadius: 2,
             }}
-            onPress={() => {
+            onPress={async () => {
+              await SecureStore.deleteItemAsync("access_token");
               router.replace("/sing-in");
             }}
           >
             <Feather name="log-out" size={20} color="#EF4444" />
             <Text className="text-red-500 font-semibold text-base ml-2">
-              {t("settings.logout") || "Cerrar Sesión"}
+              {t("settings.logout") || "Sair da Conta"}
             </Text>
           </TouchableOpacity>
 
-          {/* Espaço no final */}
           <View className="h-6" />
         </View>
       </ScrollView>
+
+      {/* About App Modal */}
+      <Modal
+        visible={aboutModalVisible}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setAboutModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 24,
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#fff",
+              borderRadius: 20,
+              padding: 28,
+              width: "100%",
+              maxWidth: 360,
+            }}
+          >
+            {/* Modal Header */}
+            <View className="items-center mb-6">
+              <View
+                className="w-16 h-16 bg-primary-50 rounded-full items-center justify-center mb-4"
+              >
+                <Feather name="info" size={32} color="#B91C7C" />
+              </View>
+              <Text className="text-xl font-bold text-gray-900 text-center">
+                {t("settings.aboutModal.title") || "Sobre o Linfedemapp"}
+              </Text>
+            </View>
+
+            {/* Version */}
+            <View className="bg-gray-50 rounded-xl p-4 mb-4">
+              <Text className="text-sm text-gray-500 mb-1">
+                {t("settings.aboutModal.version") || "Versão"}
+              </Text>
+              <Text className="text-base font-semibold text-gray-900">1.0.0</Text>
+            </View>
+
+            {/* Description */}
+            <View className="bg-gray-50 rounded-xl p-4 mb-4">
+              <Text className="text-sm text-gray-700 leading-5">
+                {t("settings.aboutModal.description") ||
+                  "O Linfedemapp é uma ferramenta desenvolvida para profissionais de saúde otimizarem o acompanhamento de pacientes com linfedema."}
+              </Text>
+            </View>
+
+            {/* Developer */}
+            <View className="bg-gray-50 rounded-xl p-4 mb-6">
+              <Text className="text-sm text-gray-500 mb-1">
+                {t("settings.aboutModal.developer") || "Desenvolvedor"}
+              </Text>
+              <Text className="text-base font-semibold text-gray-900">
+                {t("settings.aboutModal.developerName") || "Equipe Linfedemapp"}
+              </Text>
+            </View>
+
+            {/* Close Button */}
+            <TouchableOpacity
+              className="bg-primary-500 rounded-xl p-4 items-center"
+              onPress={() => setAboutModalVisible(false)}
+            >
+              <Text className="text-white font-bold text-base">
+                {t("settings.aboutModal.close") || "Fechar"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

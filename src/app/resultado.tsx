@@ -278,46 +278,46 @@ export default function Resultado() {
     if (percentage < 5) {
       const text = t("results.volumeAnalysis.noChanges").replace(
         "{difference}",
-        `${formattedDifference} mL`
+        `${formattedDifference}`
       );
-      return renderTextWithBold(text, [`${formattedDifference} mL`]);
+      return renderTextWithBold(text, [`${formattedDifference} cm³`]);
     } else if (percentage >= 5 && percentage < 10) {
       const text = t("results.volumeAnalysis.stage0")
-        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{difference}", `${formattedDifference}`)
         .replace("{percentage}", `${formattedPercentage}%`);
       const stage = text.includes("estágio") ? "estágio 0" : "estadio 0";
       return renderTextWithBold(text, [
-        `${formattedDifference} mL`,
+        `${formattedDifference} cm³`,
         `${formattedPercentage}%`,
         stage,
       ]);
     } else if (percentage >= 10 && percentage < 20) {
       const text = t("results.volumeAnalysis.stage1")
-        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{difference}", `${formattedDifference}`)
         .replace("{percentage}", `${formattedPercentage}%`);
       const stage = text.includes("estágio") ? "estágio I" : "estadio I";
       return renderTextWithBold(text, [
-        `${formattedDifference} mL`,
+        `${formattedDifference} cm³`,
         `${formattedPercentage}%`,
         stage,
       ]);
     } else if (percentage >= 20 && percentage < 40) {
       const text = t("results.volumeAnalysis.stage2")
-        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{difference}", `${formattedDifference}`)
         .replace("{percentage}", `${formattedPercentage}%`);
       const stage = text.includes("estágio") ? "estágio II" : "estadio II";
       return renderTextWithBold(text, [
-        `${formattedDifference} mL`,
+        `${formattedDifference} cm³`,
         `${formattedPercentage}%`,
         stage,
       ]);
     } else {
       const text = t("results.volumeAnalysis.stage3")
-        .replace("{difference}", `${formattedDifference} mL`)
+        .replace("{difference}", `${formattedDifference}`)
         .replace("{percentage}", `${formattedPercentage}%`);
       const stage = text.includes("estágio") ? "estágio III" : "estadio III";
       return renderTextWithBold(text, [
-        `${formattedDifference} mL`,
+        `${formattedDifference} cm³`,
         `${formattedPercentage}%`,
         stage,
       ]);
@@ -775,7 +775,7 @@ export default function Resultado() {
                   className="text-primary-500 font-semibold"
                   style={{ fontSize: 12, padding: 10 }}
                 >
-                  {volumeReferenciaTotal.toFixed(2)} mL
+                  {volumeReferenciaTotal.toFixed(2)} cm³
                 </Text>
               </View>
             </View>
@@ -810,7 +810,7 @@ export default function Resultado() {
                   className="text-primary-500 font-semibold"
                   style={{ fontSize: 12, padding: 10 }}
                 >
-                  {volumeAfetadoTotal.toFixed(2)} mL
+                  {volumeAfetadoTotal.toFixed(2)} cm³
                 </Text>
               </View>
             </View>

@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   Image,
-  Alert,
   ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native";
@@ -14,7 +13,6 @@ import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 import FaqAccordion from "@/components/FaqAccordion";
-import { Linking } from "react-native";
 import { useTranslation } from "@/context/LanguageContext";
 import { API_URL } from "@/config/api";
 
@@ -52,22 +50,20 @@ export default function Faq() {
   useEffect(() => {
     const fetchUser = async () => {
       const token = await SecureStore.getItemAsync("access_token");
-      if (!token) {
-        // Alert.alert("Erro", "Token de autenticação não encontrado.");
-        return;
-      }
+      if (!token) return;
       try {
         const response = await axios.get(`${API_URL}/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);
-        console.log("User data:", response.data);
-      } catch (error) {
-        console.error("Error fetching user:", error);
+      } catch {
+        // silently ignore — user just won't have a name displayed
       }
     };
     fetchUser();
   }, []);
+
+  const firstName = user?.name?.split(" ")[0] ?? "";
 
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">
@@ -85,13 +81,16 @@ export default function Faq() {
       </View>
 
       <ScrollView className="mt-2">
-        <View className="justify-center items-center mt-10">
+        {/* paddingTop to allow the doctor image to overflow upward */}
+        <View className="justify-center items-center" style={{ paddingTop: 50, paddingBottom: 8 }}>
           <View
-            className="bg-primary-500 px-6 flex-row items-center"
+            className="bg-primary-500 flex-row items-center"
             style={{
               width: 330,
               height: 130,
               borderRadius: 20,
+              paddingLeft: 140,
+              paddingRight: 16,
             }}
           >
             <Image
@@ -99,24 +98,29 @@ export default function Faq() {
               style={{
                 position: "absolute",
                 top: -50,
+                left: 0,
                 width: 130,
                 height: 180,
                 zIndex: 1,
               }}
             />
-            <View
-              className="flex-1 justify-center items-center"
-              style={{ marginLeft: 120, marginBottom: 30 }}
-            >
-              <Text className="text-white-500 font-semibold mt-10 text-center">
-                {user
-                  ? `${t("common.hello")}, ${user.name.split(" ")[0]}!`
+            <View className="flex-1 justify-center" style={{ marginBottom: 16 }}>
+              <Text
+                className="text-white-500 font-semibold mt-4 text-center"
+                numberOfLines={1}
+                adjustsFontSizeToFit
+              >
+                {firstName
+                  ? `${t("common.hello")}, ${firstName}!`
                   : `${t("common.hello")}!`}
               </Text>
-              <Text className="text-white-500 font-semibold mb-4 text-center">
+              <Text className="text-white-500 font-semibold mb-1 text-center text-sm">
                 {t("faq.needHelp")}
               </Text>
-              <Text className="text-white-500 text-xs font-semibold text-center">
+              <Text
+                className="text-white-500 text-xs font-semibold text-center"
+                numberOfLines={2}
+              >
                 {t("faq.supportText")}
               </Text>
             </View>

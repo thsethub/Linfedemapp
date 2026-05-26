@@ -7,20 +7,76 @@ import Entypo from "@expo/vector-icons/Entypo";
 import { Feather } from "@expo/vector-icons";
 import { useTranslation } from "../context/LanguageContext";
 
+const ICON_SIZE = 50;
+const ITEM_WIDTH = 82; // wide enough for longest English label ("Lymphedema\nCalculator")
+
+function ShortcutItem({
+  onPress,
+  icon,
+  iconImage,
+  label,
+  subLabel,
+  customIcon,
+}: {
+  onPress: () => void;
+  icon?: string;
+  iconImage?: any;
+  label: string;
+  subLabel: string;
+  customIcon?: React.ReactNode;
+}) {
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{ width: ITEM_WIDTH, alignItems: "center", marginRight: 14 }}
+    >
+      <View
+        style={{
+          width: ICON_SIZE,
+          height: ICON_SIZE,
+          borderRadius: ICON_SIZE / 2,
+          backgroundColor: "#f8e8f1",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 8,
+        }}
+      >
+        {customIcon ?? (iconImage ? (
+          <Image source={iconImage} style={{ width: 24, height: 24 }} />
+        ) : icon ? (
+          <Feather name={icon as any} size={24} color="#B91C7C" />
+        ) : null)}
+      </View>
+      <Text
+        style={{
+          color: "#B91C7C",
+          fontWeight: "600",
+          fontSize: 12,
+          textAlign: "center",
+          lineHeight: 16,
+        }}
+        numberOfLines={2}
+        adjustsFontSizeToFit
+        minimumFontScale={0.75}
+      >
+        {`${label}\n${subLabel}`}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
 export default function Home() {
   const { t } = useTranslation();
 
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">
       <StatusBar style="dark" translucent />
+
+      {/* Banner */}
       <View className="justify-center items-center">
         <View
           className="bg-primary-500 px-6 mt-8"
-          style={{
-            width: 330,
-            height: 130,
-            borderRadius: 20,
-          }}
+          style={{ width: 330, height: 130, borderRadius: 20 }}
         >
           <Image
             source={require("../assets/image 8.png")}
@@ -34,12 +90,16 @@ export default function Home() {
             }}
           />
           <Text className="text-white-500 font-semibold mt-10">
-            <Text>{t("home.banner.title1") || "Fique por dentro das"}</Text>
+            {t("home.banner.title1") || "Fique por dentro das"}
           </Text>
           <Text className="text-white-500 font-semibold mb-4">
-            <Text>{t("home.banner.title2") || "novidades do app!"}</Text>
+            {t("home.banner.title2") || "novidades do app!"}
           </Text>
-          <TouchableOpacity activeOpacity={0.6} className="flex-row mr-2">
+          <TouchableOpacity
+            activeOpacity={0.6}
+            className="flex-row mr-2"
+            onPress={() => router.push("/news")}
+          >
             <Text className="text-white-500 font-medium">
               {t("home.banner.seeMore") || "Veja mais"}
             </Text>
@@ -48,264 +108,68 @@ export default function Home() {
         </View>
       </View>
 
-      {/* Nova Seção: Perfil e Configurações */}
-      <View
-        style={{
-          marginLeft: 40,
-          marginTop: 30,
-        }}
-      >
+      {/* Minha Conta */}
+      <View style={{ marginLeft: 40, marginTop: 30 }}>
         <Text className="text-black-500 font-bold text-xl mb-2">
           {t("home.profile.title") || "Minha Conta"}
         </Text>
-        <View
-          style={{
-            marginRight: 20,
-          }}
-        >
+        <View style={{ marginRight: 20 }}>
           <View className="flex-row bg-white-500 rounded-lg py-4">
-            {/* <TouchableOpacity
-              onPress={() => {
-                router.push("/profile");
-              }}
-            >
-              <View className="items-center" style={{ marginRight: 10 }}>
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 40,
-                    backgroundColor: "#f8e8f1",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: 8,
-                  }}
-                >
-                  <Feather name="user" size={24} color="#B91C7C" />
-                </View>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.profile.professional") || "Perfil"}
-                </Text>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.profile.professionalSub") || "Profissional"}
-                </Text>
-              </View>
-            </TouchableOpacity> */}
-
-            <TouchableOpacity
-              onPress={() => {
-                router.push("/settings");
-              }}
-            >
-              <View
-                className="items-center"
-                style={{
-                  // marginLeft: 10,
-                }}
-              >
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 40,
-                    backgroundColor: "#f8e8f1",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    // marginBottom: 8,
-                  }}
-                >
-                  <Entypo name="cog" size={24} color="#B91C7C" />
-                </View>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.settings.title") || "Ajustes"}
-                </Text>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.settings.subtitle") || "do App"}
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <ShortcutItem
+              onPress={() => router.push("/profile")}
+              icon="user"
+              label={t("home.profile.professional") || "Perfil"}
+              subLabel={t("home.profile.professionalSub") || "Profissional"}
+            />
+            <ShortcutItem
+              onPress={() => router.push("/settings")}
+              customIcon={<Entypo name="cog" size={24} color="#B91C7C" />}
+              label={t("home.settings.title") || "Ajustes"}
+              subLabel={t("home.settings.subtitle") || "do App"}
+            />
           </View>
         </View>
       </View>
 
-      <View
-        style={{
-          marginLeft: 40,
-          marginTop: 30,
-        }}
-      >
-        <Text className="text-black-500 font-bold text-xl ">
+      {/* Realizar Exames */}
+      <View style={{ marginLeft: 40, marginTop: 30 }}>
+        <Text className="text-black-500 font-bold text-xl mb-0">
           {t("home.exams.performTitle") || "Realizar exames"}
         </Text>
-        <View
-          style={{
-            marginRight: 20, // Espaço entre o ícone e o texto
-          }}
-        >
+        <View style={{ marginRight: 20 }}>
           <View className="flex-row bg-white-500 rounded-lg items-center py-4">
-            <TouchableOpacity
-              onPress={() => {
-                router.push("/fichaExame");
-              }}
-            >
-              <View className="items-center" style={{ marginRight: 10 }}>
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 40,
-                    backgroundColor: "#f8e8f1",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: 8,
-                  }}
-                >
-                  <Image
-                    source={require("../assets/file-text.png")}
-                    style={{
-                      width: 24,
-                      height: 24,
-                    }}
-                  />
-                </View>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.exams.examForm") || "Ficha de"}
-                </Text>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.exams.examFormSub") || "Exame"}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                router.push("/calculadora");
-              }}
-            >
-              <View className="items-center" style={{ marginLeft: 10 }}>
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 40,
-                    backgroundColor: "#f8e8f1",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: 8,
-                  }}
-                >
-                  <Image
-                    source={require("../assets/Group.png")}
-                    style={{
-                      width: 23,
-                      height: 23,
-                    }}
-                  />
-                </View>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.exams.calculator") || "Calculadora"}
-                </Text>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.exams.calculatorSub") || "Linfedema"}
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <ShortcutItem
+              onPress={() => router.push("/fichaExame")}
+              iconImage={require("../assets/file-text.png")}
+              label={t("home.exams.examForm") || "Ficha de"}
+              subLabel={t("home.exams.examFormSub") || "Exame"}
+            />
+            <ShortcutItem
+              onPress={() => router.push("/calculadora")}
+              iconImage={require("../assets/Group.png")}
+              label={t("home.exams.calculator") || "Calculadora"}
+              subLabel={t("home.exams.calculatorSub") || "Linfedema"}
+            />
           </View>
         </View>
       </View>
 
-      <View
-        style={{
-          marginLeft: 40,
-          marginTop: 30,
-        }}
-      >
-        <Text className="text-black-500 font-bold text-xl ">
+      {/* Exames concluídos */}
+      <View style={{ marginLeft: 40, marginTop: 30 }}>
+        <Text className="text-black-500 font-bold text-xl mb-0">
           {t("home.exams.completedTitle") || "Exames concluídos"}
         </Text>
-        <View
-          style={{
-            marginRight: 20,
-          }}
-        >
+        <View style={{ marginRight: 20 }}>
           <View className="flex-row bg-white-500 rounded-lg items-center py-4">
-            <TouchableOpacity
-              onPress={() => {
-                router.push("/historicoExames");
-              }}
-            >
-              <View className="items-center">
-                <View
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 40,
-                    backgroundColor: "#f8e8f1",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: 8,
-                  }}
-                >
-                  <Image
-                    source={require("../assets/file-text.png")}
-                    style={{
-                      width: 24,
-                      height: 24,
-                    }}
-                  />
-                </View>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.exams.history") || "Histórico"}
-                </Text>
-                <Text className="font-semibold text-primary-500 text-center text-sm">
-                  {t("home.exams.historySub") || "Exames"}
-                </Text>
-              </View>
-            </TouchableOpacity>
+            <ShortcutItem
+              onPress={() => router.push("/historicoExames")}
+              iconImage={require("../assets/file-text.png")}
+              label={t("home.exams.history") || "Histórico de"}
+              subLabel={t("home.exams.historySub") || "Exames"}
+            />
           </View>
         </View>
       </View>
-
-      <TouchableOpacity
-        onPress={() => {
-          router.navigate("/faq");
-        }}
-        style={{
-          position: "absolute",
-          bottom: 25,
-          alignSelf: "center",
-        }}
-      >
-        <Text className="text-center">
-          <Text className="text-primary-500">
-            {t("buttons.help") || "Preciso de ajuda"}
-          </Text>
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={{
-          position: "absolute",
-          bottom: 60,
-          right: 30,
-          width: 50,
-          height: 50,
-          backgroundColor: "#b41976",
-          borderRadius: 30,
-          justifyContent: "center",
-          alignItems: "center",
-          // Adicionando sombra
-          shadowColor: "#000",
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 6,
-          elevation: 5,
-        }}
-        onPress={() => {
-          router.navigate("/faq");
-        }}
-      >
-        <Entypo name="help" size={24} color="white" />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }

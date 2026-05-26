@@ -113,12 +113,32 @@
   },
   "profile": {
     "title": "Perfil Profesional",
-    "specialty": "Fisioterapeuta",
+    "information": "Información",
+    "specialty": "Titulación / Profesión",
+    "specialtyPlaceholder": "Ej: Fisioterapeuta, Dr(a)...",
     "email": "Correo electrónico",
     "phone": "Teléfono",
-    "institution": "Institución",
+    "institution": "Origen / Institución",
+    "institutionPlaceholder": "Ej: Hospital, Universidad...",
+    "editingMode": "Modo de edición",
+    "save": "Guardar cambios",
     "editProfile": "Editar Perfil",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "loadError": "No fue posible cargar los datos del perfil.",
+    "saveSuccess": "¡Perfil actualizado con éxito!",
+    "saveError": "No fue posible guardar los cambios."
+  },
+  "news": {
+    "title": "Noticias",
+    "subtitle": "Linfedema y Linfología",
+    "loading": "Cargando noticias...",
+    "error": "No fue posible cargar las noticias.",
+    "retry": "Intentar de nuevo",
+    "empty": "No se encontraron noticias.",
+    "feedTitle": "Feed de Noticias",
+    "feedSubtitle": "Actualizado diariamente • Google News",
+    "source": "Fuente: Google News via RSS",
+    "cantOpen": "No fue posible abrir el artículo."
   },
   "common": {
     "hello": "Hola",
@@ -135,7 +155,8 @@
     "close": "Cerrar",
     "validation": "Validación",
     "notProvided": "No informado",
-    "select": "Seleccionar"
+    "select": "Seleccionar",
+    "authTokenNotFound": "Token de autenticación no encontrado."
   },
   "settings": {
     "general": "General",
@@ -150,7 +171,15 @@
     "helpSubtitle": "Preguntas frecuentes y soporte",
     "about": "Acerca de la App",
     "aboutSubtitle": "Versión 1.0.0",
-    "logout": "Cerrar Sesión"
+    "logout": "Cerrar Sesión",
+    "aboutModal": {
+      "title": "Acerca de Linfedemapp",
+      "version": "Versión",
+      "description": "Linfedemapp es una herramienta desarrollada para que los profesionales de la salud optimicen el seguimiento de pacientes con linfedema.",
+      "developer": "Desarrollador",
+      "developerName": "Equipo Linfedemapp",
+      "close": "Cerrar"
+    }
   },
   "patient": {
     "title": "Ficha del Paciente",
@@ -316,11 +345,11 @@
     "noPatientFound": "No se encontró ningún paciente.",
     "associatePatientBeforeConfirm": "Asocie al menos un paciente antes de confirmar.",
     "volumeAnalysis": {
-      "noChanges": "El miembro presenta una diferencia de volumen de {difference} mL, pero no presenta alteraciones volumétricas.",
-      "stage0": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, lo que puede sugerir un estadio 0 o subclínico.",
-      "stage1": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio I o leve.",
-      "stage2": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio II o moderado.",
-      "stage3": "El miembro presenta una diferencia de volumen de {difference} mL y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio III o avanzado."
+      "noChanges": "El miembro presenta una diferencia de volumen de {difference} cm³, pero no presenta alteraciones volumétricas.",
+      "stage0": "El miembro presenta una diferencia de volumen de {difference} cm³ y alteraciones de volumen de {percentage}%, lo que puede sugerir un estadio 0 o subclínico.",
+      "stage1": "El miembro presenta una diferencia de volumen de {difference} cm³ y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio I o leve.",
+      "stage2": "El miembro presenta una diferencia de volumen de {difference} cm³ y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio II o moderado.",
+      "stage3": "El miembro presenta una diferencia de volumen de {difference} cm³ y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio III o avanzado."
     },
     "alert": "¡Alerta!",
     "references": {

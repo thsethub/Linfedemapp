@@ -34,22 +34,8 @@
     "close": "Close",
     "validation": "Validation",
     "notProvided": "Not provided",
-    "select": "Select"
-  },
-  "settings": {
-    "general": "General",
-    "languageSubtitle": "English (US)",
-    "account": "Account",
-    "profile": "Profile",
-    "profileSubtitle": "Manage personal information",
-    "notifications": "Notifications",
-    "notificationsSubtitle": "Configure alerts and reminders",
-    "support": "Support",
-    "help": "Help and FAQ",
-    "helpSubtitle": "Frequently asked questions and support",
-    "about": "About the App",
-    "aboutSubtitle": "Version 1.0.0",
-    "logout": "Sign out"
+    "select": "Select",
+    "authTokenNotFound": "Authentication token not found."
   },
   "auth": {
     "login": {
@@ -76,7 +62,428 @@
       "registerButton": "Register",
       "registering": "Registering...",
       "hasAccount": "Already have an account?",
-      "signIn": "Sign in now"
+      "signIn": "Sign in now",
+      "fillAllFields": "Please fill in all fields.",
+      "invalidEmail": "Please enter a valid e-mail address.",
+      "passwordMismatch": "Passwords do not match. Please verify.",
+      "successMessage": "Account created successfully!",
+      "errorMessage": "Error creating account.",
+      "networkError": "Could not complete registration."
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your e-mail and we will send you recovery instructions.",
+      "emailPlaceholder": "Enter your e-mail",
+      "sendInstructions": "Send instructions",
+      "rememberedPassword": "Remembered your password?",
+      "signInNow": "Sign in now",
+      "enterEmail": "Please enter your e-mail.",
+      "emailSendError": "Could not send the e-mail.",
+      "networkError": "Could not connect to the server. Check your connection.",
+      "enterCodeTitle": "Enter the code",
+      "checkEmail": "Check your e-mail",
+      "codeSentTo": "We sent a verification code to:",
+      "verificationCode": "Verification code",
+      "verifyCode": "Verify code",
+      "didntReceiveCode": "Didn't receive the code?",
+      "resendCode": "Send again",
+      "codeRequired": "The code must have 6 digits.",
+      "invalidCode": "Invalid or expired code.",
+      "verificationError": "Verification Error",
+      "newPasswordTitle": "New password",
+      "newPasswordSubtitle": "Almost done! Enter your new password to finish the recovery.",
+      "newPassword": "New password",
+      "newPasswordPlaceholder": "Enter your new password",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "Confirm your new password",
+      "passwordMismatch": "Passwords do not match.",
+      "updatePassword": "Update password",
+      "shortPassword": "Short password",
+      "passwordMinLength": "New password must be at least 6 characters.",
+      "passwordUpdated": "Your password has been updated. Please sign in.",
+      "passwordUpdateError": "Could not update the password."
+    }
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "needHelp": "How can I help?",
+    "supportText": "On the support screen, you can find answers to all your questions about the app.",
+    "questions": {
+      "q1": {
+        "question": "How does the app work?",
+        "answer": "Linfedemapp is a tool developed for healthcare professionals to optimize the follow-up of patients with lymphedema. It allows recording anamnesis data, performing perimetry measurements, calculating limb volume, and tracking treatment progress through a detailed history."
+      },
+      "q2": {
+        "question": "How is volumetry calculated in the app?",
+        "answer": "Volume calculation in the app is performed using circumference measurements obtained by perimetry, using the indirect volumetry method. In this process, the limb is divided into successive segments of approximately 10 cm, each considered as a truncated cone. The volume of each segment is calculated by the formula:\n\nV = (h / 12π) × (C1² + C1 × C2 + C2²)\n\nwhere h corresponds to the segment height (distance between measurement points), and C₁ and C₂ are the proximal and distal circumferences, respectively. The sum of all segment volumes gives the total limb volume.\n\nThis method, described in the clinical guidelines of the American Physical Therapy Association, is recognized as a valid and reliable technique for estimating limb volume in patients with lymphedema (Levenhagen et al., 2017).\n\nReference:\nLEVENHAGEN, Kimberly et al. Diagnosis of upper quadrant lymphedema secondary to cancer: clinical practice guideline from the Oncology Section of the American Physical Therapy Association. Physical Therapy, v. 97, n. 7, p. 729-745, 2017.\nhttps://doi.org/10.1093/ptj/pzx050"
+      },
+      "q3": {
+        "question": "Is it possible to compare patient progress?",
+        "answer": "Yes. The 'Exam History' section stores all assessments. By selecting a patient, you can view the progression of limb volume, the percentage difference between assessments, and compare perimetry data over time, facilitating the analysis of treatment effectiveness."
+      },
+      "q4": {
+        "question": "How is patient data protected?",
+        "answer": "Security is our priority. All data is transmitted via HTTPS and stored with encryption. Access is restricted and follows the guidelines of the General Data Protection Regulation (GDPR), ensuring the confidentiality of clinical information."
+      },
+      "q5": {
+        "question": "How does report export work?",
+        "answer": "From the history, any exam can be exported as a PDF report. The document includes patient data, perimetry measurements, calculated volume, and evaluation date, ready to be attached to the electronic medical record or shared."
+      },
+      "q6": {
+        "question": "How can I reset my password?",
+        "answer": "On the login screen, click on 'Forgot your password?'. You will need to provide your registered e-mail to receive a verification code and instructions to create a new password."
+      }
+    }
+  },
+  "home": {
+    "banner": {
+      "title1": "Stay up to date with",
+      "title2": "app news!",
+      "seeMore": "See more"
+    },
+    "profile": {
+      "title": "My Account",
+      "professional": "Profile",
+      "professionalSub": "Professional"
+    },
+    "settings": {
+      "title": "App",
+      "subtitle": "Settings"
+    },
+    "exams": {
+      "performTitle": "Perform exams",
+      "completedTitle": "Completed exams",
+      "examForm": "Exam",
+      "examFormSub": "Form",
+      "calculator": "Lymphedema",
+      "calculatorSub": "Calculator",
+      "history": "Exam",
+      "historySub": "History"
+    }
+  },
+  "profile": {
+    "title": "Professional Profile",
+    "information": "Information",
+    "specialty": "Title / Profession",
+    "specialtyPlaceholder": "e.g.: Physiotherapist, Dr...",
+    "email": "E-mail",
+    "phone": "Phone",
+    "institution": "Origin / Institution",
+    "institutionPlaceholder": "e.g.: Hospital, University...",
+    "editingMode": "Edit mode",
+    "save": "Save changes",
+    "editProfile": "Edit Profile",
+    "logout": "Sign out",
+    "name": "Name",
+    "profession": "Profession",
+    "origin": "Origin",
+    "loadError": "Could not load profile data.",
+    "saveSuccess": "Profile updated successfully!",
+    "saveError": "Could not save changes."
+  },
+  "news": {
+    "title": "News",
+    "subtitle": "Lymphedema & Lymphology",
+    "loading": "Loading news...",
+    "error": "Could not load news.",
+    "retry": "Try again",
+    "empty": "No news found.",
+    "feedTitle": "News Feed",
+    "feedSubtitle": "Updated daily • Google News",
+    "source": "Source: Google News via RSS",
+    "cantOpen": "Could not open the article."
+  },
+  "settings": {
+    "general": "General",
+    "languageSubtitle": "English (US)",
+    "account": "Account",
+    "profile": "Profile",
+    "profileSubtitle": "Manage personal information",
+    "notifications": "Notifications",
+    "notificationsSubtitle": "Configure alerts and reminders",
+    "support": "Support",
+    "help": "Help and FAQ",
+    "helpSubtitle": "Frequently asked questions and support",
+    "about": "About the App",
+    "aboutSubtitle": "Version 1.0.0",
+    "logout": "Sign out",
+    "aboutModal": {
+      "title": "About Linfedemapp",
+      "version": "Version",
+      "description": "Linfedemapp is a tool developed for healthcare professionals to optimize lymphedema patient follow-up.",
+      "developer": "Developer",
+      "developerName": "Linfedemapp Team",
+      "close": "Close"
+    }
+  },
+  "patient": {
+    "title": "Patient Form",
+    "patientData": "Patient data",
+    "fullName": "Full name",
+    "fullNamePlaceholder": "Name",
+    "birthDate": "Date of birth",
+    "selectDate": "Select date",
+    "address": "Address",
+    "addressPlaceholder": "Address",
+    "phone": "Phone",
+    "phonePlaceholder": "(__) ____-____",
+    "weight": "Body weight",
+    "weightPlaceholder": "e.g.: 70",
+    "height": "Height",
+    "heightPlaceholder": "e.g.: 170",
+    "activityLevel": "Physical activity level",
+    "maritalStatus": "Marital status",
+    "occupation": "Profession/Occupation",
+    "occupationPlaceholder": "Enter profession/occupation",
+    "next": "Next",
+    "cancerDiagnosisDate": "Cancer diagnosis date",
+    "month": "Month",
+    "year": "Year",
+    "proceduresPerformed": "Procedures performed",
+    "skinChanges": "Have you had skin changes?",
+    "complementary": "Complementary",
+    "details": "Details",
+    "observation": "Observation",
+    "observationPlaceholder": "Add an observation about the patient",
+    "save": "Save",
+    "proceed": "Proceed",
+    "selectType": "Select type",
+    "howLongAgo": "How long ago?",
+    "activityLevels": {
+      "sedentary": "Sedentary",
+      "irregular": "Irregular",
+      "active": "Active",
+      "veryActive": "Very active"
+    },
+    "maritalStatuses": {
+      "single": "Single",
+      "married": "Married",
+      "widowed": "Widowed",
+      "divorced": "Divorced"
+    },
+    "procedures": {
+      "chemotherapy": "Chemotherapy",
+      "radiotherapy": "Radiotherapy",
+      "surgery": "Surgery",
+      "axillaryDissection": "Axillary dissection",
+      "hormoneTherapy": "Hormone therapy"
+    },
+    "procedureTypes": {
+      "neoadjuvant": "Neoadjuvant",
+      "adjuvant": "Adjuvant",
+      "neoAdjuvant": "Neo + Adjuvant",
+      "simpleMastectomy": "Simple mastectomy",
+      "modifiedMastectomy": "Modified mastectomy",
+      "radicalMastectomy": "Radical mastectomy",
+      "quadrantectomy": "Quadrantectomy",
+      "total": "Total",
+      "selective": "Selective",
+      "dontKnow": "Does not know"
+    },
+    "skinChangeTypes": {
+      "edema": "Edema",
+      "skinRetraction": "Skin retraction",
+      "pain": "Pain",
+      "nippleInversion": "Nipple inversion",
+      "hyperemia": "Hyperemia",
+      "nippleDesquamation": "Nipple desquamation",
+      "radiodermatitis": "Radiodermatitis",
+      "nippleUlceration": "Nipple ulceration",
+      "infection": "Infection",
+      "others": "Other(s)"
+    },
+    "questions": {
+      "musculoskeletalComplaints": "Does the patient have musculoskeletal complaints after treatment?",
+      "lymphedemaSymptoms": "Does the patient have lymphedema symptoms?",
+      "cacifoSign": "Pitting sign",
+      "orangePeelSign": "Orange peel sign",
+      "stemmerSign": "Stemmer sign"
+    },
+    "common": {
+      "yes": "Yes",
+      "no": "No",
+      "select": "Select"
+    }
+  },
+  "calculator": {
+    "title": "Calculator",
+    "reference": {
+      "title": "Reference",
+      "typeTitle": "Reference Type",
+      "styloidProcess": "Ulnar Styloid Process",
+      "articularLine": "Elbow Articular Line",
+      "acromion": "Acromion"
+    },
+    "affectedLimb": {
+      "title": "Affected Limb",
+      "rightArm": "Right Arm",
+      "leftArm": "Left Arm"
+    },
+    "points": {
+      "title": "Number of points",
+      "distance": "Point distance",
+      "instruction": "Perform measurements on the patient's limb starting at the chosen reference point and every"
+    },
+    "next": "Next"
+  },
+  "arms": {
+    "left": "Left",
+    "right": "Right",
+    "leftArm": "Left Arm",
+    "rightArm": "Right Arm",
+    "measurementProcess": "Measurement process",
+    "distanceBetweenPoints": "Distance between points",
+    "reference": "Reference",
+    "referenceLimb": "Reference Limb",
+    "affectedLimb": "Affected Limb",
+    "referencePerimeter": "Reference point perimeter (0cm)",
+    "perimetry": "Perimetry",
+    "pointsAboveReference": "Points above reference",
+    "pointsBelowReference": "Points below reference",
+    "point": "Point",
+    "calculate": "Calculate",
+    "measurementInstruction": "Make sure to perform measurements on the patient's limb from the reference position chosen above during the exam.",
+    "validationMessage": "Please fill in at least one valid measurement for both limbs before continuing.",
+    "references": {
+      "styloidProcess": "Ulnar Styloid Process",
+      "articularLine": "Elbow Articular Line",
+      "acromion": "Acromion"
+    }
+  },
+  "results": {
+    "diagnosis": "Diagnosis",
+    "results": "Results",
+    "perimetryExplanation": "The perimetry of each measured point may suggest: ",
+    "levels": {
+      "noChanges": "No changes",
+      "mild": "Mild",
+      "moderate": "Moderate",
+      "severe": "Severe"
+    },
+    "volumetry": "Volumetry",
+    "volume": "Vol.",
+    "volumeDifference": "Volume Difference",
+    "complementary": "Complementary",
+    "note": "Note",
+    "notePlaceholder": "Leave a comment",
+    "finalize": "Finalize",
+    "finalizeMeasurement": "Finalize Measurement",
+    "associateToPatient": "Would you like to associate this measurement with a patient?",
+    "authTokenNotFound": "Authentication token not found.",
+    "errorLoadingPatients": "Could not load patients.",
+    "selectPatientError": "Select a patient to associate the measurement.",
+    "measurementAssociated": "Measurement successfully associated with patient!",
+    "errorAssociatingMeasurement": "Could not associate the measurement.",
+    "selectPatient": "Select a Patient",
+    "searchPatient": "Search patient",
+    "birthDate": "Date of Birth",
+    "noPatientFound": "No patient found.",
+    "associatePatientBeforeConfirm": "Associate at least one patient before confirming.",
+    "volumeAnalysis": {
+      "noChanges": "The limb presents a volume difference of {difference} cm³, but shows no volumetric changes.",
+      "stage0": "The limb presents a volume difference of {difference} cm³ and volume changes of {percentage}%, which may suggest stage 0 or subclinical lymphedema.",
+      "stage1": "The limb presents a volume difference of {difference} cm³ and volume changes of {percentage}%, suggesting stage I or mild lymphedema.",
+      "stage2": "The limb presents a volume difference of {difference} cm³ and volume changes of {percentage}%, suggesting stage II or moderate lymphedema.",
+      "stage3": "The limb presents a volume difference of {difference} cm³ and volume changes of {percentage}%, suggesting stage III or advanced lymphedema."
+    },
+    "alert": "Alert!",
+    "references": {
+      "panobianco": "Reference - Panobianco; Mamede, 2002.",
+      "lymphologyConsensus": "International Consensus of the Lymphology Society, 2023."
+    }
+  },
+  "examHistory": {
+    "title": "Clinical History",
+    "searchPlaceholder": "Search patient",
+    "birthDate": "Date of Birth",
+    "openHistory": "Open Clinical History",
+    "delete": "Delete",
+    "noPatients": "No patients found.",
+    "confirmDelete": "Confirmation",
+    "confirmDeleteMessage": "Are you sure you want to delete this patient?",
+    "deleteSuccess": "Patient deleted successfully!",
+    "deleteError": "Could not delete the patient.",
+    "loadError": "Could not load patients."
+  },
+  "patientDetails": {
+    "title": "Clinical History",
+    "generatePDF": "Generate PDF",
+    "noDataFound": "No data found for this patient.",
+    "tabs": {
+      "chart": "Chart",
+      "details": "Details"
+    },
+    "chart": {
+      "title": "Volumetric Evolution",
+      "referenceLimb": "Reference Limb",
+      "affectedLimb": "Affected Limb"
+    },
+    "sections": {
+      "personalInfo": "Personal Information",
+      "physicalData": "Physical Data",
+      "procedures": "Procedures",
+      "skinChanges": "Skin Changes",
+      "signsSymptoms": "Signs and Symptoms",
+      "evolutionHistory": "Evolution History"
+    },
+    "fields": {
+      "birthDate": "Date of Birth",
+      "address": "Address",
+      "phone": "Phone",
+      "maritalStatus": "Marital Status",
+      "occupation": "Occupation",
+      "observation": "Observation",
+      "bodyWeight": "Body Weight",
+      "height": "Height",
+      "activityLevel": "Physical Activity Level",
+      "proceduresPerformed": "Procedures Performed",
+      "radiotherapy": "Radiotherapy",
+      "chemotherapy": "Chemotherapy",
+      "hormonotherapy": "Hormone Therapy",
+      "surgery": "Surgery",
+      "axillaryDissection": "Axillary Dissection",
+      "hormonotherapyDetails": "Hormone Therapy Details",
+      "musculoskeletalComplaints": "Musculoskeletal Complaints",
+      "lymphedemaSymptoms": "Lymphedema Symptoms",
+      "pittingSign": "Pitting Sign",
+      "orangePeelSign": "Orange Peel Sign",
+      "stemmerSign": "Stemmer Sign",
+      "evaluationDate": "Evaluation Date",
+      "measurementProcess": "Measurement Process",
+      "distanceBetweenPoints": "Distance between points",
+      "referenceArm": "Reference Arm",
+      "affectedArm": "Affected Arm",
+      "reference": "Reference",
+      "perimetry": "Perimetry",
+      "leftArmPoints": "Left Arm Points",
+      "rightArmPoints": "Right Arm Points",
+      "differences": "Differences",
+      "volumetry": "Volumetry",
+      "volumeDifference": "Volume Difference",
+      "referenceVolumes": "Reference Volumes",
+      "affectedVolumes": "Affected Volumes",
+      "totalReferenceVolume": "Total Reference Volume",
+      "totalAffectedVolume": "Total Affected Volume",
+      "observations": "Observations"
+    },
+    "values": {
+      "notProvided": "Not provided",
+      "notApplicable": "N/A",
+      "noProcedures": "No procedures provided",
+      "noSkinChanges": "No skin changes reported",
+      "noMeasurements": "No measurements found.",
+      "noObservations": "No observations provided.",
+      "incompleteInfo": "Incomplete information",
+      "kg": "kg",
+      "cm": "cm",
+      "ml": "cm³",
+      "months": "months"
+    },
+    "errors": {
+      "patientIdNotFound": "Patient ID not found.",
+      "loadError": "Could not load patient data.",
+      "pdfError": "Could not generate the report.",
+      "insufficientData": "Insufficient data to generate the report."
     }
   }
 }
