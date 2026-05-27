@@ -490,11 +490,12 @@
     "title": "About the App",
     "appLabel": "Application",
     "description": "Developed during the Master's in Physiotherapy by the principal author.",
-    "department": "Graduate Program in Physiotherapy — PPGFISIO",
+    "department": "Graduate Program in Physical Therapy, Universidade Federal de Pernambuco (UFPE)",
     "infoLabel": "Application Information",
     "city": "City",
     "version": "Version",
     "published": "Published",
+    "publishedLabel": "Sep/2025",
     "inpi": {
       "title": "Registration & Protection (INPI)",
       "process": "Process No.",
@@ -502,7 +503,8 @@
       "publishedDate": "Publication date",
       "issued": "Issued on",
       "validity": "Validity",
-      "note": "This application has official registration at INPI — Computer Program No."
+      "validityValue": "50 years (from 01/01/2026)",
+      "note": "This application has official registration at INPI: Computer Program No."
     },
     "citation": {
       "title": "Scientific Citation",
@@ -510,7 +512,13 @@
       "share": "Share"
     },
     "team": {
-      "title": "Author Team"
+      "title": "Author Team",
+      "roles": {
+        "author": "Author",
+        "advisor": "Advisor",
+        "scientificInitiation": "Scientific Initiation",
+        "collaborator": "Collaborator"
+      }
     },
     "contact": {
       "title": "Contact",

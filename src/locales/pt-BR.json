@@ -486,11 +486,12 @@
     "title": "Sobre o App",
     "appLabel": "Aplicativo",
     "description": "Desenvolvido durante o Mestrado em Fisioterapia da autora principal.",
-    "department": "Programa de Pós-Graduação em Fisioterapia — PPGFISIO",
+    "department": "Programa de Pós-graduação em Fisioterapia da Universidade Federal de Pernambuco (UFPE)",
     "infoLabel": "Informações do Aplicativo",
     "city": "Cidade",
     "version": "Versão",
     "published": "Publicação",
+    "publishedLabel": "Set/2025",
     "inpi": {
       "title": "Registro & Proteção (INPI)",
       "process": "Nº do Processo",
@@ -498,7 +499,8 @@
       "publishedDate": "Data de publicação",
       "issued": "Expedido em",
       "validity": "Validade",
-      "note": "Este aplicativo possui registro oficial no INPI — Programa de Computador nº"
+      "validityValue": "50 anos (a partir de 01/01/2026)",
+      "note": "Este aplicativo possui registro oficial no INPI: Programa de Computador nº"
     },
     "citation": {
       "title": "Citação Científica",
@@ -506,7 +508,13 @@
       "share": "Compartilhar"
     },
     "team": {
-      "title": "Equipe de Autores"
+      "title": "Equipe de Autores",
+      "roles": {
+        "author": "Autora",
+        "advisor": "Orientador",
+        "scientificInitiation": "Iniciação Científica",
+        "collaborator": "Colaborador"
+      }
     },
     "contact": {
       "title": "Contato",

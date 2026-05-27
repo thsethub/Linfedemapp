@@ -17,21 +17,19 @@ const appData = {
   name: "Linfedemapp",
   version: "1.0.0",
   city: "Recife, PE",
-  publishedLabel: "Set/2025",
   institution: "Universidade Federal de Pernambuco (UFPE)",
   inpi: {
     processo: "BR512025005856-0",
     publicacao: "15/09/2025",
     expedicao: "25/11/2025",
-    validade: "50 anos (a partir de 01/01/2026)",
     titular: "Universidade Federal de Pernambuco",
   },
   authors: [
-    { name: "Naiany Tenório de Jesus", role: "Autora", email: "naiany.tenorio@ufpe.br" },
-    { name: "Diego de Sousa Dantas", role: "Orientador", email: "diego.sdantas@ufpe.br" },
-    { name: "Herbert Albérico de Sá Leitão", role: "Orientador", email: null },
-    { name: "Thiago Augusto Santana Pereira", role: "Iniciação Científica", email: null },
-    { name: "Vinicius Roberto Medeiros de Souza", role: "Colaborador", email: null },
+    { name: "Naiany Tenório de Jesus", role: "author", email: "naiany.tenorio@ufpe.br" },
+    { name: "Diego de Sousa Dantas", role: "advisor", email: "diego.sdantas@ufpe.br" },
+    { name: "Herbert Albérico de Sá Leitão", role: "advisor", email: null },
+    { name: "Thiago Augusto Santana Pereira", role: "scientificInitiation", email: null },
+    { name: "Vinicius Roberto Medeiros de Souza", role: "collaborator", email: null },
   ],
   contacts: [
     { label: "Naiany Tenório de Jesus", email: "naiany.tenorio@ufpe.br" },
@@ -159,19 +157,16 @@ export default function Sobre() {
     {
       id: "abnt",
       label: "ABNT NBR 6023:2025",
-      sublabel: "Padrão obrigatório em universidades brasileiras",
       text: `TENÓRIO, Naiany; DANTAS, Diego de Sousa; LEITÃO, Herbert Albérico de Sá; PEREIRA, Thiago Augusto Santana; SOUZA, Vinicius Roberto Medeiros de. Linfedemapp. Recife, PE: UFPE, 2025. Acesso em: ${todayPtBR}.`,
     },
     {
       id: "apa",
       label: "APA 7ª Edição",
-      sublabel: "Padrão internacional — inglês e espanhol",
       text: `Tenório, N., Dantas, D. S., Leitão, H. A. S., Pereira, T. A. S., & Souza, V. R. M. (2025). Linfedemapp [Mobile application]. UFPE.`,
     },
     {
       id: "vancouver",
       label: "Vancouver",
-      sublabel: "Padrão biomédico — saúde e fisioterapia",
       text: `Tenório N, Dantas DS, Leitão HAS, Pereira TAS, Souza VRM. Linfedemapp [mobile application]. Recife: UFPE; 2025 [cited ${todayEN}].`,
     },
   ];
@@ -235,7 +230,7 @@ export default function Sobre() {
             {[
               { label: `v${appData.version}` },
               { label: appData.city },
-              { label: appData.publishedLabel },
+              { label: t("sobre.publishedLabel") },
             ].map((chip) => (
               <View
                 key={chip.label}
@@ -306,7 +301,7 @@ export default function Sobre() {
           <InfoRow label={t("sobre.inpi.holder")} value={appData.inpi.titular} />
           <InfoRow label={t("sobre.inpi.publishedDate")} value={appData.inpi.publicacao} />
           <InfoRow label={t("sobre.inpi.issued")} value={appData.inpi.expedicao} />
-          <InfoRow label={t("sobre.inpi.validity")} value={appData.inpi.validade} />
+          <InfoRow label={t("sobre.inpi.validity")} value={t("sobre.inpi.validityValue")} />
           <View
             style={{
               backgroundColor: "#fff",
@@ -353,11 +348,8 @@ export default function Sobre() {
               key={cite.id}
               style={{ marginBottom: i < citations.length - 1 ? 18 : 0 }}
             >
-              <Text style={{ fontWeight: "700", color: "#880E4F", fontSize: 13, marginBottom: 2 }}>
+              <Text style={{ fontWeight: "700", color: "#880E4F", fontSize: 13, marginBottom: 8 }}>
                 {cite.label}
-              </Text>
-              <Text style={{ color: "#9CA3AF", fontSize: 11, marginBottom: 8 }}>
-                {cite.sublabel}
               </Text>
               <View
                 style={{
@@ -431,7 +423,7 @@ export default function Sobre() {
                 <Text style={{ fontWeight: "700", color: "#111827", fontSize: 13 }}>
                   {author.name}
                 </Text>
-                <Text style={{ color: "#9CA3AF", fontSize: 11 }}>{author.role}</Text>
+                <Text style={{ color: "#9CA3AF", fontSize: 11 }}>{t(`sobre.team.roles.${author.role}`)}</Text>
                 {author.email && (
                   <TouchableOpacity onPress={() => Linking.openURL(`mailto:${author.email}`)}>
                     <Text style={{ color: "#B91C7C", fontSize: 11, marginTop: 2 }}>
@@ -452,8 +444,7 @@ export default function Sobre() {
               borderColor: "#F8BBD0",
             }}
           >
-            <Text style={{ color: "#6B7280", fontSize: 12 }}>{appData.institution}</Text>
-            <Text style={{ color: "#9CA3AF", fontSize: 11, marginTop: 2 }}>
+            <Text style={{ color: "#6B7280", fontSize: 12 }}>
               {t("sobre.department")}
             </Text>
           </View>
