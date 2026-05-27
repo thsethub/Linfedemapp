@@ -90,18 +90,18 @@ export default function Home() {
             }}
           />
           <Text className="text-white-500 font-semibold mt-10">
-            {t("home.banner.title1") || "Fique por dentro das"}
+            Conheça o
           </Text>
           <Text className="text-white-500 font-semibold mb-4">
-            {t("home.banner.title2") || "novidades do app!"}
+            Linfedemapp
           </Text>
           <TouchableOpacity
             activeOpacity={0.6}
             className="flex-row mr-2"
-            onPress={() => router.push("/news")}
+            onPress={() => router.push("/sobre")}
           >
             <Text className="text-white-500 font-medium">
-              {t("home.banner.seeMore") || "Veja mais"}
+              Sobre o app
             </Text>
             <Entypo name="chevron-small-right" size={24} color="white" />
           </TouchableOpacity>

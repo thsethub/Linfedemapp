@@ -6,7 +6,6 @@ import {
   StatusBar,
   ScrollView,
   Switch,
-  Modal,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -43,7 +42,6 @@ export default function Settings() {
   const { t } = useTranslation();
   const { currentLanguage, setLanguage } = useLanguage();
   const [notifications, setNotifications] = useState(true);
-  const [aboutModalVisible, setAboutModalVisible] = useState(false);
 
   const handleLanguageChange = async (languageCode: string) => {
     try {
@@ -299,7 +297,7 @@ export default function Settings() {
               icon="info"
               title={t("settings.about") || "Sobre o App"}
               subtitle={t("settings.aboutSubtitle") || "Versão 1.0.0"}
-              onPress={() => setAboutModalVisible(true)}
+              onPress={() => router.push("/sobre")}
             />
           </View>
 
@@ -327,81 +325,6 @@ export default function Settings() {
         </View>
       </ScrollView>
 
-      {/* About App Modal */}
-      <Modal
-        visible={aboutModalVisible}
-        animationType="fade"
-        transparent
-        onRequestClose={() => setAboutModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            justifyContent: "center",
-            alignItems: "center",
-            paddingHorizontal: 24,
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 20,
-              padding: 28,
-              width: "100%",
-              maxWidth: 360,
-            }}
-          >
-            {/* Modal Header */}
-            <View className="items-center mb-6">
-              <View
-                className="w-16 h-16 bg-primary-50 rounded-full items-center justify-center mb-4"
-              >
-                <Feather name="info" size={32} color="#B91C7C" />
-              </View>
-              <Text className="text-xl font-bold text-gray-900 text-center">
-                {t("settings.aboutModal.title") || "Sobre o Linfedemapp"}
-              </Text>
-            </View>
-
-            {/* Version */}
-            <View className="bg-gray-50 rounded-xl p-4 mb-4">
-              <Text className="text-sm text-gray-500 mb-1">
-                {t("settings.aboutModal.version") || "Versão"}
-              </Text>
-              <Text className="text-base font-semibold text-gray-900">1.0.0</Text>
-            </View>
-
-            {/* Description */}
-            <View className="bg-gray-50 rounded-xl p-4 mb-4">
-              <Text className="text-sm text-gray-700 leading-5">
-                {t("settings.aboutModal.description") ||
-                  "O Linfedemapp é uma ferramenta desenvolvida para profissionais de saúde otimizarem o acompanhamento de pacientes com linfedema."}
-              </Text>
-            </View>
-
-            {/* Developer */}
-            <View className="bg-gray-50 rounded-xl p-4 mb-6">
-              <Text className="text-sm text-gray-500 mb-1">
-                {t("settings.aboutModal.developer") || "Desenvolvedor"}
-              </Text>
-              <Text className="text-base font-semibold text-gray-900">
-                {t("settings.aboutModal.developerName") || "Equipe Linfedemapp"}
-              </Text>
-            </View>
-
-            {/* Close Button */}
-            <TouchableOpacity
-              className="bg-primary-500 rounded-xl p-4 items-center"
-              onPress={() => setAboutModalVisible(false)}
-            >
-              <Text className="text-white font-bold text-base">
-                {t("settings.aboutModal.close") || "Fechar"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 }

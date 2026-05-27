@@ -284,7 +284,7 @@ export default function Resultado() {
     } else if (percentage >= 5 && percentage < 10) {
       const text = t("results.volumeAnalysis.stage0")
         .replace("{difference}", `${formattedDifference}`)
-        .replace("{percentage}", `${formattedPercentage}%`);
+        .replace("{percentage}", `${formattedPercentage}`);
       const stage = text.includes("estágio") ? "estágio 0" : "estadio 0";
       return renderTextWithBold(text, [
         `${formattedDifference} cm³`,
@@ -294,7 +294,7 @@ export default function Resultado() {
     } else if (percentage >= 10 && percentage < 20) {
       const text = t("results.volumeAnalysis.stage1")
         .replace("{difference}", `${formattedDifference}`)
-        .replace("{percentage}", `${formattedPercentage}%`);
+        .replace("{percentage}", `${formattedPercentage}`);
       const stage = text.includes("estágio") ? "estágio I" : "estadio I";
       return renderTextWithBold(text, [
         `${formattedDifference} cm³`,
@@ -304,7 +304,7 @@ export default function Resultado() {
     } else if (percentage >= 20 && percentage < 40) {
       const text = t("results.volumeAnalysis.stage2")
         .replace("{difference}", `${formattedDifference}`)
-        .replace("{percentage}", `${formattedPercentage}%`);
+        .replace("{percentage}", `${formattedPercentage}`);
       const stage = text.includes("estágio") ? "estágio II" : "estadio II";
       return renderTextWithBold(text, [
         `${formattedDifference} cm³`,
@@ -314,7 +314,7 @@ export default function Resultado() {
     } else {
       const text = t("results.volumeAnalysis.stage3")
         .replace("{difference}", `${formattedDifference}`)
-        .replace("{percentage}", `${formattedPercentage}%`);
+        .replace("{percentage}", `${formattedPercentage}`);
       const stage = text.includes("estágio") ? "estágio III" : "estadio III";
       return renderTextWithBold(text, [
         `${formattedDifference} cm³`,
