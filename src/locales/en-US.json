@@ -137,9 +137,9 @@
   },
   "home": {
     "banner": {
-      "title1": "Stay up to date with",
-      "title2": "app news!",
-      "seeMore": "See more"
+      "title1": "Learn a little more",
+      "title2": "about the app!",
+      "seeMore": "About the app"
     },
     "profile": {
       "title": "My Account",
@@ -485,5 +485,38 @@
       "pdfError": "Could not generate the report.",
       "insufficientData": "Insufficient data to generate the report."
     }
+  },
+  "sobre": {
+    "title": "About the App",
+    "appLabel": "Application",
+    "description": "Developed during the Master's in Physiotherapy by the principal author.",
+    "department": "Graduate Program in Physiotherapy — PPGFISIO",
+    "infoLabel": "Application Information",
+    "city": "City",
+    "version": "Version",
+    "published": "Published",
+    "inpi": {
+      "title": "Registration & Protection (INPI)",
+      "process": "Process No.",
+      "holder": "Holder",
+      "publishedDate": "Publication date",
+      "issued": "Issued on",
+      "validity": "Validity",
+      "note": "This application has official registration at INPI — Computer Program No."
+    },
+    "citation": {
+      "title": "Scientific Citation",
+      "dateNote": "The access date is automatically inserted with today's date when sharing.",
+      "share": "Share"
+    },
+    "team": {
+      "title": "Author Team"
+    },
+    "contact": {
+      "title": "Contact",
+      "label": "Contact",
+      "description": "For questions, suggestions or scientific collaborations, please contact those responsible for the project."
+    },
+    "footer": "All rights reserved"
   }
 }

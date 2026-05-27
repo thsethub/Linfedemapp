@@ -177,7 +177,7 @@ export default function Index() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          className="mt-16"
+          className="mt-10"
           onPress={() => {
             router.push("/faq");
           }}

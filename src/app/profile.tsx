@@ -3,13 +3,11 @@ import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
   ActivityIndicator,
   Alert,
   TextInput,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
@@ -275,18 +273,17 @@ export default function Profile() {
       </View>
 
       {/* ===== CONTENT ===== */}
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+      <KeyboardAwareScrollView
+        style={{ flex: 1, backgroundColor: "#F9FAFB" }}
+        contentContainerStyle={{
+          paddingHorizontal: 20,
+          paddingBottom: insets.bottom + 80,
+        }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+        enableOnAndroid
+        extraScrollHeight={24}
       >
-        <ScrollView
-          style={{ backgroundColor: "#F9FAFB" }}
-          contentContainerStyle={{
-            paddingHorizontal: 20,
-            paddingBottom: insets.bottom + 80, // space for global FAQ FAB
-          }}
-          showsVerticalScrollIndicator={false}
-        >
           <Text
             style={{
               fontSize: 16,
@@ -397,8 +394,7 @@ export default function Profile() {
               </Text>
             </TouchableOpacity>
           )}
-        </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
     </View>
   );
 }

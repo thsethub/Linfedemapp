@@ -87,9 +87,9 @@
   },
   "home": {
     "banner": {
-      "title1": "Mantente al día con",
-      "title2": "las novedades!",
-      "seeMore": "Ver más"
+      "title1": "Conoce un poco más",
+      "title2": "sobre la aplicación!",
+      "seeMore": "Sobre la app"
     },
     "profile": {
       "title": "Mi Cuenta",
@@ -481,5 +481,38 @@
       "pdfError": "No fue posible generar el informe.",
       "insufficientData": "No hay datos suficientes para generar el informe."
     }
+  },
+  "sobre": {
+    "title": "Sobre la App",
+    "appLabel": "Aplicación",
+    "description": "Desarrollado durante la Maestría en Fisioterapia de la autora principal.",
+    "department": "Programa de Posgrado en Fisioterapia — PPGFISIO",
+    "infoLabel": "Información de la Aplicación",
+    "city": "Ciudad",
+    "version": "Versión",
+    "published": "Publicación",
+    "inpi": {
+      "title": "Registro & Protección (INPI)",
+      "process": "Nº de Proceso",
+      "holder": "Titular",
+      "publishedDate": "Fecha de publicación",
+      "issued": "Expedido el",
+      "validity": "Validez",
+      "note": "Esta aplicación cuenta con registro oficial en el INPI — Programa de Computadora nº"
+    },
+    "citation": {
+      "title": "Citación Científica",
+      "dateNote": "La fecha de acceso se inserta automáticamente con la fecha de hoy al compartir.",
+      "share": "Compartir"
+    },
+    "team": {
+      "title": "Equipo de Autores"
+    },
+    "contact": {
+      "title": "Contacto",
+      "label": "Contacto",
+      "description": "Para dudas, sugerencias o colaboraciones científicas, póngase en contacto con los responsables del proyecto."
+    },
+    "footer": "Todos los derechos reservados"
   }
 }

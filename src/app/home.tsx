@@ -8,7 +8,7 @@ import { Feather } from "@expo/vector-icons";
 import { useTranslation } from "../context/LanguageContext";
 
 const ICON_SIZE = 50;
-const ITEM_WIDTH = 82; // wide enough for longest English label ("Lymphedema\nCalculator")
+const ITEM_WIDTH = 90;
 
 function ShortcutItem({
   onPress,
@@ -55,11 +55,19 @@ function ShortcutItem({
           textAlign: "center",
           lineHeight: 16,
         }}
-        numberOfLines={2}
-        adjustsFontSizeToFit
-        minimumFontScale={0.75}
       >
-        {`${label}\n${subLabel}`}
+        {label}
+      </Text>
+      <Text
+        style={{
+          color: "#B91C7C",
+          fontWeight: "600",
+          fontSize: 12,
+          textAlign: "center",
+          lineHeight: 16,
+        }}
+      >
+        {subLabel}
       </Text>
     </TouchableOpacity>
   );
@@ -90,10 +98,10 @@ export default function Home() {
             }}
           />
           <Text className="text-white-500 font-semibold mt-10">
-            Conheça o
+            {t("home.banner.title1")}
           </Text>
           <Text className="text-white-500 font-semibold mb-4">
-            Linfedemapp
+            {t("home.banner.title2")}
           </Text>
           <TouchableOpacity
             activeOpacity={0.6}
@@ -101,7 +109,7 @@ export default function Home() {
             onPress={() => router.push("/sobre")}
           >
             <Text className="text-white-500 font-medium">
-              Sobre o app
+              {t("home.banner.seeMore")}
             </Text>
             <Entypo name="chevron-small-right" size={24} color="white" />
           </TouchableOpacity>
