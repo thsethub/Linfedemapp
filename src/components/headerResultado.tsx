@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons"; // Ícone ArrowLeft
-import { useMeasurementContext } from "@/context/context";
 
 type HeaderProps = {
   title: string;
@@ -10,45 +9,34 @@ type HeaderProps = {
 
 const Header = ({ title }: HeaderProps) => {
   const router = useRouter();
-  const { patientData } = useMeasurementContext();
-
-  const hasPatientData = !!(
-    patientData.fullName ||
-    patientData.address ||
-    patientData.phone ||
-    patientData.birthDate
-  );
 
   return (
-    <View
-      className="flex-row items-center justify-center px-6 mt-8"
-      style={{ position: "relative" }}
-    >
+    <View className="flex-row items-center w-full px-4 mt-8">
       {/* Botão de Voltar */}
       <TouchableOpacity
-        onPress={() => {
-            router.push("/bracoDireito");
-        }}
+        onPress={() => router.push("/bracoDireito")}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={{
-          position: "absolute",
-          right: 200,
           width: 40,
           height: 40,
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "flex-start",
         }}
       >
         <Feather name="arrow-left" size={28} color="#000" />
       </TouchableOpacity>
 
       {/* Ícone + Título Centralizado */}
-      <View className="flex-row items-center">
+      <View className="flex-1 flex-row items-center justify-center">
         <Image
           source={require("../assets/file-text2.png")}
           className="w-7 h-7"
         />
-        <Text className="font-semibold text-center mt-1 ml-2">{title}</Text>
+        <Text className="font-semibold text-center ml-2">{title}</Text>
       </View>
+
+      {/* Espaçador para manter o título centralizado */}
+      <View style={{ width: 40 }} />
     </View>
   );
 };

@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Feather } from "@expo/vector-icons";
-import { useTranslation } from "../context/LanguageContext";
+import { useTranslation, useLanguage } from "../context/LanguageContext";
 
 const appData = {
   name: "Linfedemapp",
@@ -139,17 +139,14 @@ function SectionCard({
 
 export default function Sobre() {
   const { t } = useTranslation();
+  const { currentLanguage } = useLanguage();
   const insets = useSafeAreaInsets();
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
-  const todayPtBR = new Date().toLocaleDateString("pt-BR", {
+  // Data de acesso formatada no idioma atual do app.
+  const accessDate = new Date().toLocaleDateString(currentLanguage, {
     day: "2-digit",
     month: "long",
-    year: "numeric",
-  });
-  const todayEN = new Date().toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
     year: "numeric",
   });
 
@@ -157,7 +154,9 @@ export default function Sobre() {
     {
       id: "abnt",
       label: "ABNT NBR 6023:2025",
-      text: `TENÓRIO, Naiany; DANTAS, Diego de Sousa; LEITÃO, Herbert Albérico de Sá; PEREIRA, Thiago Augusto Santana; SOUZA, Vinicius Roberto Medeiros de. Linfedemapp. Recife, PE: UFPE, 2025. Acesso em: ${todayPtBR}.`,
+      text: `TENÓRIO, Naiany; DANTAS, Diego de Sousa; LEITÃO, Herbert Albérico de Sá; PEREIRA, Thiago Augusto Santana; SOUZA, Vinicius Roberto Medeiros de. Linfedemapp. Recife, PE: UFPE, 2025. ${t(
+        "sobre.citation.accessedOn"
+      )}: ${accessDate}.`,
     },
     {
       id: "apa",
@@ -167,7 +166,9 @@ export default function Sobre() {
     {
       id: "vancouver",
       label: "Vancouver",
-      text: `Tenório N, Dantas DS, Leitão HAS, Pereira TAS, Souza VRM. Linfedemapp [mobile application]. Recife: UFPE; 2025 [cited ${todayEN}].`,
+      text: `Tenório N, Dantas DS, Leitão HAS, Pereira TAS, Souza VRM. Linfedemapp [mobile application]. Recife: UFPE; 2025 [${t(
+        "sobre.citation.accessedOn"
+      )}: ${accessDate}].`,
     },
   ];
 

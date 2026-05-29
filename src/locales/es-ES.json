@@ -27,7 +27,12 @@
       "forgotPassword": "¿Olvidaste tu contraseña?",
       "loginButton": "Iniciar Sesión",
       "noAccount": "¿No tienes una cuenta? ",
-      "signUp": "Regístrate ahora"
+      "signUp": "Regístrate ahora",
+      "unexpectedResponse": "Respuesta inesperada del servidor.",
+      "userNotFound": "Usuario no encontrado.",
+      "wrongPassword": "Contraseña incorrecta.",
+      "loginError": "Error al iniciar sesión.",
+      "unexpectedError": "Error inesperado."
     },
     "register": {
       "title": "Registro",
@@ -156,7 +161,8 @@
     "validation": "Validación",
     "notProvided": "No informado",
     "select": "Seleccionar",
-    "authTokenNotFound": "Token de autenticación no encontrado."
+    "authTokenNotFound": "Token de autenticación no encontrado.",
+    "attention": "Atención"
   },
   "settings": {
     "general": "General",
@@ -212,6 +218,16 @@
     "observationPlaceholder": "Agregue una observación sobre la paciente",
     "save": "Guardar",
     "proceed": "Continuar",
+    "saveSuccess": "¡Paciente guardado con éxito!",
+    "saveError": "No fue posible guardar el paciente.",
+    "dateNotProvided": "Fecha no informada",
+    "validation": {
+      "requiredFields": "Complete todos los campos obligatorios.",
+      "selectProcedure": "Seleccione al menos un procedimiento realizado.",
+      "fillProcedureDetails": "Complete el tipo y la duración para el procedimiento:",
+      "selectSkinChange": "Seleccione al menos una alteración cutánea.",
+      "answerAllQuestions": "Responda todas las preguntas complementarias."
+    },
     "selectType": "Seleccione el tipo",
     "howLongAgo": "¿Hace cuánto tiempo?",
     "activityLevels": {
@@ -353,7 +369,7 @@
     },
     "alert": "¡Alerta!",
     "references": {
-      "panobianco": "Referencia - Panobianco; Mamede, 2002.",
+      "panobianco": "Panobianco; Mamede, 2002.",
       "lymphologyConsensus": "Consenso Internacional de la sociedad de linfología, 2023."
     }
   },
@@ -505,6 +521,7 @@
     "citation": {
       "title": "Citación Científica",
       "dateNote": "La fecha de acceso se inserta automáticamente con la fecha de hoy al compartir.",
+      "accessedOn": "Acceso el",
       "share": "Compartir"
     },
     "team": {

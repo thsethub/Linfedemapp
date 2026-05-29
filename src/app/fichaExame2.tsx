@@ -61,7 +61,7 @@ export default function FichaExame2() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
@@ -86,7 +86,7 @@ export default function FichaExame2() {
         updatedPatientData.cancerDiagnosisDate &&
         updatedPatientData.cancerDiagnosisDate !== "/"
           ? updatedPatientData.cancerDiagnosisDate
-          : "Data não informada";
+          : t("patient.dateNotProvided");
 
       // Mapeia os campos do patientData para o formato esperado
       const dataToSend = {
@@ -109,27 +109,27 @@ export default function FichaExame2() {
         sinalCacifo: updatedPatientData.cacifoSign,
         sinalCascaLaranja: updatedPatientData.orangePeelSign,
         sinalStemmer: updatedPatientData.stemmerSign,
-        radioterapia: updatedPatientData.procedures.includes("Radioterapia")
+        radioterapia: updatedPatientData.procedures.includes("radiotherapy")
           ? {
               tipo: updatedPatientData.radiotherapy?.type || null,
               duracao: updatedPatientData.radiotherapy?.duration || null,
             }
           : null,
-        cirurgia: updatedPatientData.procedures.includes("Cirurgia")
+        cirurgia: updatedPatientData.procedures.includes("surgery")
           ? {
               tipo: updatedPatientData.surgery?.type || null,
               duracao: updatedPatientData.surgery?.duration || null,
             }
           : null,
         disseccaoAxilar: updatedPatientData.procedures.includes(
-          "Esvaziamento axilar"
+          "axillaryDissection"
         )
           ? {
               tipo: updatedPatientData.axillaryDissection?.type || null,
               duracao: updatedPatientData.axillaryDissection?.duration || null,
             }
           : null,
-        hormonoterapia: updatedPatientData.procedures.includes("Hormonoterapia")
+        hormonoterapia: updatedPatientData.procedures.includes("hormoneTherapy")
           ? {
               tipo: updatedPatientData.hormoneTherapy?.type || null,
               duracao: updatedPatientData.hormoneTherapy?.duration || null,
@@ -137,7 +137,7 @@ export default function FichaExame2() {
           : null,
         detalhesHormonoterapia:
           updatedPatientData.hormoneTherapyDetails || null,
-        quimioterapia: updatedPatientData.procedures.includes("Quimioterapia")
+        quimioterapia: updatedPatientData.procedures.includes("chemotherapy")
           ? {
               tipo: updatedPatientData.chemotherapy?.type || null,
               duracao: updatedPatientData.chemotherapy?.duration || null,
@@ -164,7 +164,7 @@ export default function FichaExame2() {
 
       // Limpa os dados do paciente e navega para a home
       clearAllData();
-      Alert.alert("Sucesso", "Paciente salvo com sucesso!", [
+      Alert.alert(t("common.success"), t("patient.saveSuccess"), [
         {
           text: "OK",
           onPress: () => {
@@ -175,7 +175,7 @@ export default function FichaExame2() {
     } catch (error) {
       setLoading(false);
       // console.error("Erro ao salvar o paciente:", error);
-      Alert.alert("Erro", "Não foi possível salvar o paciente.");
+      Alert.alert(t("common.error"), t("patient.saveError"));
     }
   };
 
@@ -190,7 +190,7 @@ export default function FichaExame2() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert("Erro", "Token de autenticação não encontrado.");
+        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
@@ -215,7 +215,7 @@ export default function FichaExame2() {
         updatedPatientData.cancerDiagnosisDate &&
         updatedPatientData.cancerDiagnosisDate !== "/"
           ? updatedPatientData.cancerDiagnosisDate
-          : "Data não informada";
+          : t("patient.dateNotProvided");
 
       // Mapeia os campos do patientData para o formato esperado
       const dataToSend = {
@@ -238,27 +238,27 @@ export default function FichaExame2() {
         sinalCacifo: updatedPatientData.cacifoSign,
         sinalCascaLaranja: updatedPatientData.orangePeelSign,
         sinalStemmer: updatedPatientData.stemmerSign,
-        radioterapia: updatedPatientData.procedures.includes("Radioterapia")
+        radioterapia: updatedPatientData.procedures.includes("radiotherapy")
           ? {
               tipo: updatedPatientData.radiotherapy?.type || null,
               duracao: updatedPatientData.radiotherapy?.duration || null,
             }
           : null,
-        cirurgia: updatedPatientData.procedures.includes("Cirurgia")
+        cirurgia: updatedPatientData.procedures.includes("surgery")
           ? {
               tipo: updatedPatientData.surgery?.type || null,
               duracao: updatedPatientData.surgery?.duration || null,
             }
           : null,
         disseccaoAxilar: updatedPatientData.procedures.includes(
-          "Esvaziamento axilar"
+          "axillaryDissection"
         )
           ? {
               tipo: updatedPatientData.axillaryDissection?.type || null,
               duracao: updatedPatientData.axillaryDissection?.duration || null,
             }
           : null,
-        hormonoterapia: updatedPatientData.procedures.includes("Hormonoterapia")
+        hormonoterapia: updatedPatientData.procedures.includes("hormoneTherapy")
           ? {
               tipo: updatedPatientData.hormoneTherapy?.type || null,
               duracao: updatedPatientData.hormoneTherapy?.duration || null,
@@ -266,7 +266,7 @@ export default function FichaExame2() {
           : null,
         detalhesHormonoterapia:
           updatedPatientData.hormoneTherapyDetails || null,
-        quimioterapia: updatedPatientData.procedures.includes("Quimioterapia")
+        quimioterapia: updatedPatientData.procedures.includes("chemotherapy")
           ? {
               tipo: updatedPatientData.chemotherapy?.type || null,
               duracao: updatedPatientData.chemotherapy?.duration || null,
@@ -293,7 +293,7 @@ export default function FichaExame2() {
 
       // Limpa os dados do paciente e navega para a home
       clearAllData();
-      Alert.alert("Sucesso", "Paciente salvo com sucesso!", [
+      Alert.alert(t("common.success"), t("patient.saveSuccess"), [
         {
           text: "OK",
           onPress: () => {
@@ -304,7 +304,7 @@ export default function FichaExame2() {
     } catch (error) {
       setLoading(false);
       // console.error("Erro ao salvar o paciente:", error);
-      Alert.alert("Erro", "Não foi possível salvar o paciente.");
+      Alert.alert(t("common.error"), t("patient.saveError"));
     }
   };
 
@@ -332,7 +332,10 @@ export default function FichaExame2() {
 
     for (const field of requiredFields) {
       if (!data[field] || data[field].toString().trim() === "") {
-        Alert.alert("Atenção", "Preencha todos os campos obrigatórios.");
+        Alert.alert(
+          t("common.attention"),
+          t("patient.validation.requiredFields")
+        );
         setLoading(false);
         return false;
       }
@@ -341,7 +344,10 @@ export default function FichaExame2() {
     // Procedimentos obrigatórios
     if (!data.procedures || data.procedures.length === 0) {
       setLoading(false);
-      Alert.alert("Atenção", "Selecione pelo menos um procedimento realizado.");
+      Alert.alert(
+        t("common.attention"),
+        t("patient.validation.selectProcedure")
+      );
       return false;
     }
 
@@ -349,27 +355,29 @@ export default function FichaExame2() {
     for (const proc of data.procedures) {
       let key = "";
       switch (proc) {
-        case "Quimioterapia":
+        case "chemotherapy":
           key = "chemotherapy";
           break;
-        case "Radioterapia":
+        case "radiotherapy":
           key = "radiotherapy";
           break;
-        case "Hormonoterapia":
+        case "hormoneTherapy":
           key = "hormoneTherapy";
           break;
-        case "Cirurgia":
+        case "surgery":
           key = "surgery";
           break;
-        case "Esvaziamento axilar":
+        case "axillaryDissection":
           key = "axillaryDissection";
           break;
       }
       if (key && (!data[key] || !data[key].type || !data[key].duration)) {
         setLoading(false);
         Alert.alert(
-          "Atenção",
-          `Preencha o tipo e a duração para o procedimento: ${proc}.`
+          t("common.attention"),
+          `${t("patient.validation.fillProcedureDetails")} ${t(
+            `patient.procedures.${key}`
+          )}.`
         );
         return false;
       }
@@ -378,7 +386,10 @@ export default function FichaExame2() {
     // Alterações cutâneas obrigatórias
     if (!data.skinChanges || data.skinChanges.length === 0) {
       setLoading(false);
-      Alert.alert("Atenção", "Selecione pelo menos uma alteração cutânea.");
+      Alert.alert(
+        t("common.attention"),
+        t("patient.validation.selectSkinChange")
+      );
       return false;
     }
 
@@ -392,7 +403,10 @@ export default function FichaExame2() {
     ];
     for (const field of questionsRequired) {
       if (!data[field] || data[field].toString().trim() === "") {
-        Alert.alert("Atenção", "Responda todas as perguntas complementares.");
+        Alert.alert(
+          t("common.attention"),
+          t("patient.validation.answerAllQuestions")
+        );
         return false;
       }
     }

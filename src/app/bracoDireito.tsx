@@ -292,13 +292,16 @@ export default function bracoAfetado() {
         onPress={() => {
           router.push("/calculadora");
         }}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={{
           position: "absolute",
+          top: 50,
+          left: 16,
+          zIndex: 10,
           width: 40,
           height: 40,
           justifyContent: "center",
-          alignItems: "center",
-          ...(width > 768 ? { left: 100, top: 50 } : { right: 340, top: 50 }), // Responsivo: tablet ou celular
+          alignItems: "flex-start",
         }}
       >
         <Feather name="arrow-left" size={28} color="#000" />

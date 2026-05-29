@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
-import { Feather, Ionicons } from "@expo/vector-icons"; // Ícone ArrowLeft
-import { useMeasurementContext } from "@/context/context";
+import { Feather } from "@expo/vector-icons"; // Ícone ArrowLeft
+import { useTranslation } from "@/context/LanguageContext";
 
 type HeaderProps = {
   title: string;
@@ -12,37 +12,38 @@ type HeaderProps = {
 
 const Header = ({ title, name, dataDiagnostiCancer }: HeaderProps) => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   return (
-    <View
-      className="flex-row items-center justify-center px-6 mt-8 bg-[#b41976] w-full py-8 rounded-b-3xl shadow-md"
-      style={{ position: "relative" }}
-    >
-      {/* Botão de Voltar */}
+    <View className="bg-[#b41976] w-full pt-8 pb-8 rounded-b-3xl shadow-md">
+      <View className="flex-row items-center w-full px-4">
+        {/* Botão de Voltar */}
+        <TouchableOpacity
+          onPress={() => router.push("/historicoExames")}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          style={{
+            width: 40,
+            height: 40,
+            justifyContent: "center",
+            alignItems: "flex-start",
+          }}
+        >
+          <Feather name="arrow-left" size={28} color="#FFF" />
+        </TouchableOpacity>
 
-      {/* Ícone + Título Centralizado */}
-      <TouchableOpacity
-        onPress={() => {
-          router.push("/historicoExames");
-        }}
-        style={{
-          position: "absolute",
-          right: 340,
-          width: 40,
-          height: 40,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Feather name="arrow-left" size={28} color="#FFF" />
-      </TouchableOpacity>
-      <View className="items-center">
-        <Text className="text-white-500 text-2xl font-bold text-center mt-6">
-          {name}
-        </Text>
-        <Text className="text-[#ffe0f0] text-sm">
-          Diagnóstico: {dataDiagnostiCancer || "Não informado"}
-        </Text>
+        {/* Nome + Diagnóstico Centralizado */}
+        <View className="flex-1 items-center">
+          <Text className="text-white-500 text-2xl font-bold text-center">
+            {name}
+          </Text>
+          <Text className="text-[#ffe0f0] text-sm text-center">
+            {t("results.diagnosis")}:{" "}
+            {dataDiagnostiCancer || t("common.notProvided")}
+          </Text>
+        </View>
+
+        {/* Espaçador para manter o conteúdo centralizado */}
+        <View style={{ width: 40 }} />
       </View>
     </View>
   );

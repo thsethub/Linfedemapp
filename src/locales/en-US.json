@@ -35,7 +35,8 @@
     "validation": "Validation",
     "notProvided": "Not provided",
     "select": "Select",
-    "authTokenNotFound": "Authentication token not found."
+    "authTokenNotFound": "Authentication token not found.",
+    "attention": "Attention"
   },
   "auth": {
     "login": {
@@ -46,7 +47,12 @@
       "forgotPassword": "Forgot your password?",
       "loginButton": "Sign in",
       "noAccount": "Don't have an account? ",
-      "signUp": "Register now"
+      "signUp": "Register now",
+      "unexpectedResponse": "Unexpected response from the server.",
+      "userNotFound": "User not found.",
+      "wrongPassword": "Incorrect password.",
+      "loginError": "Error signing in.",
+      "unexpectedError": "Unexpected error."
     },
     "register": {
       "title": "Sign up",
@@ -247,6 +253,16 @@
     "observationPlaceholder": "Add an observation about the patient",
     "save": "Save",
     "proceed": "Proceed",
+    "saveSuccess": "Patient saved successfully!",
+    "saveError": "Could not save the patient.",
+    "dateNotProvided": "Date not provided",
+    "validation": {
+      "requiredFields": "Please fill in all required fields.",
+      "selectProcedure": "Select at least one procedure performed.",
+      "fillProcedureDetails": "Fill in the type and duration for the procedure:",
+      "selectSkinChange": "Select at least one skin change.",
+      "answerAllQuestions": "Answer all complementary questions."
+    },
     "selectType": "Select type",
     "howLongAgo": "How long ago?",
     "activityLevels": {
@@ -388,7 +404,7 @@
     },
     "alert": "Alert!",
     "references": {
-      "panobianco": "Reference - Panobianco; Mamede, 2002.",
+      "panobianco": "Panobianco; Mamede, 2002.",
       "lymphologyConsensus": "International Consensus of the Lymphology Society, 2023."
     }
   },
@@ -509,6 +525,7 @@
     "citation": {
       "title": "Scientific Citation",
       "dateNote": "The access date is automatically inserted with today's date when sharing.",
+      "accessedOn": "Accessed on",
       "share": "Share"
     },
     "team": {

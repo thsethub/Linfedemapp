@@ -27,7 +27,12 @@
       "forgotPassword": "Esqueceu a senha?",
       "loginButton": "Entrar",
       "noAccount": "Não tem uma conta? ",
-      "signUp": "Registrar agora"
+      "signUp": "Registrar agora",
+      "unexpectedResponse": "Resposta inesperada do servidor.",
+      "userNotFound": "Usuário não encontrado.",
+      "wrongPassword": "Senha incorreta.",
+      "loginError": "Erro ao fazer login.",
+      "unexpectedError": "Erro inesperado."
     },
     "register": {
       "title": "Cadastro",
@@ -187,7 +192,8 @@
     "validation": "Validação",
     "notProvided": "Não informado",
     "select": "Selecionar",
-    "authTokenNotFound": "Token de autenticação não encontrado."
+    "authTokenNotFound": "Token de autenticação não encontrado.",
+    "attention": "Atenção"
   },
   "settings": {
     "general": "Geral",
@@ -243,6 +249,16 @@
     "observationPlaceholder": "Adicione uma observação sobre o paciente",
     "save": "Salvar",
     "proceed": "Prosseguir",
+    "saveSuccess": "Paciente salvo com sucesso!",
+    "saveError": "Não foi possível salvar o paciente.",
+    "dateNotProvided": "Data não informada",
+    "validation": {
+      "requiredFields": "Preencha todos os campos obrigatórios.",
+      "selectProcedure": "Selecione pelo menos um procedimento realizado.",
+      "fillProcedureDetails": "Preencha o tipo e a duração para o procedimento:",
+      "selectSkinChange": "Selecione pelo menos uma alteração cutânea.",
+      "answerAllQuestions": "Responda todas as perguntas complementares."
+    },
     "selectType": "Selecione o tipo",
     "howLongAgo": "Há quanto tempo?",
     "activityLevels": {
@@ -384,7 +400,7 @@
     },
     "alert": "Alerta!",
     "references": {
-      "panobianco": "Referência - Panobianco; Mamede, 2002.",
+      "panobianco": "Panobianco; Mamede, 2002.",
       "lymphologyConsensus": "Consenso Internacional da sociedade de linfologia, 2023."
     }
   },
@@ -505,6 +521,7 @@
     "citation": {
       "title": "Citação Científica",
       "dateNote": "A data de acesso é inserida automaticamente com a data de hoje ao compartilhar.",
+      "accessedOn": "Acesso em",
       "share": "Compartilhar"
     },
     "team": {

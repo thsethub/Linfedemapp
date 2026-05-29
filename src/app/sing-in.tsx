@@ -55,7 +55,7 @@ export default function SignIn() {
   const handleLogin = async () => {
     setIsAuthenticating(true);
     if (!email || !password) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      Alert.alert(t("common.error"), t("auth.register.fillAllFields"));
       setIsAuthenticating(false);
       return;
     }
@@ -72,7 +72,7 @@ export default function SignIn() {
         router.push("/home");
       } else {
         // Caso raro: resposta inesperada
-        Alert.alert("Erro", "Resposta inesperada do servidor.");
+        Alert.alert(t("common.error"), t("auth.login.unexpectedResponse"));
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -80,16 +80,16 @@ export default function SignIn() {
         const message = error.response?.data;
 
         if (status === 404 && typeof message === "string") {
-          Alert.alert("Erro", "Usuário não encontrado.");
+          Alert.alert(t("common.error"), t("auth.login.userNotFound"));
         } else if (status === 401 && typeof message === "string") {
-          Alert.alert("Erro", "Senha incorreta.");
+          Alert.alert(t("common.error"), t("auth.login.wrongPassword"));
         } else if (typeof message === "string") {
-          Alert.alert("Erro", message);
+          Alert.alert(t("common.error"), message);
         } else {
-          Alert.alert("Erro", "Erro ao fazer login.");
+          Alert.alert(t("common.error"), t("auth.login.loginError"));
         }
       } else {
-        Alert.alert("Erro", "Erro inesperado.");
+        Alert.alert(t("common.error"), t("auth.login.unexpectedError"));
       }
     } finally {
       setIsAuthenticating(false);

@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 import { useRouter } from "expo-router";
 import { Feather } from "@expo/vector-icons"; // Ícone ArrowLeft
-import { useMeasurementContext } from "@/context/context";
 
 type HeaderProps = {
   title: string;
@@ -10,33 +9,25 @@ type HeaderProps = {
 
 const Header = ({ title }: HeaderProps) => {
   const router = useRouter();
-  // const {clearAllData} = useMeasurementContext(); // Importa a função clearAllData do contexto
 
   return (
-    <View
-      className="flex-row items-center justify-center px-6 mt-8"
-      style={{ position: "relative" }}
-    >
+    <View className="flex-row items-center w-full px-4 mt-8">
       {/* Botão de Voltar */}
       <TouchableOpacity
-        onPress={() => {
-          // clearAllData();
-          router.push("/home")}
-        }
+        onPress={() => router.push("/home")}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={{
-          position: "absolute",
-          right: 250,
           width: 40,
           height: 40,
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "flex-start",
         }}
       >
         <Feather name="arrow-left" size={28} color="#000" />
       </TouchableOpacity>
 
       {/* Ícone + Título Centralizado */}
-      <View className="flex-row items-center">
+      <View className="flex-1 flex-row items-center justify-center">
         <Image
           source={require("../assets/file-text2.png")}
           className="w-6 h-6"
@@ -45,6 +36,9 @@ const Header = ({ title }: HeaderProps) => {
           {title}
         </Text>
       </View>
+
+      {/* Espaçador para manter o título centralizado */}
+      <View style={{ width: 40 }} />
     </View>
   );
 };

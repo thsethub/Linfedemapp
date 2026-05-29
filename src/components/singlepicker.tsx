@@ -1,13 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  StyleSheet,
-  FlatList,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
+import { useTranslation } from "@/context/LanguageContext";
+import WheelColumn from "@/components/WheelColumn";
 
 interface SinglePickerProps {
   title: string; // Título acima do dropdown
@@ -28,27 +23,30 @@ const SinglePicker: React.FC<SinglePickerProps> = ({
   selectedMonth,
   selectedYear,
 }) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
-  const listRef = useRef<FlatList>(null);
+  const [selectedValue, setSelectedValue] = useState<string | null>(
+    initialValue ?? null
+  );
+  // Valor "ativo" enquanto o modal está aberto (antes de confirmar).
+  const [tempValue, setTempValue] = useState<string | null>(null);
 
   const getDaysInMonth = (year: number, month: number) =>
     new Date(year, month, 0).getDate();
 
-  const currentYear = new Date().getFullYear(); // Obtém o ano atual dinamicamente
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
 
   const data =
     type === "month"
       ? Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"))
       : type === "year"
-      ? Array.from(
-          { length: currentYear - 1900 + 1 }, // Gera anos de 1900 até o ano atual
-          (_, i) => String(currentYear - i) // Gera em ordem decrescente
-        )
+      ? Array.from({ length: currentYear - 1900 + 1 }, (_, i) =>
+          String(currentYear - i)
+        ) // Anos do atual (topo) até 1900
       : type === "day" && selectedYear && selectedMonth
-      ? Array.from(
-          { length: getDaysInMonth(selectedYear, selectedMonth) },
-          (_, i) => String(i + 1).padStart(2, "0")
+      ? Array.from({ length: getDaysInMonth(selectedYear, selectedMonth) }, (_, i) =>
+          String(i + 1).padStart(2, "0")
         )
       : [];
 
@@ -58,61 +56,68 @@ const SinglePicker: React.FC<SinglePickerProps> = ({
     }
   }, [initialValue]);
 
+  // Valor padrão ao abrir: o já selecionado, ou a data atual (mês/ano), ou o primeiro item.
+  const defaultValue = () => {
+    if (selectedValue && data.includes(selectedValue)) return selectedValue;
+    if (type === "month") return String(currentMonth).padStart(2, "0");
+    if (type === "year") return String(currentYear);
+    return data[0] ?? null;
+  };
+
+  const openModal = () => {
+    setTempValue(defaultValue());
+    setVisible(true);
+  };
+
   const handleConfirm = () => {
-    if (selectedValue) {
-      onConfirm(selectedValue);
-      setVisible(false);
+    if (tempValue) {
+      setSelectedValue(tempValue);
+      onConfirm(tempValue);
     }
+    setVisible(false);
   };
 
   return (
     <>
       {/* Botão com placeholder e seta */}
-      <TouchableOpacity onPress={() => setVisible(true)} style={styles.button}>
-        <Text style={styles.buttonText}>{selectedValue || placeholder}</Text>
+      <TouchableOpacity onPress={openModal} style={styles.button}>
+        <Text
+          style={[styles.buttonText, selectedValue && styles.buttonTextFilled]}
+        >
+          {selectedValue || placeholder}
+        </Text>
         <Feather name="chevron-down" size={16} color="#000" />
       </TouchableOpacity>
 
       {/* Modal do Picker */}
-      <Modal visible={visible} transparent animationType="fade">
+      <Modal visible={visible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.pickerContainer}>
             <Text style={styles.title}>{title}</Text>
-            <FlatList
-              ref={listRef}
-              data={data}
-              keyExtractor={(item) => item}
-              showsVerticalScrollIndicator={false}
-              style={{ maxHeight: 200 }} // Limita a altura do modal
-              contentContainerStyle={{ paddingVertical: 10 }}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => setSelectedValue(item)}
-                  style={styles.itemContainer}
-                >
-                  <Text
-                    style={[
-                      styles.itemText,
-                      item === selectedValue && styles.selectedItemText,
-                    ]}
-                  >
-                    {item}
-                  </Text>
-                </TouchableOpacity>
-              )}
-            />
+
+            <View style={styles.wheelRow}>
+              <WheelColumn
+                data={data}
+                selectedValue={tempValue}
+                onChange={setTempValue}
+                visible={visible}
+              />
+            </View>
+
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 onPress={() => setVisible(false)}
                 style={styles.cancelButton}
               >
-                <Text style={styles.cancelButtonText}>Cancelar</Text>
+                <Text style={styles.cancelButtonText}>{t("common.cancel")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleConfirm}
                 style={styles.confirmButton}
               >
-                <Text style={styles.confirmButtonText}>Confirmar</Text>
+                <Text style={styles.confirmButtonText}>
+                  {t("common.confirm")}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -138,6 +143,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginRight: 10,
   },
+  buttonTextFilled: {
+    color: "#000",
+  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -147,53 +155,44 @@ const styles = StyleSheet.create({
   pickerContainer: {
     width: "80%",
     backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
+    borderRadius: 16,
+    padding: 20,
     alignItems: "center",
   },
   title: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 10,
+    marginBottom: 12,
+    color: "#111827",
   },
-  itemContainer: {
-    height: 40,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  itemText: {
-    fontSize: 14,
-    color: "#A9A9A9",
-  },
-  selectedItemText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#b41976",
+  wheelRow: {
+    flexDirection: "row",
+    width: "60%",
   },
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 10,
+    marginTop: 16,
     width: "100%",
   },
   cancelButton: {
     flex: 1,
-    padding: 8,
+    padding: 10,
     marginHorizontal: 5,
-    backgroundColor: "#ccc",
-    borderRadius: 5,
+    backgroundColor: "#eee",
+    borderRadius: 8,
     alignItems: "center",
   },
   cancelButtonText: {
-    color: "#000",
+    color: "#444",
     fontWeight: "bold",
   },
   confirmButton: {
     flex: 1,
-    padding: 8,
+    padding: 10,
     marginHorizontal: 5,
     backgroundColor: "#b41976",
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: "center",
   },
   confirmButtonText: {

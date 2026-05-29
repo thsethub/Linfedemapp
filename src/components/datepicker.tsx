@@ -1,12 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  StyleSheet,
-  FlatList,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, Modal, StyleSheet } from "react-native";
+import { useTranslation } from "@/context/LanguageContext";
+import WheelColumn from "@/components/WheelColumn";
 
 interface DatePickerProps {
   visible: boolean;
@@ -15,134 +10,109 @@ interface DatePickerProps {
   initialDate?: string; // Data inicial opcional no formato "DD/MM/AAAA"
 }
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 const DatePicker: React.FC<DatePickerProps> = ({
   visible,
   onClose,
   onConfirm,
   initialDate,
 }) => {
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
-  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const { t } = useTranslation();
+  const today = new Date();
 
-  const yearListRef = useRef<FlatList>(null);
-  const monthListRef = useRef<FlatList>(null);
-  const dayListRef = useRef<FlatList>(null);
+  const [selectedYear, setSelectedYear] = useState<number>(
+    today.getFullYear()
+  );
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    today.getMonth() + 1
+  );
+  const [selectedDay, setSelectedDay] = useState<number>(today.getDate());
 
+  // Anos de (atual - 100) até o ano atual, em ordem crescente.
   const years = Array.from(
     { length: 101 },
-    (_, i) => new Date().getFullYear() - 100 + i
+    (_, i) => today.getFullYear() - 100 + i
   );
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
 
   const getDaysInMonth = (year: number, month: number) =>
     new Date(year, month, 0).getDate();
 
-  const days =
-    selectedYear && selectedMonth
-      ? Array.from(
-          { length: getDaysInMonth(selectedYear, selectedMonth) },
-          (_, i) => i + 1
-        )
-      : [];
+  const days = Array.from(
+    { length: getDaysInMonth(selectedYear, selectedMonth) },
+    (_, i) => i + 1
+  );
 
+  // Ao abrir: posiciona nos valores de initialDate, ou na data de hoje.
   useEffect(() => {
-    if (visible && initialDate) {
+    if (!visible) return;
+    if (initialDate) {
       const [day, month, year] = initialDate.split("/").map(Number);
-      setSelectedYear(year);
-      setSelectedMonth(month);
-      setSelectedDay(day);
-
-      setTimeout(() => {
-        yearListRef.current?.scrollToIndex({
-          index: years.indexOf(year),
-          animated: false,
-        });
-        monthListRef.current?.scrollToIndex({
-          index: month - 1,
-          animated: false,
-        });
-        dayListRef.current?.scrollToIndex({ index: day - 1, animated: false });
-      }, 100);
+      if (day && month && year) {
+        setSelectedYear(year);
+        setSelectedMonth(month);
+        setSelectedDay(day);
+        return;
+      }
     }
+    setSelectedYear(today.getFullYear());
+    setSelectedMonth(today.getMonth() + 1);
+    setSelectedDay(today.getDate());
   }, [visible, initialDate]);
 
-  const handleConfirm = () => {
-    if (selectedYear && selectedMonth && selectedDay) {
-      const formattedDate = `${String(selectedDay).padStart(2, "0")}/${String(
-        selectedMonth
-      ).padStart(2, "0")}/${selectedYear}`;
-      onConfirm(formattedDate);
-      onClose();
+  // Garante que o dia selecionado seja válido ao mudar mês/ano.
+  useEffect(() => {
+    const maxDay = getDaysInMonth(selectedYear, selectedMonth);
+    if (selectedDay > maxDay) {
+      setSelectedDay(maxDay);
     }
-  };
+  }, [selectedYear, selectedMonth]);
 
-  const renderPicker = (
-    data: number[],
-    selectedValue: number | null,
-    onValueChange: (value: number) => void,
-    listRef: React.RefObject<FlatList>
-  ) => (
-    <FlatList
-      ref={listRef}
-      data={data}
-      keyExtractor={(item) => item.toString()}
-      showsVerticalScrollIndicator={false}
-      snapToAlignment="center"
-      snapToInterval={50}
-      decelerationRate="fast"
-      getItemLayout={(_, index) => ({
-        length: 50,
-        offset: 50 * index,
-        index,
-      })}
-      contentContainerStyle={{ paddingVertical: 100 }}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          onPress={() => onValueChange(item)}
-          style={styles.itemContainer}
-        >
-          <Text
-            style={[
-              styles.itemText,
-              item === selectedValue && styles.selectedItemText,
-            ]}
-          >
-            {item}
-          </Text>
-        </TouchableOpacity>
-      )}
-    />
-  );
+  const handleConfirm = () => {
+    const formattedDate = `${pad(selectedDay)}/${pad(
+      selectedMonth
+    )}/${selectedYear}`;
+    onConfirm(formattedDate);
+    onClose();
+  };
 
   return (
     <Modal visible={visible} transparent animationType="slide">
       <View style={styles.modalContainer}>
         <View style={styles.pickerContainer}>
-          <Text style={styles.title}>Selecione a Data</Text>
+          <Text style={styles.title}>{t("patient.selectDate")}</Text>
+
           <View style={styles.pickerRow}>
-            <View style={styles.pickerColumn}>
-              {renderPicker(years, selectedYear, setSelectedYear, yearListRef)}
-            </View>
-            <View style={styles.pickerColumn}>
-              {renderPicker(
-                months,
-                selectedMonth,
-                setSelectedMonth,
-                monthListRef
-              )}
-            </View>
-            <View style={styles.pickerColumn}>
-              {renderPicker(days, selectedDay, setSelectedDay, dayListRef)}
-            </View>
+            <WheelColumn
+              data={days.map(pad)}
+              selectedValue={pad(selectedDay)}
+              onChange={(v) => setSelectedDay(Number(v))}
+              visible={visible}
+            />
+            <WheelColumn
+              data={months.map(pad)}
+              selectedValue={pad(selectedMonth)}
+              onChange={(v) => setSelectedMonth(Number(v))}
+              visible={visible}
+            />
+            <WheelColumn
+              data={years.map(String)}
+              selectedValue={String(selectedYear)}
+              onChange={(v) => setSelectedYear(Number(v))}
+              visible={visible}
+            />
           </View>
 
           <View style={styles.buttonRow}>
-            <TouchableOpacity onPress={onClose} style={styles.button}>
-              <Text style={styles.buttonText}>Cancelar</Text>
+            <TouchableOpacity onPress={onClose} style={styles.cancelButton}>
+              <Text style={styles.cancelButtonText}>{t("common.cancel")}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleConfirm} style={styles.button}>
-              <Text style={styles.buttonText}>Confirmar</Text>
+            <TouchableOpacity
+              onPress={handleConfirm}
+              style={styles.confirmButton}
+            >
+              <Text style={styles.confirmButtonText}>{t("common.confirm")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -161,38 +131,20 @@ const styles = StyleSheet.create({
   pickerContainer: {
     width: "90%",
     backgroundColor: "#fff",
-    borderRadius: 10,
+    borderRadius: 16,
     padding: 20,
     alignItems: "center",
   },
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 16,
+    color: "#111827",
   },
   pickerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     width: "100%",
-  },
-  pickerColumn: {
-    flex: 1,
-    height: 200,
-    alignItems: "center",
-  },
-  itemContainer: {
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  itemText: {
-    fontSize: 16,
-    color: "#A9A9A9",
-  },
-  selectedItemText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#b41976",
   },
   buttonRow: {
     flexDirection: "row",
@@ -200,15 +152,27 @@ const styles = StyleSheet.create({
     marginTop: 20,
     width: "100%",
   },
-  button: {
+  cancelButton: {
     flex: 1,
-    padding: 10,
+    padding: 12,
     marginHorizontal: 5,
-    backgroundColor: "#b41976",
-    borderRadius: 5,
+    backgroundColor: "#eee",
+    borderRadius: 8,
     alignItems: "center",
   },
-  buttonText: {
+  cancelButtonText: {
+    color: "#444",
+    fontWeight: "bold",
+  },
+  confirmButton: {
+    flex: 1,
+    padding: 12,
+    marginHorizontal: 5,
+    backgroundColor: "#b41976",
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  confirmButtonText: {
     color: "#fff",
     fontWeight: "bold",
   },
