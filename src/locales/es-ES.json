@@ -361,7 +361,7 @@
     "noPatientFound": "No se encontró ningún paciente.",
     "associatePatientBeforeConfirm": "Asocie al menos un paciente antes de confirmar.",
     "volumeAnalysis": {
-      "noChanges": "El miembro presenta una diferencia de volumen de {difference} cm³, pero no presenta alteraciones volumétricas.",
+      "noChanges": "El miembro presenta una diferencia de volumen de {difference} cm³, pero no presenta alteraciones volumétricas sugestivas de linfedema.",
       "stage0": "El miembro presenta una diferencia de volumen de {difference} cm³ y alteraciones de volumen de {percentage}%, lo que puede sugerir un estadio 0 o subclínico.",
       "stage1": "El miembro presenta una diferencia de volumen de {difference} cm³ y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio I o leve.",
       "stage2": "El miembro presenta una diferencia de volumen de {difference} cm³ y alteraciones de volumen de {percentage}%, sugiriendo linfedema estadio II o moderado.",

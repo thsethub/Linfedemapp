@@ -828,21 +828,23 @@ export default function Resultado() {
               <Text className="text-lg font-medium">
                 {t("results.volumeDifference")}
               </Text>
-              <View
-                className={`items-center justify-center ${bgClass}`}
-                style={{
-                  width: 75,
-                  height: 35,
-                  borderRadius: 10,
-                }}
-              >
-                <Text
-                  className={`font-semibold ${textClass}`}
-                  style={{ fontSize: 12, padding: 10 }}
+              {volumeDifferencePercentage >= 5 && (
+                <View
+                  className={`items-center justify-center ${bgClass}`}
+                  style={{
+                    width: 75,
+                    height: 35,
+                    borderRadius: 10,
+                  }}
                 >
-                  {volumeDifferenceText2}
-                </Text>
-              </View>
+                  <Text
+                    className={`font-semibold ${textClass}`}
+                    style={{ fontSize: 12, padding: 10 }}
+                  >
+                    {volumeDifferenceText2}
+                  </Text>
+                </View>
+              )}
             </View>
             <View
               className={`flex-row justify-center items-center ${bgClass}`}

@@ -396,7 +396,7 @@
     "noPatientFound": "No patient found.",
     "associatePatientBeforeConfirm": "Associate at least one patient before confirming.",
     "volumeAnalysis": {
-      "noChanges": "The limb presents a volume difference of {difference} cm³, but shows no volumetric changes.",
+      "noChanges": "The limb presents a volume difference of {difference} cm³, but shows no volumetric changes suggestive of lymphedema.",
       "stage0": "The limb presents a volume difference of {difference} cm³ and volume changes of {percentage}%, which may suggest stage 0 or subclinical lymphedema.",
       "stage1": "The limb presents a volume difference of {difference} cm³ and volume changes of {percentage}%, suggesting stage I or mild lymphedema.",
       "stage2": "The limb presents a volume difference of {difference} cm³ and volume changes of {percentage}%, suggesting stage II or moderate lymphedema.",
