@@ -1,6 +1,5 @@
 import "../style/global.css";
 import { Slot, usePathname, useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
@@ -58,7 +57,6 @@ export default function Layout() {
   return (
     <LanguageProvider>
       <MeasurementProvider>
-        <StatusBar style="light" translucent />
         <View style={{ flex: 1 }}>
           <Slot />
           <GlobalFAQButton />

@@ -67,7 +67,7 @@ export default function Faq() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">
-      <StatusBar style="dark" translucent />
+      <StatusBar style="dark" />
 
       {/* Header */}
       <View className="px-4 py-3 flex-row items-center">

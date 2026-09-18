@@ -11,6 +11,7 @@ import {
   SafeAreaView,
   Platform,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { cssInterop } from "nativewind";
 import { Feather } from "@expo/vector-icons";
@@ -161,6 +162,7 @@ export default function RecuperarSenha() {
   if (isCodeVerified) {
     return (
       <SafeAreaView className="flex-1 bg-white-500">
+        <StatusBar style="light" />
         <KeyboardAwareScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           enableOnAndroid
@@ -296,6 +298,7 @@ export default function RecuperarSenha() {
     const finalCode = code.join("");
     return (
       <SafeAreaView className="flex-1 bg-white-500">
+        <StatusBar style="light" />
         <KeyboardAwareScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           enableOnAndroid
@@ -390,6 +393,7 @@ export default function RecuperarSenha() {
   // --- TELA 1: DIGITAR E-MAIL ---
   return (
     <SafeAreaView className="flex-1 bg-white-500">
+      <StatusBar style="light" />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         enableOnAndroid

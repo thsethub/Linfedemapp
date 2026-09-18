@@ -78,7 +78,7 @@ export default function Home() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">
-      <StatusBar style="dark" translucent />
+      <StatusBar style="dark" />
 
       {/* Banner */}
       <View className="justify-center items-center">

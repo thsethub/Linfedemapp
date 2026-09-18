@@ -8,7 +8,7 @@ import {
   Dimensions,
   LogBox,
 } from "react-native";
-// import { StatusBar } from "expo-status-bar";
+import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -56,6 +56,7 @@ export default function Index() {
 
   return (
     <SafeAreaView className="flex-1 bg-primary-500">
+      <StatusBar style="light" />
       {/* Top Section */}
       <View className="flex-1 bg-white-500 relative mt-28">
         {/* SVG with Gradient */}

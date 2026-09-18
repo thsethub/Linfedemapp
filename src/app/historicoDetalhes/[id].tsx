@@ -211,7 +211,7 @@ export default function PatientProfileScreen() {
 
   return (
     <ScrollView className="flex-1 bg-[#f7f7f7]">
-      <StatusBar style="dark" translucent />
+      <StatusBar style="dark" />
       {/* Cabeçalho */}
       <Header
         title={t("patientDetails.title")}

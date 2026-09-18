@@ -497,7 +497,7 @@ export default function FichaExame2() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-600 mt-8">
-      <StatusBar style="dark" translucent />
+      <StatusBar style="dark" />
       {/* <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         enableOnAndroid

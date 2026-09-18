@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   Dimensions,
   Alert,
-  StatusBar,
   StyleSheet,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import { useLanguage } from "../context/LanguageContext";
@@ -69,7 +69,7 @@ export default function LanguageSelector() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="light-content" backgroundColor="#b41976" />
+      <StatusBar style="light" />
 
       {/* Header Section with Globe Icon */}
       <View style={styles.headerContainer}>

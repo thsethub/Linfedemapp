@@ -285,7 +285,7 @@ export default function bracoAfetado() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-600 ">
-      <StatusBar style="dark" translucent />
+      <StatusBar style="dark" />
 
       {/* Botão de Voltar */}
       <TouchableOpacity

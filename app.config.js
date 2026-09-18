@@ -29,7 +29,17 @@ module.exports = {
       output: "static",
       favicon: "./assets/images/favicon.png",
     },
-    plugins: ["expo-router", "expo-font", "expo-secure-store"],
+    plugins: [
+      "expo-router",
+      "expo-font",
+      "expo-secure-store",
+      "@react-native-community/datetimepicker",
+      "expo-sharing",
+      "expo-splash-screen",
+      "expo-sqlite",
+      "expo-status-bar",
+      "expo-web-browser",
+    ],
     experiments: {
       typedRoutes: true,
     },

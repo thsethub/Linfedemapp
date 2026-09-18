@@ -113,7 +113,7 @@ export default function SignIn() {
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar style="light" translucent />
+      <StatusBar style="light" />
 
       <View
         className="bg-primary-500 px-6 py-10 mb-10"

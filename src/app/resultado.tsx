@@ -632,7 +632,7 @@ export default function Resultado() {
 
   return (
     <SafeAreaView className="flex-1 bg-white-600">
-      <StatusBar style="dark" translucent />
+      <StatusBar style="dark" />
 
       <KeyboardAvoidingView
         style={{ flex: 1 }}

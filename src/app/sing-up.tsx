@@ -106,7 +106,7 @@ export default function SingUp() {
 
   return (
     <SafeAreaView className="flex-1">
-      <StatusBar style="light" translucent />
+      <StatusBar style="light" />
       {/* Header */}
       <View
         className="bg-primary-500 px-6 py-10"

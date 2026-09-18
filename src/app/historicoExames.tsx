@@ -160,7 +160,7 @@ export default function HistoricoExames() {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="dark" translucent />
+      <StatusBar style="dark" />
       {/* Cabeçalho */}
       <View style={styles.header}>
         <Header title={t("examHistory.title")} />

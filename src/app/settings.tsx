@@ -3,10 +3,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StatusBar,
   ScrollView,
   Switch,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import { useTranslation, useLanguage } from "../context/LanguageContext";
@@ -147,7 +147,7 @@ export default function Settings() {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
+      <StatusBar style="dark" />
 
       <ScrollView
         className="flex-1"
