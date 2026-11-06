@@ -12,7 +12,7 @@ import { router } from "expo-router";
 import { useTranslation, useLanguage } from "../context/LanguageContext";
 import { Feather } from "@expo/vector-icons";
 import { Language } from "../locales";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../utils/secureStorage";
 
 const languages = [
   {

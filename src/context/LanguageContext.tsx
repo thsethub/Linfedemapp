@@ -5,7 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../utils/secureStorage";
 import { languages, Language } from "../locales";
 
 interface LanguageContextType {

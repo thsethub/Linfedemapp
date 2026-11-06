@@ -1,5 +1,4 @@
-import * as Print from "expo-print";
-import * as Sharing from "expo-sharing";
+import { exportHtmlAsPdf } from "./exportPdf";
 
 export async function generatePatientReport(
   patientData: any,
@@ -125,16 +124,8 @@ export async function generatePatientReport(
   `;
 
   try {
-    // Gera o PDF
-    const { uri } = await Print.printToFileAsync({
-      html: htmlContent,
-      base64: false,
-    });
-
-    // Compartilha o arquivo
-    if (await Sharing.isAvailableAsync()) {
-      await Sharing.shareAsync(uri);
-    } else {
+    // Gera o PDF e compartilha (nativo) ou abre a impressão (web)
+    if (!(await exportHtmlAsPdf(htmlContent))) {
       console.log("Compartilhamento não disponível.");
     }
   } catch (error) {

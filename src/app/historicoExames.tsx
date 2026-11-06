@@ -13,7 +13,7 @@ import {
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../utils/secureStorage";
 import { StatusBar } from "expo-status-bar";
 import Header from "@/components/headerExames1";
 import { useTranslation } from "@/context/LanguageContext";

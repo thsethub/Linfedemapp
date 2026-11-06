@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../utils/secureStorage";
 import axios from "axios";
 import { useTranslation } from "../context/LanguageContext";
 import { API_URL } from "../config/api";

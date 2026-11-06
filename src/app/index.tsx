@@ -11,7 +11,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../utils/secureStorage";
 import { useLanguage, useTranslation } from "../context/LanguageContext";
 
 LogBox.ignoreLogs([

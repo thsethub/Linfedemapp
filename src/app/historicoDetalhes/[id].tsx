@@ -11,7 +11,7 @@ import {
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import axios from "axios";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../../utils/secureStorage";
 import { generatePatientReport } from "@/utils/generatePatientReport";
 import Header from "@/components/headerId";
 import { useMeasurementContext } from "../../context/context";

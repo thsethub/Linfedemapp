@@ -23,7 +23,7 @@ import Header from "@/components/headerFicha2";
 import axios from "axios";
 import ProcedureDetails from "@/components/procedimentosEcapsulados";
 import { Alert } from "react-native";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../utils/secureStorage";
 import { useTranslation } from "@/context/LanguageContext";
 import { API_URL } from "@/config/api";
 

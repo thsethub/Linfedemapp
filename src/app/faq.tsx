@@ -11,7 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from "../utils/secureStorage";
 import FaqAccordion from "@/components/FaqAccordion";
 import { useTranslation } from "@/context/LanguageContext";
 import { API_URL } from "@/config/api";
