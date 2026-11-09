@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  Dimensions,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -26,7 +25,8 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { API_URL } from "@/config/api";
 
-import { MAX_APP_WIDTH } from "../../utils/layout";
+import EvolutionChart from "@/components/EvolutionChart";
+import { armKey, referenceKey } from "@/utils/storedValueLabels";
 export default function PatientProfileScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams();
@@ -168,10 +168,24 @@ export default function PatientProfileScreen() {
   }
 
   const formatDate = (date: string): string => {
-    console.log("Data recebida:", date);
     if (!date) return t("patientDetails.values.notProvided"); // Caso a data seja inválida ou não exista
     const [year, month, day] = date.split("-");
-    return `${day}-${month}-${year}`;
+    return `${day}/${month}/${year}`;
+  };
+
+  // O app grava esses valores traduzidos no idioma da época ("Left", "Ulnar Styloid
+  // Process"...); aqui voltam à chave e são exibidos no idioma atual.
+  const armLabel = (v?: string) => {
+    const key = armKey(v);
+    return key
+      ? t(key === "left" ? "arms.leftArm" : "arms.rightArm")
+      : v || t("patientDetails.values.notProvided");
+  };
+  const referenceTypeLabel = (v?: string) => {
+    const key = referenceKey(v);
+    return key
+      ? t(`arms.references.${key}`)
+      : v || t("patientDetails.values.notProvided");
   };
 
   const calculateVolume = (comprimentoRef: string, inputs: string[]) => {
@@ -389,7 +403,7 @@ export default function PatientProfileScreen() {
       </Section>
 
       {/* Histórico Evolutivo com Abas */}
-      <View className="mt-6 px-4 mb-10">
+      <View className="mt-6 px-4 mb-28">
         <Text className="text-lg font-semibold mb-2 text-[#b41976]">
           {t("patientDetails.sections.evolutionHistory")}
         </Text>
@@ -402,14 +416,22 @@ export default function PatientProfileScreen() {
               activeTab === "chart" ? "bg-[#b41976]" : "bg-white"
             }`}
           >
-            <Text
-              style={{
-                color: activeTab === "chart" ? "#ffffff" : "#4b5563",
-                fontWeight: activeTab === "chart" ? "bold" : "600",
-              }}
-            >
-              📊 {t("patientDetails.tabs.chart")}
-            </Text>
+            <View className="flex-row items-center">
+              <Feather
+                name="bar-chart-2"
+                size={16}
+                color={activeTab === "chart" ? "#ffffff" : "#4b5563"}
+                style={{ marginRight: 6 }}
+              />
+              <Text
+                style={{
+                  color: activeTab === "chart" ? "#ffffff" : "#4b5563",
+                  fontWeight: activeTab === "chart" ? "bold" : "600",
+                }}
+              >
+                {t("patientDetails.tabs.chart")}
+              </Text>
+            </View>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveTab("details")}
@@ -417,14 +439,22 @@ export default function PatientProfileScreen() {
               activeTab === "details" ? "bg-[#b41976]" : "bg-white"
             }`}
           >
-            <Text
-              style={{
-                color: activeTab === "details" ? "#ffffff" : "#4b5563",
-                fontWeight: activeTab === "details" ? "bold" : "600",
-              }}
-            >
-              📋 {t("patientDetails.tabs.details")}
-            </Text>
+            <View className="flex-row items-center">
+              <Feather
+                name="list"
+                size={16}
+                color={activeTab === "details" ? "#ffffff" : "#4b5563"}
+                style={{ marginRight: 6 }}
+              />
+              <Text
+                style={{
+                  color: activeTab === "details" ? "#ffffff" : "#4b5563",
+                  fontWeight: activeTab === "details" ? "bold" : "600",
+                }}
+              >
+                {t("patientDetails.tabs.details")}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -432,293 +462,13 @@ export default function PatientProfileScreen() {
         <View className="bg-white rounded-b-xl border-x border-b border-gray-200 p-4">
           {activeTab === "chart" ? (
             /* ABA 1: GRÁFICO */
-            <View>
-              {measurements.length > 0 ? (
-                <View>
-                  {/* Gráfico de Linhas */}
-                  <View className="h-72 bg-gray-50 rounded-xl p-4 mb-4">
-                    <Text className="text-center font-semibold text-gray-700 mb-4">
-                      {t("patientDetails.chart.title")}
-                    </Text>
-
-                    <View className="flex-1 relative flex-row">
-                      {/* Preparar dados para o gráfico */}
-                      {(() => {
-                        const chartData = measurements.map((item) => {
-                          const totalRef = item.volumesReferencia
-                            ? item.volumesReferencia.reduce(
-                                (acc: number, v: number) => acc + v,
-                                0
-                              )
-                            : 0;
-                          const totalAfet = item.volumesAfetado
-                            ? item.volumesAfetado.reduce(
-                                (acc: number, v: number) => acc + v,
-                                0
-                              )
-                            : 0;
-
-                          // Formatar data de YYYY-MM-DD para DD/MM/YYYY
-                          const dateParts = item.dataAvaliacao.split("-");
-                          const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-
-                          return {
-                            date: formattedDate,
-                            reference: totalRef,
-                            affected: totalAfet,
-                          };
-                        });
-
-                        const maxVolume = Math.max(
-                          ...chartData.map((d) =>
-                            Math.max(d.reference, d.affected)
-                          ),
-                          1
-                        );
-                        const minVolume = Math.min(
-                          ...chartData.map((d) =>
-                            Math.min(d.reference, d.affected)
-                          ),
-                          0
-                        );
-
-                        const chartHeight = 160;
-                        const chartWidth = Math.min(Dimensions.get("window").width, MAX_APP_WIDTH) - 150; // Espaço para eixo Y
-                        const pointSpacing =
-                          chartWidth / Math.max(chartData.length - 1, 1);
-
-                        // Calcular valores para eixo Y (5 marcações)
-                        const yAxisValues = [];
-                        const step = (maxVolume - minVolume) / 4;
-                        for (let i = 0; i <= 4; i++) {
-                          yAxisValues.push(Math.round(minVolume + step * i));
-                        }
-
-                        return (
-                          <>
-                            {/* Eixo Y - Volumes */}
-                            <View
-                              className="justify-between mr-2"
-                              style={{ height: chartHeight + 20 }}
-                            >
-                              {yAxisValues.reverse().map((value, index) => (
-                                <Text
-                                  key={`y-${index}`}
-                                  className="text-xs text-gray-600"
-                                >
-                                  {value} mL
-                                </Text>
-                              ))}
-                            </View>
-
-                            {/* Área do gráfico e eixo X */}
-                            <View className="flex-1">
-                              {/* Área do gráfico */}
-                              <View
-                                className="relative"
-                                style={{ height: chartHeight }}
-                              >
-                                {/* Linhas de grade horizontais */}
-                                {yAxisValues.map((value, index) => (
-                                  <View
-                                    key={`grid-${index}`}
-                                    className="absolute left-0 right-0 border-t border-gray-300"
-                                    style={{
-                                      top: (index * chartHeight) / 4,
-                                    }}
-                                  />
-                                ))}
-
-                                {/* Linha de referência (azul) */}
-                                <View
-                                  className="absolute bottom-0 left-0 right-0"
-                                  style={{ height: chartHeight }}
-                                >
-                                  {chartData.map((point, index) => {
-                                    const y =
-                                      chartHeight -
-                                      ((point.reference - minVolume) /
-                                        (maxVolume - minVolume)) *
-                                        chartHeight;
-                                    const x = index * pointSpacing;
-                                    const nextPoint = chartData[index + 1];
-
-                                    return (
-                                      <View key={`ref-${index}`}>
-                                        {/* Ponto */}
-                                        <View
-                                          className="absolute bg-blue-500 rounded-full"
-                                          style={{
-                                            width: 8,
-                                            height: 8,
-                                            left: x - 4,
-                                            top: y - 4,
-                                          }}
-                                        />
-                                        {/* Linha conectando ao próximo ponto */}
-                                        {nextPoint && (
-                                          <View
-                                            className="absolute bg-blue-500"
-                                            style={{
-                                              height: 2,
-                                              width: Math.sqrt(
-                                                Math.pow(pointSpacing, 2) +
-                                                  Math.pow(
-                                                    chartHeight -
-                                                      ((nextPoint.reference -
-                                                        minVolume) /
-                                                        (maxVolume -
-                                                          minVolume)) *
-                                                        chartHeight -
-                                                      y,
-                                                    2
-                                                  )
-                                              ),
-                                              left: x,
-                                              top: y,
-                                              transform: [
-                                                {
-                                                  rotate: `${Math.atan2(
-                                                    chartHeight -
-                                                      ((nextPoint.reference -
-                                                        minVolume) /
-                                                        (maxVolume -
-                                                          minVolume)) *
-                                                        chartHeight -
-                                                      y,
-                                                    pointSpacing
-                                                  )}rad`,
-                                                },
-                                              ],
-                                              transformOrigin: "left center",
-                                            }}
-                                          />
-                                        )}
-                                      </View>
-                                    );
-                                  })}
-                                </View>
-
-                                {/* Linha afetada (rosa) */}
-                                <View
-                                  className="absolute bottom-0 left-0 right-0"
-                                  style={{ height: chartHeight }}
-                                >
-                                  {chartData.map((point, index) => {
-                                    const y =
-                                      chartHeight -
-                                      ((point.affected - minVolume) /
-                                        (maxVolume - minVolume)) *
-                                        chartHeight;
-                                    const x = index * pointSpacing;
-                                    const nextPoint = chartData[index + 1];
-
-                                    return (
-                                      <View key={`afet-${index}`}>
-                                        {/* Ponto */}
-                                        <View
-                                          className="absolute bg-[#b41976] rounded-full"
-                                          style={{
-                                            width: 8,
-                                            height: 8,
-                                            left: x - 4,
-                                            top: y - 4,
-                                          }}
-                                        />
-                                        {/* Linha conectando ao próximo ponto */}
-                                        {nextPoint && (
-                                          <View
-                                            className="absolute bg-[#b41976]"
-                                            style={{
-                                              height: 2,
-                                              width: Math.sqrt(
-                                                Math.pow(pointSpacing, 2) +
-                                                  Math.pow(
-                                                    chartHeight -
-                                                      ((nextPoint.affected -
-                                                        minVolume) /
-                                                        (maxVolume -
-                                                          minVolume)) *
-                                                        chartHeight -
-                                                      y,
-                                                    2
-                                                  )
-                                              ),
-                                              left: x,
-                                              top: y,
-                                              transform: [
-                                                {
-                                                  rotate: `${Math.atan2(
-                                                    chartHeight -
-                                                      ((nextPoint.affected -
-                                                        minVolume) /
-                                                        (maxVolume -
-                                                          minVolume)) *
-                                                        chartHeight -
-                                                      y,
-                                                    pointSpacing
-                                                  )}rad`,
-                                                },
-                                              ],
-                                              transformOrigin: "left center",
-                                            }}
-                                          />
-                                        )}
-                                      </View>
-                                    );
-                                  })}
-                                </View>
-                              </View>
-
-                              {/* Eixo X - Datas */}
-                              <View
-                                className="flex-row justify-between mt-3"
-                                style={{ paddingHorizontal: 4 }}
-                              >
-                                {chartData.map((point, index) => (
-                                  <View
-                                    key={`date-${index}`}
-                                    style={{ width: 70, alignItems: "center" }}
-                                  >
-                                    <Text
-                                      className="text-xs text-gray-600"
-                                      numberOfLines={1}
-                                      adjustsFontSizeToFit
-                                    >
-                                      {point.date}
-                                    </Text>
-                                  </View>
-                                ))}
-                              </View>
-                            </View>
-                          </>
-                        );
-                      })()}
-                    </View>
-                  </View>
-
-                  {/* Legenda */}
-                  <View className="flex-row justify-center items-center gap-6">
-                    <View className="flex-row items-center">
-                      <View className="w-4 h-4 bg-blue-500 rounded mr-2" />
-                      <Text className="text-gray-700">
-                        {t("patientDetails.chart.referenceLimb")}
-                      </Text>
-                    </View>
-                    <View className="flex-row items-center ml-4">
-                      <View className="w-4 h-4 bg-[#b41976] rounded mr-2" />
-                      <Text className="text-gray-700">
-                        {t("patientDetails.chart.affectedLimb")}
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              ) : (
-                <Text className="text-gray-500 text-center">
-                  {t("patientDetails.values.noMeasurements")}
-                </Text>
-              )}
-            </View>
+            measurements.length > 0 ? (
+              <EvolutionChart measurements={measurements} />
+            ) : (
+              <Text className="text-gray-500 text-center">
+                {t("patientDetails.values.noMeasurements")}
+              </Text>
+            )
           ) : (
             /* ABA 2: DETALHES */
             <View>
@@ -783,11 +533,17 @@ export default function PatientProfileScreen() {
                         className="flex-row justify-between items-center p-4 bg-white"
                       >
                         <View className="flex-1">
-                          <Text className="font-semibold text-[#b41976]">
-                            📅 {formatDate(item.dataAvaliacao)}
-                          </Text>
+                          <View className="flex-row items-center">
+                            <Feather name="calendar" size={14} color="#b41976" />
+                            <Text className="font-semibold text-[#b41976] ml-2">
+                              {formatDate(item.dataAvaliacao)}
+                            </Text>
+                          </View>
                           <Text className="text-sm text-gray-600 mt-1">
-                            Vol. Diferença: {item.volumeDifference?.toFixed(2)}%
+                            {t("patientDetails.fields.volumeDifference")}:{" "}
+                            {item.volumeDifference != null
+                              ? `${item.volumeDifference.toFixed(2)}%`
+                              : t("patientDetails.values.notProvided")}
                           </Text>
                         </View>
                         <Feather
@@ -813,18 +569,15 @@ export default function PatientProfileScreen() {
                             </Text>
                             <Text className="text-gray-700">
                               {t("patientDetails.fields.referenceArm")}:{" "}
-                              {item.referenceArm ||
-                                t("patientDetails.values.notProvided")}
+                              {armLabel(item.referenceArm)}
                             </Text>
                             <Text className="text-gray-700">
                               {t("patientDetails.fields.affectedArm")}:{" "}
-                              {item.affectedArm ||
-                                t("patientDetails.values.notProvided")}
+                              {armLabel(item.affectedArm)}
                             </Text>
                             <Text className="text-gray-700">
                               {t("patientDetails.fields.reference")}:{" "}
-                              {item.tipoReferencia ||
-                                t("patientDetails.values.notProvided")}
+                              {referenceTypeLabel(item.tipoReferencia)}
                             </Text>
                           </View>
 
@@ -932,9 +685,17 @@ export default function PatientProfileScreen() {
                               {totalVolumesAfetado.toFixed(2)}{" "}
                               {t("patientDetails.values.ml")}
                             </Text>
-                            <Text className="text-gray-700 font-semibold mt-2 text-sm">
-                              📝 {linfedemaText}
-                            </Text>
+                            <View className="flex-row items-start mt-2">
+                              <Feather
+                                name="file-text"
+                                size={14}
+                                color="#374151"
+                                style={{ marginTop: 2 }}
+                              />
+                              <Text className="text-gray-700 font-semibold text-sm ml-2 flex-1">
+                                {linfedemaText}
+                              </Text>
+                            </View>
                           </View>
 
                           {/* Observações */}
@@ -983,8 +744,15 @@ const Section = ({
 );
 
 // Componente reutilizável de campo
-const Field = ({ label, value }: { label: string; value: string }) => (
-  <Text>
-    <Text className="font-semibold">{label}:</Text> {value}
-  </Text>
-);
+const Field = ({ label, value }: { label: string; value: string }) =>
+  label === "•" ? (
+    // item de lista: só o marcador, sem os dois-pontos de "rótulo: valor"
+    <Text>
+      {"•  "}
+      {value}
+    </Text>
+  ) : (
+    <Text>
+      <Text className="font-semibold">{label}:</Text> {value}
+    </Text>
+  );

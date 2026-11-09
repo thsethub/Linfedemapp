@@ -428,7 +428,17 @@
     "chart": {
       "title": "Evolución Volumétrica",
       "referenceLimb": "Miembro de Referencia",
-      "affectedLimb": "Miembro Afectado"
+      "affectedLimb": "Miembro Afectado",
+      "period": "Período",
+      "periodAll": "Todo",
+      "period3m": "3 meses",
+      "period6m": "6 meses",
+      "period12m": "12 meses",
+      "emptyPeriod": "Ninguna medición en el período seleccionado.",
+      "hint": "Toque un punto para ver los detalles",
+      "measurementsCount": "{count} mediciones",
+      "volumeUnit": "Volumen en cm³",
+      "difference": "Diferencia"
     },
     "sections": {
       "personalInfo": "Información Personal",
@@ -488,7 +498,7 @@
       "incompleteInfo": "Información incompleta",
       "kg": "kg",
       "cm": "cm",
-      "ml": "mL",
+      "ml": "cm³",
       "months": "meses"
     },
     "errors": {

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
@@ -79,6 +79,11 @@ export default function Home() {
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">
       <StatusBar style="dark" />
+      {/* Rolagem: em telas baixas o fim da página (Histórico de Exames) ficava cortado */}
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 120 }}
+        showsVerticalScrollIndicator={false}
+      >
 
       {/* Banner */}
       <View className="justify-center items-center">
@@ -179,6 +184,7 @@ export default function Home() {
           </View>
         </View>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

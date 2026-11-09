@@ -14,6 +14,12 @@ Capturas em `.playwright-mcp/` (fluxo/, sweep2/, sweep3/).
 - [x] **C6** `Dropdown` com `flex:1` + `justifyContent:"center"` empurrava o título 20 px sobre a legenda das imagens → `flex-start`.
 - [x] **C7** Campos de texto em linha (`flex-1`) não encolhiam na web (o `<input>` tem largura mínima) e vazavam do cartão: peso/altura da `fichaExame` pareciam uma barra só e a unidade (`cm`) ficava fora do cartão → `style={{ minWidth: 0 }}`.
 - [x] **C8** Cartões com `width: 360` fixo eram cortados em telas de 360 px na web (a barra de rolagem reduz a área útil) → `width: "100%"` + `maxWidth: 360` (15 cartões em fichas, braços, calculadora e resultado).
+- [x] **C9** Entrada com composição dependente do tamanho da tela → colagem numa caixa de proporção fixa (390×328, a do projeto), escalada de forma uniforme e centralizada; mesmas coordenadas em 360, 390, 768 e 1440 px.
+- [x] **C10** Conteúdo cortado sem rolagem em telas baixas (home: "Histórico de Exames"; login: "Registrar agora"; entrada) → `ScrollView` nas três telas. Auditoria automática: nenhum texto fica abaixo da área visível sem um contêiner que role até ele.
+- [x] **C11** Dropdowns (`Dropdown`/`Dropdown2`): a lista flutuante (posição absoluta) cobria o campo seguinte e era cortada → lista **dentro do fluxo** da tela, com rolagem interna (máx. 210 px), marca o item escolhido e fecha ao escolher ou ao tocar no campo.
+- [x] **C12** Seletor de data (`WheelColumn`): na web a seleção não mudava ao rolar (eventos de fim de rolagem não disparam com roda/barra) e a coluna do dia ficava desalinhada → detecção de fim de rolagem por inatividade, com encaixe no item.
+- [x] **C13** Histórico: gráfico novo (`EvolutionChart`) com curva suave (interpolação monotônica), eixo X proporcional às datas, filtros de período (Tudo/3/6/12 meses), séries ligáveis/desligáveis, ponto clicável com detalhes (data, volumes em cm³, diferença), ícones no lugar de emojis; toque por áreas nativas (onPress em SVG não funciona na web).
+- [x] **C14** Detalhes: valores gravados já traduzidos no idioma da época (`Left`, `Ulnar Styloid Process`...) agora são reconhecidos em pt/en/es e exibidos no idioma atual (`utils/storedValueLabels.ts`, também no PDF); "•:" nas alterações cutâneas; "Vol. Diferença" fixo em português; unidade mL → cm³; emojis 📅📝 trocados por ícones.
 
 ## Telas (ordem do fluxo)
 

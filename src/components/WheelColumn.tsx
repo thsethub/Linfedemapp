@@ -49,13 +49,40 @@ const WheelColumn: React.FC<WheelColumnProps> = ({
     return () => clearTimeout(id);
   }, [visible, selectedValue, data.length]);
 
-  const handleSettle = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const index = Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT);
-    const clamped = Math.max(0, Math.min(index, data.length - 1));
-    const value = data[clamped];
-    if (value != null && value !== selectedValue) {
-      onChange(value);
-    }
+  // Valores mais recentes para o timer de "fim da rolagem" (evita closure velha).
+  const latest = useRef({ selectedValue, onChange, data });
+  latest.current = { selectedValue, onChange, data };
+  const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(
+    () => () => {
+      if (settleTimer.current) clearTimeout(settleTimer.current);
+    },
+    []
+  );
+
+  // Na web, onMomentumScrollEnd/onScrollEndDrag não disparam com roda do mouse ou
+  // barra de rolagem, então a seleção nunca mudava. Detectamos o fim da rolagem
+  // por inatividade: encaixa no item mais próximo e atualiza a seleção.
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const y = e.nativeEvent.contentOffset.y;
+    if (settleTimer.current) clearTimeout(settleTimer.current);
+    settleTimer.current = setTimeout(() => {
+      const { data: items, selectedValue: current, onChange: change } =
+        latest.current;
+      const index = Math.max(
+        0,
+        Math.min(Math.round(y / ITEM_HEIGHT), items.length - 1)
+      );
+      const target = index * ITEM_HEIGHT;
+      if (Math.abs(y - target) > 1) {
+        listRef.current?.scrollToOffset({ offset: target, animated: true });
+      }
+      const value = items[index];
+      if (value != null && value !== current) {
+        change(value);
+      }
+    }, 140);
   };
 
   return (
@@ -79,8 +106,8 @@ const WheelColumn: React.FC<WheelColumnProps> = ({
           index,
         })}
         contentContainerStyle={{ paddingVertical: ITEM_HEIGHT * 2 }}
-        onMomentumScrollEnd={handleSettle}
-        onScrollEndDrag={handleSettle}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
         renderItem={({ item }) => {
           const isSelected = item === selectedValue;
           return (

@@ -432,7 +432,17 @@
     "chart": {
       "title": "Volumetric Evolution",
       "referenceLimb": "Reference Limb",
-      "affectedLimb": "Affected Limb"
+      "affectedLimb": "Affected Limb",
+      "period": "Period",
+      "periodAll": "All",
+      "period3m": "3 months",
+      "period6m": "6 months",
+      "period12m": "12 months",
+      "emptyPeriod": "No measurements in the selected period.",
+      "hint": "Tap a point to see the details",
+      "measurementsCount": "{count} measurements",
+      "volumeUnit": "Volume in cm³",
+      "difference": "Difference"
     },
     "sections": {
       "personalInfo": "Personal Information",

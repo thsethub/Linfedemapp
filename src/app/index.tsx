@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -6,12 +6,20 @@ import {
   TouchableOpacity,
   Image,
   LogBox,
+  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import Svg, { Rect, Defs, LinearGradient, Stop } from "react-native-svg";
 import { router } from "expo-router";
 import * as SecureStore from "../utils/secureStorage";
 import { useLanguage, useTranslation } from "../context/LanguageContext";
+import { useAppWindow } from "../utils/layout";
+
+// Colagem desenhada numa caixa de proporção fixa (a do projeto, 390x328) e escalada
+// de forma uniforme: a composição das fotos é a mesma em qualquer tamanho de tela.
+const DESIGN_W = 390;
+const DESIGN_H = 328;
+const TOP_BAND = 112; // faixa rosa acima da colagem
 
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested", // Ignore nested VirtualizedLists warning
@@ -19,9 +27,19 @@ LogBox.ignoreLogs([
 export default function Index() {
   const { isLanguageSelected } = useLanguage();
   const { t } = useTranslation();
-  // Tamanho real da área da colagem; as fotos escalam a partir dele (desenho base 390x410)
-  const [box, setBox] = useState({ w: 0, h: 0 });
-  const u = Math.min(box.w / 390, box.h / 410);
+  const { width } = useAppWindow();
+  const u = Math.min(width / DESIGN_W, 1.25);
+  const offsetX = (width - DESIGN_W * u) / 2;
+  // Posiciona uma foto em coordenadas do desenho (390x328)
+  const place = (left: number, top: number, w: number, h: number, radius = 0) => ({
+    position: "absolute" as const,
+    left: offsetX + left * u,
+    top: top * u,
+    width: w * u,
+    height: h * u,
+    borderRadius: radius * u,
+    zIndex: 1,
+  });
 
   // useEffect(() => {
   //   const clearToken = async () => {
@@ -57,103 +75,69 @@ export default function Index() {
   return (
     <SafeAreaView className="flex-1 bg-primary-500">
       <StatusBar style="light" />
-      {/* Top Section */}
-      <View
-        className="flex-1 bg-white-500 relative mt-28"
-        onLayout={(e) =>
-          setBox({
-            w: e.nativeEvent.layout.width,
-            h: e.nativeEvent.layout.height,
-          })
-        }
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
       >
-        {/* SVG with Gradient */}
-        <Svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 374 406"
-          preserveAspectRatio="none"
-          fill="none"
-          style={{ position: "absolute", left: 0, top: 0 }}
+        {/* Faixa rosa superior */}
+        <View className="bg-primary-500" style={{ height: TOP_BAND }} />
+
+        {/* Colagem (proporção fixa) */}
+        <View
+          className="bg-white-500"
+          style={{ height: DESIGN_H * u, position: "relative" }}
         >
-          <Rect
-            width={880}
-            height={880}
-            x={-252}
-            y={-474}
-            fill="url(#a)"
-            rx={440}
+          <Svg
+            width="100%"
+            height="100%"
+            viewBox="0 0 374 406"
+            preserveAspectRatio="none"
+            fill="none"
+            style={{ position: "absolute", left: 0, top: 0 }}
+          >
+            <Rect
+              width={880}
+              height={880}
+              x={-252}
+              y={-474}
+              fill="url(#a)"
+              rx={440}
+            />
+            <Defs>
+              <LinearGradient
+                id="a"
+                x1={452.847}
+                x2={-271.222}
+                y1={-474}
+                y2={-263.911}
+                gradientUnits="userSpaceOnUse"
+              >
+                <Stop stopColor="#B41976" />
+                <Stop offset={1} stopColor="#B41976" />
+              </LinearGradient>
+            </Defs>
+          </Svg>
+
+          <Image
+            source={require("../assets/Frame 238284.png")}
+            style={place(16, -20, 125, 125, 46)}
           />
-          <Defs>
-            <LinearGradient
-              id="a"
-              x1={452.847}
-              x2={-271.222}
-              y1={-474}
-              y2={-263.911}
-              gradientUnits="userSpaceOnUse"
-            >
-              <Stop stopColor="#B41976" />
-              <Stop offset={1} stopColor="#B41976" />
-            </LinearGradient>
-          </Defs>
-        </Svg>
+          {/* recorte que sangra pela borda direita do desenho */}
+          <Image
+            source={require("../assets/Frame 238283.png")}
+            style={place(DESIGN_W - 138, 6, 138, 156)}
+          />
+          <Image
+            source={require("../assets/Frame 238285.png")}
+            style={place(32, 128, 100, 100, 46)}
+          />
+          <Image
+            source={require("../assets/Frame 238286.png")}
+            style={place(156, 188, 128, 128, 46)}
+          />
+        </View>
 
-        {u > 0 && (
-          <>
-            <Image
-              source={require("../assets/Frame 238284.png")}
-              style={{
-                position: "absolute",
-                top: -25 * u,
-                left: 20 * u,
-                width: 156 * u,
-                height: 156 * u,
-                borderRadius: 58 * u,
-                zIndex: 1,
-              }}
-            />
-            <Image
-              source={require("../assets/Frame 238283.png")}
-              style={{
-                position: "absolute",
-                top: 8 * u,
-                // recorte que sangra pela borda direita da tela
-                left: box.w - 172 * u,
-                width: 172 * u,
-                height: 195 * u,
-                zIndex: 1,
-              }}
-            />
-            <Image
-              source={require("../assets/Frame 238285.png")}
-              style={{
-                position: "absolute",
-                top: 160 * u,
-                left: 40 * u,
-                width: 125 * u,
-                height: 125 * u,
-                borderRadius: 58 * u,
-                zIndex: 1,
-              }}
-            />
-            <Image
-              source={require("../assets/Frame 238286.png")}
-              style={{
-                position: "absolute",
-                top: 235 * u,
-                left: 195 * u,
-                width: 160 * u,
-                height: 160 * u,
-                borderRadius: 58 * u,
-                zIndex: 1,
-              }}
-            />
-          </>
-        )}
-      </View>
-
-      <View className="flex-1 bg-white-500 px-6 py-10">
+      <View className="bg-white-500 px-6 py-10" style={{ flexGrow: 1 }}>
         <Text className="text-black-500 font-regular mb-4">
           {t("welcome.appName")}
         </Text>
@@ -202,6 +186,7 @@ export default function Index() {
           </Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

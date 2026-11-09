@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { router } from "expo-router";
@@ -114,6 +115,10 @@ export default function SignIn() {
   return (
     <SafeAreaView className="flex-1">
       <StatusBar style="light" />
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
 
       <View
         className="bg-primary-500 px-6 py-10 mb-10"
@@ -182,6 +187,7 @@ export default function SignIn() {
           </Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

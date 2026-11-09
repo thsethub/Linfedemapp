@@ -1,4 +1,5 @@
 import { exportHtmlAsPdf } from "./exportPdf";
+import { referenceLabel } from "./storedValueLabels";
 
 export async function generatePatientReport(
   patient: any,
@@ -234,7 +235,7 @@ export async function generatePatientReport(
               lastMeasurement.pontosRef || "Não informado"
             }</p>
             <p><b>Referência:</b> ${
-              lastMeasurement.tipoReferencia || "Não informado"
+              referenceLabel(lastMeasurement.tipoReferencia, "pt-BR") || "Não informado"
             }</p>
 
             <!-- Tabela de Perimetria -->
