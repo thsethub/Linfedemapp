@@ -26,6 +26,7 @@ import {
 import { Feather } from "@expo/vector-icons";
 import { API_URL } from "@/config/api";
 
+import { MAX_APP_WIDTH } from "../../utils/layout";
 export default function PatientProfileScreen() {
   const { t } = useTranslation();
   const { id } = useLocalSearchParams();
@@ -482,7 +483,7 @@ export default function PatientProfileScreen() {
                         );
 
                         const chartHeight = 160;
-                        const chartWidth = Dimensions.get("window").width - 140; // Espaço para eixo Y
+                        const chartWidth = Math.min(Dimensions.get("window").width, MAX_APP_WIDTH) - 150; // Espaço para eixo Y
                         const pointSpacing =
                           chartWidth / Math.max(chartData.length - 1, 1);
 

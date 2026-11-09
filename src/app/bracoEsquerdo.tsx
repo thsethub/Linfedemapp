@@ -6,7 +6,6 @@ import {
   // FlatList,
   Image,
   TextInput,
-  useWindowDimensions,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native";
@@ -17,9 +16,10 @@ import { useTranslation } from "@/context/LanguageContext";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Entypo } from "@expo/vector-icons";
 
+import { useAppWindow } from "../utils/layout";
 export default function bracoRef() {
   const { t } = useTranslation();
-  const { width } = useWindowDimensions();
+  const { width } = useAppWindow();
   const [ref, setRef] = useState("");
   const [affected, setAffected] = useState("");
 
@@ -329,11 +329,12 @@ export default function bracoRef() {
       >
         <View className="flex-1 justify-center items-center ">
           {/* Container do processo de medição */}
-          <View className="flex-1 justify-center items-center mt-4">
+          <View className="justify-center items-center mt-4">
             <View
-              className="flex-1 p-6 bg-white-500"
+              className="p-6 bg-white-500"
               style={{
-                width: 360,
+                width: "100%",
+                maxWidth: 360,
                 borderRadius: 40,
                 backgroundColor: "#FFF",
               }}
@@ -455,9 +456,10 @@ export default function bracoRef() {
 
           {/* Container dos dados do membro de referência */}
           <View
-            className="flex-1 p-6 bg-white-500 mt-4"
+            className="p-6 bg-white-500 mt-4"
             style={{
-              width: 360,
+              width: "100%",
+              maxWidth: 360,
               borderRadius: 40,
               backgroundColor: "#FFF",
             }}
@@ -530,9 +532,10 @@ export default function bracoRef() {
 
           {/* Perimetria */}
           <View
-            className="flex-1 p-6 bg-white-500 mt-4"
+            className="p-6 bg-white-500 mt-4"
             style={{
-              width: 360,
+              width: "100%",
+              maxWidth: 360,
               borderRadius: 40,
               backgroundColor: "#FFF",
             }}

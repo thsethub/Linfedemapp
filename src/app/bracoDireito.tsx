@@ -7,7 +7,6 @@ import {
   TextInput,
   TouchableOpacity,
   // ScrollView,
-  useWindowDimensions,
 } from "react-native";
 import { useMeasurementContext } from "../context/context";
 import { useTranslation } from "@/context/LanguageContext";
@@ -17,9 +16,10 @@ import Feather from "@expo/vector-icons/Feather";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Entypo } from "@expo/vector-icons";
 
+import { useAppWindow } from "../utils/layout";
 export default function bracoAfetado() {
   const { t } = useTranslation();
-  const { width } = useWindowDimensions(); // Obtém a largura da tela
+  const { width } = useAppWindow(); // Obtém a largura da tela
   const {
     pontosRef,
     affectedArm,
@@ -355,13 +355,14 @@ export default function bracoAfetado() {
         extraScrollHeight={160}
         keyboardShouldPersistTaps="handled"
       >
-        <View className="flex-1 justify-center items-center mt-4">
+        <View className="justify-center items-center mt-4">
           {/* Container do processo de medição */}
           <View className="flex-1 justify-center items-center">
             <View
-              className="flex-1 p-6 bg-white-500"
+              className="p-6 bg-white-500"
               style={{
-                width: 360,
+                width: "100%",
+                maxWidth: 360,
                 borderRadius: 40,
                 backgroundColor: "#FFF",
               }}
@@ -482,9 +483,10 @@ export default function bracoAfetado() {
           </View>
 
           <View
-            className="flex-1 p-6 bg-white-500 mt-4"
+            className="p-6 bg-white-500 mt-4"
             style={{
-              width: 360,
+              width: "100%",
+              maxWidth: 360,
               borderRadius: 40,
               backgroundColor: "#FFF",
             }}
@@ -550,9 +552,10 @@ export default function bracoAfetado() {
           </View>
           {/* Fim Container dos Pontos */}
           <View
-            className="flex-1 p-6 bg-white-500 mt-4"
+            className="p-6 bg-white-500 mt-4"
             style={{
-              width: 360,
+              width: "100%",
+              maxWidth: 360,
               borderRadius: 40,
               backgroundColor: "#FFF",
             }}

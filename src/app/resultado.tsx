@@ -571,7 +571,8 @@ export default function Resultado() {
       <View
         className="p-6 bg-white-500 mt-4"
         style={{
-          width: 360,
+          width: "100%",
+          maxWidth: 360,
           borderRadius: 40,
           backgroundColor: "#FFF",
         }}
@@ -579,8 +580,7 @@ export default function Resultado() {
         <View className="flex-row mb-4">
           <Image
             source={require("../assets/folder-plus.png")}
-            className="w-6 h-6 mt-0.5"
-            style={{ marginBottom: 10, marginRight: 10 }}
+            style={{ width: 24, height: 24, marginTop: 2, marginBottom: 10, marginRight: 10 }}
           />
           <Text className="text-lg font-medium mb-2">
             {t("results.complementary")}
@@ -649,7 +649,8 @@ export default function Resultado() {
           <View
             className="p-6 bg-white-500 mt-4"
             style={{
-              width: 360,
+              width: "100%",
+              maxWidth: 360,
               borderRadius: 40,
               backgroundColor: "#FFF",
             }}
@@ -724,7 +725,8 @@ export default function Resultado() {
           <View
             className="p-6 bg-white-500 mt-4"
             style={{
-              width: 360,
+              width: "100%",
+              maxWidth: 360,
               borderRadius: 40,
               backgroundColor: "#FFF",
             }}

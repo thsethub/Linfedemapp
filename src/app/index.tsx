@@ -1,11 +1,10 @@
-import React, { use, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
   Text,
   TouchableOpacity,
   Image,
-  Dimensions,
   LogBox,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -17,11 +16,12 @@ import { useLanguage, useTranslation } from "../context/LanguageContext";
 LogBox.ignoreLogs([
   "VirtualizedLists should never be nested", // Ignore nested VirtualizedLists warning
 ]);
-const { width, height } = Dimensions.get("window");
-
 export default function Index() {
   const { isLanguageSelected } = useLanguage();
   const { t } = useTranslation();
+  // Tamanho real da área da colagem; as fotos escalam a partir dele (desenho base 390x410)
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  const u = Math.min(box.w / 390, box.h / 410);
 
   // useEffect(() => {
   //   const clearToken = async () => {
@@ -58,14 +58,23 @@ export default function Index() {
     <SafeAreaView className="flex-1 bg-primary-500">
       <StatusBar style="light" />
       {/* Top Section */}
-      <View className="flex-1 bg-white-500 relative mt-28">
+      <View
+        className="flex-1 bg-white-500 relative mt-28"
+        onLayout={(e) =>
+          setBox({
+            w: e.nativeEvent.layout.width,
+            h: e.nativeEvent.layout.height,
+          })
+        }
+      >
         {/* SVG with Gradient */}
         <Svg
           width="100%"
           height="100%"
           viewBox="0 0 374 406"
+          preserveAspectRatio="none"
           fill="none"
-          className="absolute left-[-50]"
+          style={{ position: "absolute", left: 0, top: 0 }}
         >
           <Rect
             width={880}
@@ -90,53 +99,58 @@ export default function Index() {
           </Defs>
         </Svg>
 
-        <Image
-          source={require("../assets/Frame 238284.png")}
-          style={{
-            position: "absolute",
-            top: height * -0.03,
-            left: width * 0.05,
-            width: width * 0.4,
-            height: width * 0.4,
-            borderRadius: width * 0.15,
-            zIndex: 1,
-          }}
-        />
-        <Image
-          source={require("../assets/Frame 238283.png")}
-          style={{
-            position: "absolute",
-            top: height * 0.01,
-            left: width * 0.6,
-            width: width * 0.4405,
-            height: width * 0.5,
-            zIndex: 1,
-          }}
-        />
-        <Image
-          source={require("../assets/Frame 238285.png")}
-          style={{
-            position: "absolute",
-            top: height * 0.2,
-            left: width * 0.1,
-            width: width * 0.33,
-            height: width * 0.33,
-            borderRadius: width * 0.15,
-            zIndex: 1,
-          }}
-        />
-        <Image
-          source={require("../assets/Frame 238286.png")}
-          style={{
-            position: "absolute",
-            top: height * 0.3,
-            left: width * 0.5,
-            width: width * 0.45,
-            height: width * 0.45,
-            borderRadius: width * 0.15,
-            zIndex: 1,
-          }}
-        />
+        {u > 0 && (
+          <>
+            <Image
+              source={require("../assets/Frame 238284.png")}
+              style={{
+                position: "absolute",
+                top: -25 * u,
+                left: 20 * u,
+                width: 156 * u,
+                height: 156 * u,
+                borderRadius: 58 * u,
+                zIndex: 1,
+              }}
+            />
+            <Image
+              source={require("../assets/Frame 238283.png")}
+              style={{
+                position: "absolute",
+                top: 8 * u,
+                // recorte que sangra pela borda direita da tela
+                left: box.w - 172 * u,
+                width: 172 * u,
+                height: 195 * u,
+                zIndex: 1,
+              }}
+            />
+            <Image
+              source={require("../assets/Frame 238285.png")}
+              style={{
+                position: "absolute",
+                top: 160 * u,
+                left: 40 * u,
+                width: 125 * u,
+                height: 125 * u,
+                borderRadius: 58 * u,
+                zIndex: 1,
+              }}
+            />
+            <Image
+              source={require("../assets/Frame 238286.png")}
+              style={{
+                position: "absolute",
+                top: 235 * u,
+                left: 195 * u,
+                width: 160 * u,
+                height: 160 * u,
+                borderRadius: 58 * u,
+                zIndex: 1,
+              }}
+            />
+          </>
+        )}
       </View>
 
       <View className="flex-1 bg-white-500 px-6 py-10">

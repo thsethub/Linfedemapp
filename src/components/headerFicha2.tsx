@@ -30,7 +30,7 @@ const Header = ({ title }: HeaderProps) => {
       <View className="flex-1 flex-row items-center justify-center">
         <Image
           source={require("../assets/file-text2.png")}
-          className="w-6 h-6"
+          style={{ width: 24, height: 24 }}
         />
         <Text className="ml-2 text-xl font-semibold text-black-500">
           {title}

@@ -49,7 +49,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   title: {

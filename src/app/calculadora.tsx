@@ -37,9 +37,10 @@ export default function Calculadora() {
           <View className="flex-1 justify-center items-center">
             {/* Container dos dados do membro de referência */}
             <View
-              className="flex-1 p-6 bg-white-500 mt-8"
+              className="p-6 bg-white-500 mt-8"
               style={{
-                width: 360,
+                width: "100%",
+                maxWidth: 360,
                 borderRadius: 40,
                 backgroundColor: "#FFF",
               }}
@@ -102,9 +103,10 @@ export default function Calculadora() {
             </View>
             {/* Container dos pontos */}
             <View
-              className="flex-1 p-6 bg-white-500 mt-4"
+              className="p-6 bg-white-500 mt-4"
               style={{
-                width: 360,
+                width: "100%",
+                maxWidth: 360,
                 borderRadius: 40,
                 backgroundColor: "#FFF",
               }}

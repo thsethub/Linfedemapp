@@ -101,6 +101,7 @@ export default function Faq() {
                 left: 0,
                 width: 130,
                 height: 180,
+                resizeMode: "contain",
                 zIndex: 1,
               }}
             />

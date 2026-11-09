@@ -94,6 +94,7 @@ export default function Home() {
               left: 220,
               width: 100,
               height: 150,
+              resizeMode: "contain",
               zIndex: 1,
             }}
           />

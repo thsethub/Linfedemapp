@@ -84,9 +84,10 @@ export default function FichaExame1() {
 
           {/* Formulário */}
           <View
-            className="flex-1 p-6 bg-white-500 mt-4"
+            className="p-6 bg-white-500 mt-4"
             style={{
-              width: 360,
+              width: "100%",
+              maxWidth: 360,
               borderRadius: 40,
               backgroundColor: "#Fff",
             }}
@@ -94,8 +95,7 @@ export default function FichaExame1() {
             <View className="flex-row mb-4">
               <Image
                 source={require("../assets/user.png")}
-                className="w-6 h-6"
-                style={{ marginBottom: 10, marginRight: 10 }}
+                style={{ width: 24, height: 24, marginBottom: 10, marginRight: 10 }}
               />
               <Text className="text-lg font-semibold">
                 {t("patient.patientData")}
@@ -175,6 +175,8 @@ export default function FichaExame1() {
                 <View className="flex-row items-center">
                   <TextInput
                     className="bg-white-600 text-black rounded-md p-2 flex-1"
+                    // minWidth:0 deixa o campo encolher na web (input tem largura mínima própria)
+                    style={{ minWidth: 0 }}
                     placeholder={t("patient.weightPlaceholder")}
                     placeholderTextColor="#A9A9A9"
                     keyboardType="numeric"
@@ -192,6 +194,8 @@ export default function FichaExame1() {
                 <View className="flex-row items-center">
                   <TextInput
                     className="bg-white-600 text-black rounded-md p-2 flex-1"
+                    // minWidth:0 deixa o campo encolher na web (input tem largura mínima própria)
+                    style={{ minWidth: 0 }}
                     placeholder={t("patient.heightPlaceholder")}
                     placeholderTextColor="#A9A9A9"
                     keyboardType="numeric"

@@ -43,7 +43,10 @@ const Header = ({ title }: HeaderProps) => {
 
       {/* Ícone + Título Centralizado */}
       <View className="flex-1 flex-row items-center justify-center">
-        <Image className="w-6 h-6" source={require("../assets/maximize.png")} />
+        <Image
+          style={{ width: 24, height: 24 }}
+          source={require("../assets/maximize.png")}
+        />
         <Text style={{ marginLeft: 8, fontSize: 18, fontWeight: "bold" }}>
           {title}
         </Text>
