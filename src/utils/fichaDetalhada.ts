@@ -105,14 +105,16 @@ export const isPhoneValid = (value: string) => {
 export interface EssentialInput {
   fullName?: string;
   birthDate?: string;
+  address?: string;
   phone?: string;
   side?: Side | null;
 }
 
-// Obrigatórios: nome, data de nascimento, telefone e lado acometido.
+// Obrigatórios: nome, data de nascimento, endereço, telefone e lado acometido.
 export const isEssentialComplete = (d: EssentialInput) =>
   !!d.fullName?.trim() &&
   !!d.birthDate?.trim() &&
+  !!d.address?.trim() &&
   isPhoneValid(d.phone ?? "") &&
   (d.side === "right" || d.side === "left");
 

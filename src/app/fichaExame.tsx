@@ -129,7 +129,7 @@ export default function FichaExame1() {
             initialDate={patientData.birthDate || todayStr}
           />
 
-          <Label>{t("patient.address")}</Label>
+          <Label required>{t("patient.address")}</Label>
           <Field
             placeholder={t("ficha.addressPlaceholder")}
             value={patientData.address}

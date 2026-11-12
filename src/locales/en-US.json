@@ -569,7 +569,7 @@
     "goCalculator": "Go to calculator",
     "fillDetailed": "Fill in detailed record",
     "saveHint": "The patient is saved when you continue and linked to the calculation.",
-    "fillRequired": "Fill in name, date of birth, a valid phone number and side to continue.",
+    "fillRequired": "Fill in name, date of birth, address, a valid phone number and side to continue.",
     "detailedTitle": "Detailed record",
     "step": "Step",
     "of": "of",

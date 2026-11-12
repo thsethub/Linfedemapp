@@ -565,7 +565,7 @@
     "goCalculator": "Ir a la calculadora",
     "fillDetailed": "Completar ficha detallada",
     "saveHint": "La paciente se guarda al avanzar y queda vinculada al cálculo.",
-    "fillRequired": "Complete nombre, fecha de nacimiento, teléfono válido y lado para continuar.",
+    "fillRequired": "Complete nombre, fecha de nacimiento, dirección, teléfono válido y lado para continuar.",
     "detailedTitle": "Ficha detallada",
     "step": "Etapa",
     "of": "de",
