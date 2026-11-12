@@ -1,10 +1,10 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   TextInput,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -73,7 +73,7 @@ export default function Profile() {
         origem: data.origem ?? "",
       });
     } catch {
-      Alert.alert(t("common.error"), t("profile.loadError"));
+      appAlert(t("common.error"), t("profile.loadError"));
     } finally {
       setLoading(false);
     }
@@ -95,9 +95,9 @@ export default function Profile() {
       );
       setUser((prev) => (prev ? { ...prev, ...editFields } : prev));
       setIsEditing(false);
-      Alert.alert(t("common.success"), t("profile.saveSuccess"));
+      appAlert(t("common.success"), t("profile.saveSuccess"));
     } catch {
-      Alert.alert(t("common.error"), t("profile.saveError"));
+      appAlert(t("common.error"), t("profile.saveError"));
     } finally {
       setSaving(false);
     }

@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -6,7 +7,6 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  Alert,
   StyleSheet,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -37,7 +37,7 @@ export default function LanguageSelector() {
 
   const handleConfirm = async () => {
     if (!selectedLanguage) {
-      Alert.alert(
+      appAlert(
         getLocalizedText(
           "Seleção necessária",
           "Selección necesaria",
@@ -56,7 +56,7 @@ export default function LanguageSelector() {
       router.replace("/");
     } catch (error) {
       console.error("Erro ao salvar idioma:", error);
-      Alert.alert(
+      appAlert(
         getLocalizedText("Erro", "Error", "Error"),
         getLocalizedText(
           "Não foi possível salvar sua preferência de idioma.",

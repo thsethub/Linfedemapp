@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   View,
@@ -8,7 +9,6 @@ import {
   Image,
   RefreshControl,
   Linking,
-  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
@@ -314,7 +314,7 @@ export default function News() {
   const openArticle = (url: string) => {
     if (!url) return;
     Linking.openURL(url).catch(() =>
-      Alert.alert(
+      appAlert(
         t("common.error"),
         t("news.cantOpen") || "Não foi possível abrir o artigo."
       )

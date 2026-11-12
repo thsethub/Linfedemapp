@@ -1,10 +1,10 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useState, useRef } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,
@@ -50,7 +50,7 @@ export default function RecuperarSenha() {
 
   const handleSubmitEmail = async () => {
     if (!email.trim()) {
-      Alert.alert(t("common.error"), t("auth.forgotPassword.enterEmail"));
+      appAlert(t("common.error"), t("auth.forgotPassword.enterEmail"));
       return;
     }
     setIsLoading(true);
@@ -64,7 +64,7 @@ export default function RecuperarSenha() {
             ? error.response.data
             : t("auth.forgotPassword.emailSendError")
           : t("auth.forgotPassword.networkError");
-      Alert.alert(t("common.error"), errorMessage);
+      appAlert(t("common.error"), errorMessage);
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -74,7 +74,7 @@ export default function RecuperarSenha() {
   const handleVerifyCode = async () => {
     const finalCode = code.join("");
     if (finalCode.length < 6) {
-      Alert.alert(t("common.error"), t("auth.forgotPassword.codeRequired"));
+      appAlert(t("common.error"), t("auth.forgotPassword.codeRequired"));
       return;
     }
     setIsVerifying(true);
@@ -91,7 +91,7 @@ export default function RecuperarSenha() {
             ? error.response.data
             : t("auth.forgotPassword.invalidCode")
           : t("auth.forgotPassword.networkError");
-      Alert.alert(t("auth.forgotPassword.verificationError"), errorMessage);
+      appAlert(t("auth.forgotPassword.verificationError"), errorMessage);
       console.error(error);
     } finally {
       setIsVerifying(false);
@@ -100,14 +100,14 @@ export default function RecuperarSenha() {
 
   const handleUpdatePassword = async () => {
     if (newPassword.length < 6) {
-      Alert.alert(
+      appAlert(
         t("auth.forgotPassword.shortPassword"),
         t("auth.forgotPassword.passwordMinLength")
       );
       return;
     }
     if (newPassword !== confirmPassword) {
-      Alert.alert(t("common.error"), t("auth.forgotPassword.passwordMismatch"));
+      appAlert(t("common.error"), t("auth.forgotPassword.passwordMismatch"));
       return;
     }
     setIsUpdating(true);
@@ -118,7 +118,7 @@ export default function RecuperarSenha() {
         token: finalCode,
         newPassword: newPassword,
       });
-      Alert.alert(
+      appAlert(
         t("common.success") + "!",
         t("auth.forgotPassword.passwordUpdated"),
         [{ text: "OK", onPress: handleBackToLogin }]
@@ -130,7 +130,7 @@ export default function RecuperarSenha() {
             ? error.response.data
             : t("auth.forgotPassword.passwordUpdateError")
           : t("auth.forgotPassword.networkError");
-      Alert.alert(t("common.error"), errorMessage);
+      appAlert(t("common.error"), errorMessage);
       console.error(error);
     } finally {
       setIsUpdating(false);

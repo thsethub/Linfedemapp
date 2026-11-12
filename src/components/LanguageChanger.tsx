@@ -1,5 +1,6 @@
+import { appAlert } from "@/components/AppAlert";
 import React from "react";
-import { View, Text, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { useLanguage } from "../context/LanguageContext";
 import { countries, Language } from "../locales";
 
@@ -24,12 +25,12 @@ export default function LanguageChanger({
           ? "Idioma alterado para Português"
           : "Idioma cambiado a Español";
 
-      Alert.alert(newLanguage === "pt-BR" ? "Sucesso" : "Éxito", message, [
+      appAlert(newLanguage === "pt-BR" ? "Sucesso" : "Éxito", message, [
         { text: "OK" },
       ]);
     } catch (error) {
       console.error("Erro ao alterar idioma:", error);
-      Alert.alert(
+      appAlert(
         currentLanguage === "pt-BR" ? "Erro" : "Error",
         currentLanguage === "pt-BR"
           ? "Não foi possível alterar o idioma"

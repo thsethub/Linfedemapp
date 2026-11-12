@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,7 +8,6 @@ import {
   ScrollView,
   TouchableOpacity,
   TextInput,
-  Alert,
   ActivityIndicator,
   Modal,
   FlatList,
@@ -64,7 +64,7 @@ export default function Resultado() {
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const handleFinalize = () => {
-    Alert.alert(
+    appAlert(
       t("results.finalizeMeasurement"),
       t("results.associateToPatient"),
       [
@@ -120,7 +120,7 @@ export default function Resultado() {
       setLoadingPatients(true);
       const token = await SecureStore.getItemAsync("access_token");
       if (!token) {
-        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
+        appAlert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
@@ -140,7 +140,7 @@ export default function Resultado() {
       setPatients(patientsResponse.data);
     } catch (error) {
       // console.error("Erro ao buscar pacientes:", error);
-      Alert.alert(t("common.error"), t("results.errorLoadingPatients"));
+      appAlert(t("common.error"), t("results.errorLoadingPatients"));
     } finally {
       setLoadingPatients(false);
     }
@@ -152,14 +152,14 @@ export default function Resultado() {
     }
     setLoadingAssociation(true);
     if (!selectedPatient) {
-      Alert.alert(t("common.error"), t("results.selectPatientError"));
+      appAlert(t("common.error"), t("results.selectPatientError"));
       return;
     }
 
     try {
       const token = await SecureStore.getItemAsync("access_token");
       if (!token) {
-        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
+        appAlert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
@@ -200,14 +200,14 @@ export default function Resultado() {
         }
       );
 
-      Alert.alert(t("common.success"), t("results.measurementAssociated"));
+      appAlert(t("common.success"), t("results.measurementAssociated"));
       setModalVisible(false);
       setLoadingAssociation(false);
       clearMeasurementData();
       router.push("/home");
     } catch (error) {
       // console.error("Erro ao associar medição:", error);
-      Alert.alert(t("common.error"), t("results.errorAssociatingMeasurement"));
+      appAlert(t("common.error"), t("results.errorAssociatingMeasurement"));
       setLoadingAssociation(false);
     }
   };
@@ -1021,7 +1021,7 @@ export default function Resultado() {
                   <TouchableOpacity
                     onPress={() => {
                       if (!selectedPatient) {
-                        Alert.alert(
+                        appAlert(
                           t("common.validation"),
                           t("results.associatePatientBeforeConfirm")
                         );

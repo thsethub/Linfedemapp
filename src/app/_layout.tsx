@@ -1,3 +1,4 @@
+import { AppAlertHost } from "@/components/AppAlert";
 import "../style/global.css";
 import { Slot, usePathname, useRouter } from "expo-router";
 import React from "react";
@@ -37,6 +38,7 @@ const HIDE_FAQ_ROUTES = [
   "/faq",
   "/fichaExame",
   "/fichaExame2",
+  "/fichaDetalhada",
 ];
 
 function GlobalFAQButton() {
@@ -82,6 +84,7 @@ export default function Layout() {
           <View style={{ flex: 1 }}>
             <Slot />
             <GlobalFAQButton />
+            <AppAlertHost />
           </View>
         </WebFrame>
       </MeasurementProvider>

@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useState } from "react";
 import {
   View,
@@ -5,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Alert,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native";
@@ -44,17 +44,17 @@ export default function SingUp() {
       !password ||
       !confirmPassword
     ) {
-      Alert.alert(t("common.error"), t("auth.register.fillAllFields"));
+      appAlert(t("common.error"), t("auth.register.fillAllFields"));
       return;
     }
 
     if (!validateEmail(email)) {
-      Alert.alert(t("common.error"), t("auth.register.invalidEmail"));
+      appAlert(t("common.error"), t("auth.register.invalidEmail"));
       return;
     }
 
     if (password !== confirmPassword) {
-      Alert.alert(t("common.error"), t("auth.register.passwordMismatch"));
+      appAlert(t("common.error"), t("auth.register.passwordMismatch"));
       return;
     }
 
@@ -78,16 +78,16 @@ export default function SingUp() {
       });
 
       if (response.status === 200 || response.status === 201) {
-        Alert.alert(t("common.success"), t("auth.register.successMessage"));
+        appAlert(t("common.success"), t("auth.register.successMessage"));
         router.push("/sing-in");
       } else {
-        Alert.alert(t("common.error"), t("auth.register.errorMessage"));
+        appAlert(t("common.error"), t("auth.register.errorMessage"));
       }
     } catch (error: any) {
       // console.error("Erro na requisição:", error);
       const message =
         error.response?.data?.message || t("auth.register.networkError");
-      Alert.alert(t("common.error"), message);
+      appAlert(t("common.error"), message);
     } finally {
       setIsRegistering(false);
     }

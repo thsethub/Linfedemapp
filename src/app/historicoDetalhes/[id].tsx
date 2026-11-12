@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -5,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -50,7 +50,7 @@ export default function PatientProfileScreen() {
     const fetchPatientDetails = async () => {
       try {
         if (!id) {
-          Alert.alert(
+          appAlert(
             t("common.error"),
             t("patientDetails.errors.patientIdNotFound")
           );
@@ -59,7 +59,7 @@ export default function PatientProfileScreen() {
 
         const token = await SecureStore.getItemAsync("access_token");
         if (!token) {
-          Alert.alert(t("common.error"), t("results.authTokenNotFound"));
+          appAlert(t("common.error"), t("results.authTokenNotFound"));
           return;
         }
 
@@ -89,7 +89,7 @@ export default function PatientProfileScreen() {
         setMeasurements(measurementsResponse.data);
       } catch (error) {
         // console.error("Erro ao buscar os dados do paciente:", error);
-        Alert.alert(t("common.error"), t("patientDetails.errors.loadError"));
+        appAlert(t("common.error"), t("patientDetails.errors.loadError"));
       } finally {
         setLoading(false);
       }
@@ -101,7 +101,7 @@ export default function PatientProfileScreen() {
   const handleGeneratePDF = async () => {
     setLoading(true);
     if (!patient || measurements.length === 0) {
-      Alert.alert(
+      appAlert(
         t("common.error"),
         t("patientDetails.errors.insufficientData")
       );
@@ -116,7 +116,7 @@ export default function PatientProfileScreen() {
       await generatePatientReport(patient, lastMeasurement);
     } catch (error) {
       // console.error("Erro ao gerar o PDF:", error);
-      Alert.alert(t("common.error"), t("patientDetails.errors.pdfError"));
+      appAlert(t("common.error"), t("patientDetails.errors.pdfError"));
       setLoading(false);
     } finally {
       setLoading(false);

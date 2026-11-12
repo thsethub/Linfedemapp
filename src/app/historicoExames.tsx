@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -7,7 +8,6 @@ import {
   TextInput,
   StyleSheet,
   ActivityIndicator,
-  Alert,
   SafeAreaView,
 } from "react-native";
 import { useRouter } from "expo-router";
@@ -50,7 +50,7 @@ export default function HistoricoExames() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert(t("common.error"), t("results.authTokenNotFound"));
+        appAlert(t("common.error"), t("results.authTokenNotFound"));
         return;
       }
 
@@ -76,7 +76,7 @@ export default function HistoricoExames() {
       setPatients(patientsResponse.data);
     } catch (error) {
       // console.error("Erro ao buscar pacientes:", error);
-      Alert.alert(t("common.error"), t("examHistory.loadError"));
+      appAlert(t("common.error"), t("examHistory.loadError"));
     } finally {
       setLoading(false);
     }
@@ -92,12 +92,12 @@ export default function HistoricoExames() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert(t("common.error"), t("results.authTokenNotFound"));
+        appAlert(t("common.error"), t("results.authTokenNotFound"));
         return;
       }
 
       // Confirmação antes de deletar
-      Alert.alert(
+      appAlert(
         t("examHistory.confirmDelete"),
         t("examHistory.confirmDeleteMessage"),
         [
@@ -119,13 +119,13 @@ export default function HistoricoExames() {
                 // Recarrega a lista de pacientes após a exclusão
                 fetchPatients();
 
-                Alert.alert(
+                appAlert(
                   t("common.success"),
                   t("examHistory.deleteSuccess")
                 );
               } catch (error) {
                 // console.error("Erro ao deletar paciente:", error);
-                Alert.alert(t("common.error"), t("examHistory.deleteError"));
+                appAlert(t("common.error"), t("examHistory.deleteError"));
               }
             },
           },
@@ -133,7 +133,7 @@ export default function HistoricoExames() {
       );
     } catch (error) {
       // console.error("Erro ao deletar paciente:", error);
-      Alert.alert(t("common.error"), t("examHistory.deleteError"));
+      appAlert(t("common.error"), t("examHistory.deleteError"));
     }
   };
 

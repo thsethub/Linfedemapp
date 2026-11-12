@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
@@ -6,7 +7,6 @@ import {
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
-  Alert,
   ScrollView,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -56,7 +56,7 @@ export default function SignIn() {
   const handleLogin = async () => {
     setIsAuthenticating(true);
     if (!email || !password) {
-      Alert.alert(t("common.error"), t("auth.register.fillAllFields"));
+      appAlert(t("common.error"), t("auth.register.fillAllFields"));
       setIsAuthenticating(false);
       return;
     }
@@ -73,7 +73,7 @@ export default function SignIn() {
         router.push("/home");
       } else {
         // Caso raro: resposta inesperada
-        Alert.alert(t("common.error"), t("auth.login.unexpectedResponse"));
+        appAlert(t("common.error"), t("auth.login.unexpectedResponse"));
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -81,16 +81,16 @@ export default function SignIn() {
         const message = error.response?.data;
 
         if (status === 404 && typeof message === "string") {
-          Alert.alert(t("common.error"), t("auth.login.userNotFound"));
+          appAlert(t("common.error"), t("auth.login.userNotFound"));
         } else if (status === 401 && typeof message === "string") {
-          Alert.alert(t("common.error"), t("auth.login.wrongPassword"));
+          appAlert(t("common.error"), t("auth.login.wrongPassword"));
         } else if (typeof message === "string") {
-          Alert.alert(t("common.error"), message);
+          appAlert(t("common.error"), message);
         } else {
-          Alert.alert(t("common.error"), t("auth.login.loginError"));
+          appAlert(t("common.error"), t("auth.login.loginError"));
         }
       } else {
-        Alert.alert(t("common.error"), t("auth.login.unexpectedError"));
+        appAlert(t("common.error"), t("auth.login.unexpectedError"));
       }
     } finally {
       setIsAuthenticating(false);

@@ -1,3 +1,4 @@
+import { appAlert } from "@/components/AppAlert";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -22,7 +23,6 @@ import SinglePicker from "@/components/singlepicker";
 import Header from "@/components/headerFicha2";
 import axios from "axios";
 import ProcedureDetails from "@/components/procedimentosEcapsulados";
-import { Alert } from "react-native";
 import * as SecureStore from "../utils/secureStorage";
 import { useTranslation } from "@/context/LanguageContext";
 import { API_URL } from "@/config/api";
@@ -61,7 +61,7 @@ export default function FichaExame2() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
+        appAlert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
@@ -164,7 +164,7 @@ export default function FichaExame2() {
 
       // Limpa os dados do paciente e navega para a home
       clearAllData();
-      Alert.alert(t("common.success"), t("patient.saveSuccess"), [
+      appAlert(t("common.success"), t("patient.saveSuccess"), [
         {
           text: "OK",
           onPress: () => {
@@ -175,7 +175,7 @@ export default function FichaExame2() {
     } catch (error) {
       setLoading(false);
       // console.error("Erro ao salvar o paciente:", error);
-      Alert.alert(t("common.error"), t("patient.saveError"));
+      appAlert(t("common.error"), t("patient.saveError"));
     }
   };
 
@@ -190,7 +190,7 @@ export default function FichaExame2() {
       const token = await SecureStore.getItemAsync("access_token");
 
       if (!token) {
-        Alert.alert(t("common.error"), t("common.authTokenNotFound"));
+        appAlert(t("common.error"), t("common.authTokenNotFound"));
         return;
       }
 
@@ -293,7 +293,7 @@ export default function FichaExame2() {
 
       // Limpa os dados do paciente e navega para a home
       clearAllData();
-      Alert.alert(t("common.success"), t("patient.saveSuccess"), [
+      appAlert(t("common.success"), t("patient.saveSuccess"), [
         {
           text: "OK",
           onPress: () => {
@@ -304,7 +304,7 @@ export default function FichaExame2() {
     } catch (error) {
       setLoading(false);
       // console.error("Erro ao salvar o paciente:", error);
-      Alert.alert(t("common.error"), t("patient.saveError"));
+      appAlert(t("common.error"), t("patient.saveError"));
     }
   };
 
@@ -332,7 +332,7 @@ export default function FichaExame2() {
 
     for (const field of requiredFields) {
       if (!data[field] || data[field].toString().trim() === "") {
-        Alert.alert(
+        appAlert(
           t("common.attention"),
           t("patient.validation.requiredFields")
         );
@@ -344,7 +344,7 @@ export default function FichaExame2() {
     // Procedimentos obrigatórios
     if (!data.procedures || data.procedures.length === 0) {
       setLoading(false);
-      Alert.alert(
+      appAlert(
         t("common.attention"),
         t("patient.validation.selectProcedure")
       );
@@ -373,7 +373,7 @@ export default function FichaExame2() {
       }
       if (key && (!data[key] || !data[key].type || !data[key].duration)) {
         setLoading(false);
-        Alert.alert(
+        appAlert(
           t("common.attention"),
           `${t("patient.validation.fillProcedureDetails")} ${t(
             `patient.procedures.${key}`
@@ -386,7 +386,7 @@ export default function FichaExame2() {
     // Alterações cutâneas obrigatórias
     if (!data.skinChanges || data.skinChanges.length === 0) {
       setLoading(false);
-      Alert.alert(
+      appAlert(
         t("common.attention"),
         t("patient.validation.selectSkinChange")
       );
@@ -403,7 +403,7 @@ export default function FichaExame2() {
     ];
     for (const field of questionsRequired) {
       if (!data[field] || data[field].toString().trim() === "") {
-        Alert.alert(
+        appAlert(
           t("common.attention"),
           t("patient.validation.answerAllQuestions")
         );
