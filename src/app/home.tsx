@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { View, Text, TouchableOpacity, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useMeasurementContext } from "../context/context";
 import Entypo from "@expo/vector-icons/Entypo";
 import { Feather } from "@expo/vector-icons";
 import { useTranslation } from "../context/LanguageContext";
@@ -75,6 +76,13 @@ function ShortcutItem({
 
 export default function Home() {
   const { t } = useTranslation();
+  const { setCurrentPatient } = useMeasurementContext();
+  // Voltar à home encerra o vínculo com a paciente do cálculo anterior
+  useFocusEffect(
+    useCallback(() => {
+      setCurrentPatient(null);
+    }, [setCurrentPatient])
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-white-500 mt-8">

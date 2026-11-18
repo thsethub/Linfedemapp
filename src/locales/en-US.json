@@ -406,7 +406,18 @@
     "references": {
       "panobianco": "Panobianco; Mamede, 2002.",
       "lymphologyConsensus": "International Consensus of the Lymphology Society, 2023."
-    }
+    },
+    "referenceLabel": "Reference",
+    "affected": "affected",
+    "clinicalAssessment": "Clinical assessment",
+    "physiotherapist": "Physiotherapist",
+    "clinicalPrompt": "Based on the clinical exam and volumetry, the patient presents lymphedema at stage:",
+    "islNote": "Stages according to ISL 2023",
+    "clinicalNotes": "Classification and clinical notes",
+    "clinicalNotesPlaceholder": "Open field: clinical signs considered and whether they agree with the volumetry",
+    "noteExamPlaceholder": "Additional note about the exam",
+    "saveToRecord": "Save to record",
+    "savedTo": "Measurement saved to the record of"
   },
   "examHistory": {
     "title": "Clinical History",

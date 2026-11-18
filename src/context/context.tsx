@@ -54,6 +54,9 @@ interface MeasurementContextProps {
   patientData: PatientData;
   setPatientData: (data: PatientData) => void;
   clearAllData: () => void;
+  // Paciente salva na ficha e ligada ao cálculo em andamento (null se a medição for avulsa)
+  currentPatient: { id: string; name: string } | null;
+  setCurrentPatient: (p: { id: string; name: string } | null) => void;
 }
 
 const MeasurementContext = createContext<MeasurementContextProps | undefined>(
@@ -72,6 +75,7 @@ export const MeasurementProvider: React.FC<{ children: ReactNode }> = ({
   const [differences, setDifferences] = useState<number[]>([]);
   const [referenceArm, setReferenceArm] = useState<"right" | "left">("left");
   const [affectedArm, setAffectedArm] = useState<"right" | "left">("right");
+  const [currentPatient, setCurrentPatient] = useState<{ id: string; name: string } | null>(null);
 
   // Estado para os dados do paciente
   const [patientData, setPatientData] = useState<PatientData>({
@@ -156,7 +160,9 @@ export const MeasurementProvider: React.FC<{ children: ReactNode }> = ({
         setAffectedArm,
         patientData,
         setPatientData,
-        clearAllData
+        clearAllData,
+        currentPatient,
+        setCurrentPatient,
       }}
     >
       {children}

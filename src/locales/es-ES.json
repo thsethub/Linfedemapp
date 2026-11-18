@@ -205,7 +205,7 @@
     "activityLevel": "Nivel de actividad física",
     "maritalStatus": "Estado civil",
     "occupation": "Profesión/Ocupación",
-    "occupationPlaceholder": "Digite la profesión/ocupación",
+    "occupationPlaceholder": "Escriba la profesión/ocupación",
     "next": "Siguiente",
     "cancerDiagnosisDate": "Fecha del diagnóstico del cáncer",
     "month": "Mes",
@@ -371,7 +371,18 @@
     "references": {
       "panobianco": "Panobianco; Mamede, 2002.",
       "lymphologyConsensus": "Consenso Internacional de la sociedad de linfología, 2023."
-    }
+    },
+    "referenceLabel": "Referencia",
+    "affected": "afectado",
+    "clinicalAssessment": "Evaluación clínica",
+    "physiotherapist": "Fisioterapeuta",
+    "clinicalPrompt": "Con base en el examen clínico y la volumetría, la paciente presenta linfedema en estadio:",
+    "islNote": "Estadios según ISL 2023",
+    "clinicalNotes": "Clasificación y observaciones clínicas",
+    "clinicalNotesPlaceholder": "Campo abierto: signos clínicos considerados y concordancia o no con la volumetría",
+    "noteExamPlaceholder": "Observación adicional sobre el examen",
+    "saveToRecord": "Guardar en la ficha",
+    "savedTo": "Medición guardada en la ficha de"
   },
   "faq": {
     "title": "Preguntas Frecuentes",

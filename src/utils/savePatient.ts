@@ -15,7 +15,9 @@ const proc = (data: any, key: string) =>
 
 // Envia a ficha (simplificada e, se houver, a detalhada) ao backend.
 // Campos opcionais não preenchidos seguem como null/vazio.
-export async function savePatient(patientData: any): Promise<void> {
+export async function savePatient(
+  patientData: any
+): Promise<{ id: string; name: string }> {
   const token = await SecureStore.getItemAsync("access_token");
   if (!token) throw new AuthTokenMissingError();
 
@@ -58,10 +60,11 @@ export async function savePatient(patientData: any): Promise<void> {
     fichaDetalhada: detailed ? JSON.stringify(detailed) : null,
   };
 
-  await axios.post(`${API_URL}/api/pacientes`, body, {
+  const res = await axios.post(`${API_URL}/api/pacientes`, body, {
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   });
+  return { id: res.data.id, name: res.data.fullName ?? patientData.fullName };
 }

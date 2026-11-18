@@ -39,6 +39,7 @@ const HIDE_FAQ_ROUTES = [
   "/fichaExame",
   "/fichaExame2",
   "/fichaDetalhada",
+  "/resultado",
 ];
 
 function GlobalFAQButton() {

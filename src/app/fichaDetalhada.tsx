@@ -88,7 +88,7 @@ const ISL_STAGES = ["subclinical", "I", "II", "III"];
 export default function FichaDetalhada() {
   const { t } = useTranslation();
   const { width } = useAppWindow();
-  const { patientData, setPatientData, clearAllData, setAffectedArm } =
+  const { patientData, setPatientData, clearAllData, setAffectedArm, setReferenceArm, setCurrentPatient } =
     useMeasurementContext();
   const [step, setStep] = useState(1);
   const [saving, setSaving] = useState(false);
@@ -124,10 +124,12 @@ export default function FichaDetalhada() {
     setSaving(true);
     setError("");
     try {
-      await savePatient(patientData);
+      const saved = await savePatient(patientData);
       clearAllData();
       if (destination === "calculator") {
         setAffectedArm(side as Side);
+        setReferenceArm(side === "right" ? "left" : "right"); // referência = braço oposto
+        setCurrentPatient(saved);
         router.push("/calculadora");
       } else {
         router.push("/home");

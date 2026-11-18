@@ -402,7 +402,18 @@
     "references": {
       "panobianco": "Panobianco; Mamede, 2002.",
       "lymphologyConsensus": "Consenso Internacional da sociedade de linfologia, 2023."
-    }
+    },
+    "referenceLabel": "Referência",
+    "affected": "acometido",
+    "clinicalAssessment": "Avaliação clínica",
+    "physiotherapist": "Fisioterapeuta",
+    "clinicalPrompt": "Com base no exame clínico e na volumetria, a paciente apresenta linfedema em estágio:",
+    "islNote": "Estágios conforme ISL 2023",
+    "clinicalNotes": "Classificação e observações clínicas",
+    "clinicalNotesPlaceholder": "Campo aberto: sinais clínicos considerados e concordância ou não com a volumetria",
+    "noteExamPlaceholder": "Observação adicional sobre o exame",
+    "saveToRecord": "Salvar na ficha",
+    "savedTo": "Medição salva na ficha de"
   },
   "examHistory": {
     "title": "Histórico Clínico",

@@ -19,7 +19,7 @@ import { AuthTokenMissingError, savePatient } from "@/utils/savePatient";
 
 export default function FichaExame1() {
   const { t } = useTranslation();
-  const { patientData, setPatientData, clearAllData, setAffectedArm } =
+  const { patientData, setPatientData, clearAllData, setAffectedArm, setReferenceArm, setCurrentPatient } =
     useMeasurementContext();
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -44,9 +44,11 @@ export default function FichaExame1() {
     setSaving(true);
     setError("");
     try {
-      await savePatient(patientData);
+      const saved = await savePatient(patientData);
       clearAllData();
       setAffectedArm(side as Side);
+      setReferenceArm(side === "right" ? "left" : "right"); // referência = braço oposto
+      setCurrentPatient(saved); // a medição vai direto para esta paciente
       router.push("/calculadora");
     } catch (e) {
       setError(

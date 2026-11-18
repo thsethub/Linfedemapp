@@ -21,11 +21,13 @@ import { StatusBar } from "expo-status-bar";
 import axios from "axios";
 import * as SecureStore from "../utils/secureStorage";
 import Header from "@/components/headerResultado";
-import { useTranslation } from "@/context/LanguageContext";
+import { Button, Card, FaqButton, Field, Label, PRIMARY, SectionTitle, SegmentedChoice } from "@/components/fichaUi";
+import { useLanguage, useTranslation } from "@/context/LanguageContext";
 import { API_URL } from "@/config/api";
 
 export default function Resultado() {
   const { t } = useTranslation();
+  const { currentLanguage } = useLanguage();
   const {
     differences,
     pontosRef,
@@ -48,6 +50,8 @@ export default function Resultado() {
     setPontosRef,
     setSelectedValue,
     clearAllData,
+    currentPatient,
+    setCurrentPatient,
   } = useMeasurementContext();
   const router = useRouter();
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -55,6 +59,10 @@ export default function Resultado() {
   const [loadingPatients, setLoadingPatients] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [loadingAssociation, setLoadingAssociation] = useState(false);
+  // Avaliação clínica do fisioterapeuta (opcional)
+  const [clinicalStage, setClinicalStage] = useState("");
+  const [clinicalNotes, setClinicalNotes] = useState("");
+  const [saveError, setSaveError] = useState("");
 
   interface Patient {
     id: string;
@@ -113,6 +121,7 @@ export default function Resultado() {
     setPontosRef("5cm");
     setSelectedValue("opcao1");
     setAffectedArm("right");
+    setCurrentPatient(null);
   };
 
   const fetchPatients = async () => {
@@ -146,16 +155,11 @@ export default function Resultado() {
     }
   };
 
-  const handleAssociateMeasurement = async () => {
-    if (loadingAssociation) {
-      return;
-    }
+  // Envia a medição (volumetria, perimetria e avaliação clínica) para a paciente indicada.
+  const saveMeasurementTo = async (patientId: string, patientName?: string) => {
+    if (loadingAssociation) return;
     setLoadingAssociation(true);
-    if (!selectedPatient) {
-      appAlert(t("common.error"), t("results.selectPatientError"));
-      return;
-    }
-
+    setSaveError("");
     try {
       const token = await SecureStore.getItemAsync("access_token");
       if (!token) {
@@ -166,16 +170,13 @@ export default function Resultado() {
       const convertArmValue = (value: string) => {
         if (value === "left") return t("arms.left");
         if (value === "right") return t("arms.right");
-        return value; // Retorna o valor original se não for "left" ou "right"
+        return value;
       };
-
-      const convertedReferenceArm = convertArmValue(referenceArm);
-      const convertedAffectedArm = convertArmValue(affectedArm);
 
       const measurementData = {
         volumetry: {
-          referenceArm: convertedReferenceArm,
-          affectedArm: convertedAffectedArm,
+          referenceArm: convertArmValue(referenceArm),
+          affectedArm: convertArmValue(affectedArm),
           volumesReferencia,
           volumesAfetado,
           volumeDifference: volumeDifferencePercentage,
@@ -190,25 +191,47 @@ export default function Resultado() {
         },
         tipoReferencia: getReferenceName(),
         observacaoMedicao: patientData.note || "",
+        estagioClinico: clinicalStage || null,
+        observacaoClinica: clinicalNotes.trim() || null,
       };
 
       await axios.post(
-        `${API_URL}/api/pacientes/${selectedPatient.id}/mensuracao`,
+        `${API_URL}/api/pacientes/${patientId}/mensuracao`,
         measurementData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      appAlert(t("common.success"), t("results.measurementAssociated"));
       setModalVisible(false);
-      setLoadingAssociation(false);
       clearMeasurementData();
-      router.push("/home");
+      appAlert(
+        t("common.success"),
+        patientName
+          ? `${t("results.savedTo")} ${patientName}.`
+          : t("results.measurementAssociated"),
+        [{ text: "OK", onPress: () => router.push("/home") }]
+      );
     } catch (error) {
-      // console.error("Erro ao associar medição:", error);
-      appAlert(t("common.error"), t("results.errorAssociatingMeasurement"));
+      setSaveError(t("results.errorAssociatingMeasurement"));
+    } finally {
       setLoadingAssociation(false);
+    }
+  };
+
+  // Escolhida na lista (medição avulsa)
+  const handleAssociateMeasurement = async () => {
+    if (!selectedPatient) {
+      appAlert(t("common.error"), t("results.selectPatientError"));
+      return;
+    }
+    await saveMeasurementTo(selectedPatient.id, selectedPatient.fullName);
+  };
+
+  // "Salvar na ficha": com paciente já ligada ao cálculo salva direto; senão pergunta se associa
+  const handleSave = () => {
+    if (currentPatient) {
+      saveMeasurementTo(currentPatient.id, currentPatient.name);
+    } else {
+      handleFinalize();
     }
   };
 
@@ -239,8 +262,13 @@ export default function Resultado() {
   };
 
   const getVolumeDifferenceText = (percentage: number, difference: number) => {
-    const formattedDifference = Math.abs(difference).toFixed(2);
-    const formattedPercentage = percentage.toFixed(2);
+    const localeNum = (n: number) =>
+      n.toLocaleString(currentLanguage, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    const formattedDifference = localeNum(Math.abs(difference));
+    const formattedPercentage = localeNum(percentage);
 
     // Função auxiliar para renderizar texto com partes em negrito
     const renderTextWithBold = (text: string, boldParts: string[]) => {
@@ -446,181 +474,101 @@ export default function Resultado() {
     volumeDifferencePercentage
   );
 
-  const renderPoints = (startIndex: number, endIndex: number) => {
-    return (
+  // ---------- cores por faixa ----------
+  type Tone = { bg: string; fg: string };
+  const NEUTRAL: Tone = { bg: "#eeeef2", fg: "#6b6b75" };
+  const GREEN: Tone = { bg: "#e4f5ec", fg: "#1f8a4c" };
+  const YELLOW: Tone = { bg: "#fdf0cc", fg: "#9a6b00" };
+  const ORANGE: Tone = { bg: "#ffe6d2", fg: "#b4520a" };
+  const RED: Tone = { bg: "#fde2e2", fg: "#b3261e" };
+
+  // Diferença de perímetro por ponto (Panobianco; Mamede, 2002)
+  const perimetryTone = (diff?: number): Tone => {
+    if (diff === undefined || Number.isNaN(diff) || diff < 0) return NEUTRAL;
+    if (diff <= 2) return GREEN;
+    if (diff <= 3) return YELLOW;
+    if (diff <= 5) return ORANGE;
+    return RED;
+  };
+
+  // Diferença percentual de volume (ISL 2023)
+  const volumeTone = (pct: number): Tone => {
+    if (!Number.isFinite(pct) || pct < 5) return GREEN;
+    if (pct < 10) return { bg: "#eef6d8", fg: "#5f8a0e" };
+    if (pct < 20) return YELLOW;
+    if (pct < 40) return ORANGE;
+    return RED;
+  };
+
+  const fmt = (n: number, digits = 2) =>
+    Number.isFinite(n)
+      ? n.toLocaleString(currentLanguage, {
+          minimumFractionDigits: digits,
+          maximumFractionDigits: digits,
+        })
+      : "—";
+
+  // Quantidade de pontos medidos (mesma regra de antes)
+  const numPoints = (() => {
+    const table: Record<string, Record<string, number>> = {
+      opcao1: { "5cm": 9, "7cm": 7, "10cm": 4 },
+      opcao2: { "5cm": 8, "7cm": 6, "10cm": 4 },
+      opcao3: { "5cm": 9, "7cm": 7, "10cm": 4 },
+    };
+    return (table[selectedValue ?? ""]?.[pontosRef] ?? 0) + 1;
+  })();
+
+  const armName = (arm: "right" | "left") =>
+    arm === "right" ? t("arms.rightArm") : t("arms.leftArm");
+
+  const volTone = volumeTone(volumeDifferencePercentage);
+  const stageOptions = [
+    { value: "subclinical", label: t("ficha.subclinical") },
+    { value: "I", label: "I" },
+    { value: "II", label: "II" },
+    { value: "III", label: "III" },
+  ];
+
+  const levels: { key: string; range: string; tone: Tone }[] = [
+    { key: "noChanges", range: "1–2cm", tone: GREEN },
+    { key: "mild", range: "2–3cm", tone: YELLOW },
+    { key: "moderate", range: "3–5cm", tone: ORANGE },
+    { key: "severe", range: ">5cm", tone: RED },
+  ];
+
+  const VolumeRow = ({
+    label,
+    sub,
+    value,
+  }: {
+    label: string;
+    sub?: string;
+    value: string;
+  }) => (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 12,
+      }}
+    >
+      <View style={{ flexShrink: 1, marginRight: 8 }}>
+        <Text style={{ fontSize: 15.5, fontWeight: "500", color: "#111" }}>{label}</Text>
+        {!!sub && <Text style={{ fontSize: 14, color: "#666" }}>{sub}</Text>}
+      </View>
       <View
         style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "center",
+          backgroundColor: "#f4e4ef",
+          borderRadius: 10,
+          paddingHorizontal: 12,
+          paddingVertical: 8,
         }}
       >
-        {Array.from({ length: endIndex - startIndex }, (_, index) => (
-          <View
-            key={index + startIndex}
-            style={{ alignItems: "center", margin: 1, width: 60 }}
-          >
-            <Text style={{ fontSize: 12, fontWeight: "bold" }}>
-              {`P${index + startIndex}`}
-            </Text>
-            <Text style={{ fontSize: 12 }}>
-              {`(${index * parseInt(pontosRef)}cm)`}
-            </Text>
-            <View
-              className={getClassNames(differences[index + startIndex])}
-              style={{
-                width: 50,
-                height: 30,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 5,
-              }}
-            >
-              <Text
-                className={getClassNames(differences[index + startIndex])}
-                style={{ fontSize: 10 }}
-              >
-                {differences[index + startIndex] !== undefined
-                  ? formatDifference(
-                      parseFloat(differences[index + startIndex].toFixed(2))
-                    )
-                  : "N/A"}{" "}
-                cm
-              </Text>
-            </View>
-          </View>
-        ))}
+        <Text style={{ fontSize: 14, fontWeight: "700", color: PRIMARY }}>{value}</Text>
       </View>
-    );
-  };
-
-  const renderDifferences = () => {
-    let numInputs = 0;
-    let label = "";
-
-    if (selectedValue === "opcao1") {
-      if (pontosRef === "5cm") {
-        numInputs = 9;
-        label = t("arms.pointsAboveReference");
-      } else if (pontosRef === "7cm") {
-        numInputs = 7;
-        label = t("arms.pointsAboveReference");
-      } else if (pontosRef === "10cm") {
-        numInputs = 4;
-        label = t("arms.pointsAboveReference");
-      }
-    } else if (selectedValue === "opcao2") {
-      if (pontosRef === "5cm") {
-        numInputs = 8; // 2 acima e 2 abaixo
-      } else if (pontosRef === "7cm") {
-        numInputs = 6; // 3 acima e 3 abaixo
-      } else if (pontosRef === "10cm") {
-        numInputs = 4; // 4 acima e 4 abaixo
-      }
-    } else if (selectedValue === "opcao3") {
-      if (pontosRef === "5cm") {
-        numInputs = 9;
-        label = t("arms.pointsBelowReference");
-      } else if (pontosRef === "7cm") {
-        numInputs = 7;
-        label = t("arms.pointsBelowReference");
-      } else if (pontosRef === "10cm") {
-        numInputs = 4;
-        label = t("arms.pointsBelowReference");
-      }
-    }
-
-    return (
-      <View>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
-        >
-          {renderPoints(0, numInputs + 1)}
-        </View>
-      </View>
-    );
-  };
-
-  const renderVolumes = (volumes: number[]) => {
-    return volumes.map((volume, index) => (
-      <Text
-        key={index}
-        className="text-primary-500 font-semibold"
-        style={{ fontSize: 12, padding: 5 }}
-      >
-        {`V${index + 1}: ${volume.toFixed(2)} mL`}
-      </Text>
-    ));
-  };
-
-  const hasComplementaryData = Object.keys(patientData).some(
-    (key) =>
-      key === "musculoskeletalComplaints" ||
-      key === "lymphedemaSymptoms" ||
-      key === "cacifoSign" ||
-      key === "orangePeelSign" ||
-      key === "stemmerSign"
+    </View>
   );
-
-  const renderComplementaryData = () => {
-    return (
-      <View
-        className="p-6 bg-white-500 mt-4"
-        style={{
-          width: "100%",
-          maxWidth: 360,
-          borderRadius: 40,
-          backgroundColor: "#FFF",
-        }}
-      >
-        <View className="flex-row mb-4">
-          <Image
-            source={require("../assets/folder-plus.png")}
-            style={{ width: 24, height: 24, marginTop: 2, marginBottom: 10, marginRight: 10 }}
-          />
-          <Text className="text-lg font-medium mb-2">
-            {t("results.complementary")}
-          </Text>
-        </View>
-
-        {/* Seção para Nota */}
-        <View>
-          <Text
-            style={{
-              fontSize: 16,
-              fontWeight: "bold",
-              marginBottom: 8,
-            }}
-          >
-            {t("results.note")}
-          </Text>
-          <TextInput
-            placeholder={t("results.notePlaceholder")}
-            value={patientData.note || ""}
-            onChangeText={(text) =>
-              setPatientData({ ...patientData, note: text })
-            }
-            style={{
-              width: "100%",
-              height: 40,
-              backgroundColor: "#f8f8f8",
-              borderRadius: 10,
-              padding: 10,
-              textAlignVertical: "top",
-              fontWeight: "400",
-              // borderWidth: 1,
-              // borderColor: "#ccc",
-            }}
-            multiline
-          />
-        </View>
-      </View>
-    );
-  };
 
   if (loadingAssociation) {
     return (
@@ -637,262 +585,216 @@ export default function Resultado() {
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0} // ajuste conforme seu header/statusbar
+        keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
       >
         <ScrollView
-          contentContainerStyle={{
-            padding: 20,
-            alignItems: "center",
-          }}
+          contentContainerStyle={{ padding: 20, alignItems: "center" }}
+          keyboardShouldPersistTaps="handled"
         >
           <Header title={t("results.diagnosis")} />
-          <View
-            className="p-6 bg-white-500 mt-4"
-            style={{
-              width: "100%",
-              maxWidth: 360,
-              borderRadius: 40,
-              backgroundColor: "#FFF",
-            }}
-          >
-            <View className="flex-row mb-4">
-              <Feather
-                name="list"
-                size={18}
-                color="black"
-                style={{ marginRight: 10, marginTop: 5 }}
-              />
-              <Text className="text-lg font-medium text-black-500">
-                {t("results.results")}
-              </Text>
-            </View>
-            <View>{renderDifferences()}</View>
 
-            <Text className="text-primary-500 text-sm mt-4">
+          {/* Resultados da perimetria */}
+          <Card>
+            <SectionTitle icon="list" title={t("results.results")} />
+            <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}>
+              {Array.from({ length: numPoints }, (_, i) => {
+                const diff = differences[i];
+                const tone = perimetryTone(diff);
+                return (
+                  <View key={i} style={{ alignItems: "center", margin: 3, width: 60 }}>
+                    <Text style={{ fontSize: 13, fontWeight: "700" }}>{`P${i}`}</Text>
+                    <Text style={{ fontSize: 11.5, color: "#555", marginBottom: 4 }}>
+                      {`(${i * parseInt(pontosRef)}cm)`}
+                    </Text>
+                    <View
+                      style={{
+                        backgroundColor: tone.bg,
+                        borderRadius: 8,
+                        paddingVertical: 6,
+                        width: "100%",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Text style={{ fontSize: 12, fontWeight: "700", color: tone.fg }}>
+                        {diff !== undefined && !Number.isNaN(diff)
+                          ? `${formatDifference(parseFloat(diff.toFixed(2)))} cm`
+                          : "N/A"}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+
+            <Text style={{ color: PRIMARY, fontSize: 14, marginTop: 18, marginBottom: 8 }}>
               {t("results.perimetryExplanation")}
             </Text>
-            <View className="flex-row justify-center mt-2">
-              {/* Sem alterações */}
-              <View className="items-center">
-                <Text className="text-green-500 font-bold text-sm mb-1">
-                  {t("results.levels.noChanges")}
-                </Text>
-                <View className="bg-green-50 rounded-md px-3 py-1">
-                  <Text className="text-green-500 font-semibold text-xs">
-                    (1~2cm)
-                  </Text>
-                </View>
-              </View>
-              {/* Alteração leve */}
-              <View className="items-center mr-2">
-                <Text className="text-yellow-500 font-bold text-sm mb-1">
-                  {t("results.levels.mild")}
-                </Text>
-                <View className="bg-yellow-50 rounded-md px-3 py-1">
-                  <Text className="text-yellow-500 font-semibold text-xs">
-                    (2~3cm)
-                  </Text>
-                </View>
-              </View>
-              {/* Alteração moderada */}
-              <View className="items-center mr-2">
-                <Text className="text-orange-500 font-bold text-sm mb-1">
-                  {t("results.levels.moderate")}
-                </Text>
-                <View className="bg-orange-50 rounded-md px-3 py-1">
-                  <Text className="text-orange-500 font-semibold text-xs">
-                    (3~5cm)
-                  </Text>
-                </View>
-              </View>
-              {/* Alteração grave */}
-              <View className="items-center">
-                <Text className="text-red-500 font-bold text-sm mb-1">
-                  {t("results.levels.severe")}
-                </Text>
-                <View className="bg-red-50 rounded-md px-3 py-1">
-                  <Text className="text-red-500 font-semibold text-xs">
-                    ({">"}5cm)
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <Text className="text-primary-500 font-bold text-sm mt-4">
-              {t("results.references.panobianco")}
-            </Text>
-          </View>
-          {/* Perimetria */}
-          <View
-            className="p-6 bg-white-500 mt-4"
-            style={{
-              width: "100%",
-              maxWidth: 360,
-              borderRadius: 40,
-              backgroundColor: "#FFF",
-            }}
-          >
-            <View className="flex-row items-center">
-              <Feather
-                name="box"
-                size={18}
-                color="black"
-                className="mt-1.5"
-                style={{ marginRight: 10 }}
-              />
-              <Text className="text-lg font-medium text-black-500 mt-1">
-                {t("results.volumetry")}
-              </Text>
-              <TouchableOpacity>
-                <Image
-                  source={require("../assets/help-circle.png")}
-                  style={{
-                    width: 18,
-                    height: 18,
-                    marginLeft: 10,
-                    marginTop: 4.5,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-            <View
-              className="flex-row items-center mt-4"
-              style={{ justifyContent: "space-between" }}
-            >
-              <Text className="text-lg font-medium">
-                {t("results.volume")}{" "}
-                {referenceArm === "right"
-                  ? t("arms.rightArm")
-                  : t("arms.leftArm")}{" "}
-              </Text>
-              <View
-                className="items-center justify-center"
-                style={{
-                  width: 100,
-                  height: 35,
-                  borderRadius: 10,
-                  backgroundColor: "#f8e8f1",
-                }}
-              >
-                <Text
-                  className="text-primary-500 font-semibold"
-                  style={{ fontSize: 12, padding: 10 }}
-                >
-                  {volumeReferenciaTotal.toFixed(2)} cm³
-                </Text>
-              </View>
-            </View>
-            {/* <View>
-            {Array.isArray(volumesReferencia) &&
-              renderVolumes(volumesReferencia)}
-          </View> */}
-            <View
-              className="flex-row justify-center items-center bg-white-600"
-              style={{ width: 300, borderRadius: 40 }}
-            ></View>
-            <View
-              className="flex-row items-center mt-4"
-              style={{ justifyContent: "space-between" }}
-            >
-              <Text className="text-lg font-medium">
-                {t("results.volume")}{" "}
-                {affectedArm === "right"
-                  ? t("arms.rightArm")
-                  : t("arms.leftArm")}{" "}
-              </Text>
-              <View
-                className="items-center justify-center"
-                style={{
-                  width: 100,
-                  height: 35,
-                  borderRadius: 10,
-                  backgroundColor: "#f8e8f1",
-                }}
-              >
-                <Text
-                  className="text-primary-500 font-semibold"
-                  style={{ fontSize: 12, padding: 10 }}
-                >
-                  {volumeAfetadoTotal.toFixed(2)} cm³
-                </Text>
-              </View>
-            </View>
-            <View>
-              {/* {Array.isArray(volumesAfetado) && renderVolumes(volumesAfetado)} */}
-            </View>
-            <View
-              className="flex-row justify-center items-center bg-white-600"
-              style={{ width: 300, borderRadius: 40 }}
-            ></View>
-            <View
-              className="flex-row items-center mt-4 mb-4"
-              style={{ justifyContent: "space-between" }} // Adicionado para separar os itens
-            >
-              <Text className="text-lg font-medium">
-                {t("results.volumeDifference")}
-              </Text>
-              {volumeDifferencePercentage >= 5 && (
-                <View
-                  className={`items-center justify-center ${bgClass}`}
-                  style={{
-                    width: 75,
-                    height: 35,
-                    borderRadius: 10,
-                  }}
-                >
-                  <Text
-                    className={`font-semibold ${textClass}`}
-                    style={{ fontSize: 12, padding: 10 }}
+            <View style={{ flexDirection: "row", flexWrap: "wrap", marginHorizontal: -4 }}>
+              {levels.map((l) => (
+                <View key={l.key} style={{ width: "50%", padding: 4 }}>
+                  <View
+                    style={{
+                      backgroundColor: l.tone.bg,
+                      borderRadius: 10,
+                      paddingHorizontal: 10,
+                      paddingVertical: 9,
+                      minHeight: 44,
+                      justifyContent: "center",
+                    }}
                   >
-                    {volumeDifferenceText2}
-                  </Text>
+                    <Text style={{ fontSize: 12.5, fontWeight: "600", color: l.tone.fg }}>
+                      {`${t(`results.levels.${l.key}`)} (${l.range})`}
+                    </Text>
+                  </View>
                 </View>
-              )}
+              ))}
             </View>
-            <View
-              className={`flex-row justify-center items-center ${bgClass}`}
-              style={{ width: 300, borderRadius: 40 }}
-            ></View>
+            <Text style={{ color: PRIMARY, fontSize: 12.5, fontWeight: "700", marginTop: 12 }}>
+              {`${t("results.referenceLabel")}: ${t("results.references.panobianco")}`}
+            </Text>
+          </Card>
 
+          {/* Volumetria */}
+          <Card>
+            <SectionTitle icon="box" title={t("results.volumetry")} />
+            <VolumeRow
+              label={`${t("results.volume")} ${armName(affectedArm)}`}
+              sub={`(${t("results.affected")})`}
+              value={`${fmt(volumeAfetadoTotal)} cm³`}
+            />
+            <VolumeRow
+              label={`${t("results.volume")} ${armName(referenceArm)}`}
+              value={`${fmt(volumeReferenciaTotal)} cm³`}
+            />
             <View
-              className={`items-center justify-center ${bgClass}`}
               style={{
-                width: 330,
-                height: 60,
-                right: 5,
-                borderRadius: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 12,
               }}
             >
-              <Text
-                className={`${textClass}`}
-                style={{ fontSize: 12, padding: 5 }}
+              <Text style={{ fontSize: 15.5, fontWeight: "500", flexShrink: 1, marginRight: 8 }}>
+                {t("results.volumeDifference")}
+              </Text>
+              <View
+                style={{
+                  backgroundColor: volTone.bg,
+                  borderRadius: 10,
+                  paddingHorizontal: 12,
+                  paddingVertical: 8,
+                }}
               >
+                <Text style={{ fontSize: 13.5, fontWeight: "700", color: volTone.fg }}>
+                  {`${fmt(Math.abs(volumeDifference))} cm³ · ${fmt(volumeDifferencePercentage, 1)}%`}
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                backgroundColor: volTone.bg,
+                borderRadius: 12,
+                padding: 14,
+                marginBottom: 10,
+              }}
+            >
+              <Text style={{ fontSize: 13.5, lineHeight: 19, color: volTone.fg }}>
                 {volumeDifferenceText}
               </Text>
             </View>
-            <Text
-              className="text-primary-500 font-bold mt-2"
-              style={{ fontSize: 12 }}
-            >
+            <Text style={{ color: PRIMARY, fontSize: 12.5, fontWeight: "700" }}>
               {t("results.references.lymphologyConsensus")}
             </Text>
-          </View>
-          {renderComplementaryData()}
-          <TouchableOpacity
-            onPress={handleFinalize}
+          </Card>
+
+          {/* Avaliação clínica (definida pelo fisioterapeuta) */}
+          <Card>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 14,
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "center", flexShrink: 1 }}>
+                <Feather name="clipboard" size={20} color="#111" style={{ marginRight: 10 }} />
+                <Text style={{ fontSize: 17, fontWeight: "600", flexShrink: 1 }}>
+                  {t("results.clinicalAssessment")}
+                </Text>
+              </View>
+              <View
+                style={{
+                  backgroundColor: "#f4e4ef",
+                  borderRadius: 999,
+                  paddingHorizontal: 10,
+                  paddingVertical: 4,
+                  marginLeft: 8,
+                }}
+              >
+                <Text style={{ fontSize: 11.5, fontWeight: "700", color: PRIMARY }}>
+                  {t("results.physiotherapist")}
+                </Text>
+              </View>
+            </View>
+
+            <Text style={{ fontSize: 15, color: "#111", marginBottom: 12 }}>
+              {t("results.clinicalPrompt")}
+            </Text>
+            <SegmentedChoice
+              value={clinicalStage}
+              onChange={(v) => setClinicalStage(clinicalStage === v ? "" : v)}
+              options={stageOptions}
+            />
+            <Text style={{ fontSize: 12, color: "#777", marginBottom: 14 }}>
+              {t("results.islNote")}
+            </Text>
+            <Label>{t("results.clinicalNotes")}</Label>
+            <Field
+              multiline
+              minHeight={110}
+              placeholder={t("results.clinicalNotesPlaceholder")}
+              value={clinicalNotes}
+              onChangeText={setClinicalNotes}
+              style={{ marginBottom: 0 }}
+            />
+          </Card>
+
+          {/* Complementares */}
+          <Card>
+            <SectionTitle icon="folder-plus" title={t("results.complementary")} />
+            <Label>{t("results.note")}</Label>
+            <Field
+              multiline
+              minHeight={96}
+              placeholder={t("results.noteExamPlaceholder")}
+              value={patientData.note || ""}
+              onChangeText={(text) => setPatientData({ ...patientData, note: text })}
+              style={{ marginBottom: 0 }}
+            />
+          </Card>
+
+          {!!saveError && (
+            <Text style={{ color: "#c0262d", marginTop: 14, textAlign: "center" }}>{saveError}</Text>
+          )}
+
+          {/* Rodapé */}
+          <View
             style={{
-              backgroundColor: "#b41976",
-              width: 300,
-              height: 50,
-              borderRadius: 10,
+              flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
-              marginTop: 20,
+              width: "100%",
+              maxWidth: 360,
+              marginTop: 24,
             }}
           >
-            <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>
-              {t("results.finalize")}
-            </Text>
-          </TouchableOpacity>
+            <Button
+              label={t("results.saveToRecord")}
+              onPress={handleSave}
+              style={{ flex: 1, minWidth: 0, marginRight: 10 }}
+            />
+            <FaqButton onPress={() => router.navigate("/faq")} />
+          </View>
 
           {/* Modal para Seleção de Paciente */}
           <Modal
