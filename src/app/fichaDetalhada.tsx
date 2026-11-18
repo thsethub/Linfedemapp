@@ -34,10 +34,15 @@ import {
   DetailedForm,
   emptyDetailed,
   isEssentialComplete,
+  joinMonthYear,
   JOINTS,
   ROM_MOVEMENTS,
   Side,
+  splitMonthYear,
   STRENGTH_GROUPS,
+  TNM_M,
+  TNM_N,
+  TNM_T,
 } from "@/utils/fichaDetalhada";
 import { AuthTokenMissingError, savePatient } from "@/utils/savePatient";
 import { useAppWindow } from "@/utils/layout";
@@ -217,7 +222,83 @@ export default function FichaDetalhada() {
         value={d.comorbidities}
         onChangeText={(v) => setD({ comorbidities: v })}
       />
-      <Text style={{ fontSize: 12.5, color: "#777" }}>{f("oncologyLater")}</Text>
+    </Card>
+  );
+
+  // Diagnóstico oncológico (etapa 1)
+  const [dxMonth, dxYear] = splitMonthYear(patientData.cancerDiagnosisDate);
+  const currentYear = new Date().getFullYear();
+  const half = Math.floor((innerWidth - 12) / 2);
+  const third = Math.floor((innerWidth - 16) / 3);
+  const asItems = (list: string[]) => list.map((v) => ({ label: v, value: v }));
+
+  const renderOncology = () => (
+    <Card>
+      <SectionTitle icon="activity" title={f("oncologicDiagnosis")} />
+
+      <Label>{t("patient.cancerDiagnosisDate")}</Label>
+      <View style={{ flexDirection: "row", alignItems: "flex-start", marginBottom: 14 }}>
+        <View style={{ marginRight: 12 }}>
+          <Dropdown
+            width={half}
+            placeholder={t("patient.month")}
+            items={Array.from({ length: 12 }, (_, i) => {
+              const v = String(i + 1).padStart(2, "0");
+              return { label: v, value: v };
+            })}
+            selectedValue={dxMonth || null}
+            setSelectedValue={(v) => setTop({ cancerDiagnosisDate: joinMonthYear(v ?? "", dxYear) })}
+          />
+        </View>
+        <Dropdown
+          width={half}
+          placeholder={t("patient.year")}
+          items={Array.from({ length: 61 }, (_, i) => {
+            const v = String(currentYear - i);
+            return { label: v, value: v };
+          })}
+          selectedValue={dxYear || null}
+          setSelectedValue={(v) => setTop({ cancerDiagnosisDate: joinMonthYear(dxMonth, v ?? "") })}
+        />
+      </View>
+
+      <Label hint={f("tnmHint")}>{f("tnmStaging")}</Label>
+      <View style={{ flexDirection: "row", alignItems: "flex-start", marginBottom: 14 }}>
+        <View style={{ marginRight: 8 }}>
+          <Dropdown
+            width={third}
+            placeholder="T"
+            items={asItems(TNM_T)}
+            selectedValue={d.tnmT || null}
+            setSelectedValue={(v) => setD({ tnmT: v ?? "" })}
+          />
+        </View>
+        <View style={{ marginRight: 8 }}>
+          <Dropdown
+            width={third}
+            placeholder="N"
+            items={asItems(TNM_N)}
+            selectedValue={d.tnmN || null}
+            setSelectedValue={(v) => setD({ tnmN: v ?? "" })}
+          />
+        </View>
+        <Dropdown
+          width={third}
+          placeholder="M"
+          items={asItems(TNM_M)}
+          selectedValue={d.tnmM || null}
+          setSelectedValue={(v) => setD({ tnmM: v ?? "" })}
+        />
+      </View>
+
+      <Label>{f("diagnosisNotes")}</Label>
+      <Field
+        multiline
+        minHeight={110}
+        placeholder={f("diagnosisNotesPlaceholder")}
+        value={d.diagnosisNotes}
+        onChangeText={(v) => setD({ diagnosisNotes: v })}
+      />
     </Card>
   );
 
@@ -678,7 +759,12 @@ export default function FichaDetalhada() {
           </Text>
         </View>
 
-        {step === 1 && renderStep1()}
+        {step === 1 && (
+          <>
+            {renderStep1()}
+            {renderOncology()}
+          </>
+        )}
         {step === 2 && renderStep2()}
         {step === 3 && renderStep3()}
         {step === 4 && renderStep4()}

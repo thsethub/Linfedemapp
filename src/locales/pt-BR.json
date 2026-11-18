@@ -590,7 +590,6 @@
     },
     "comorbidities": "Comorbidades",
     "comorbiditiesPlaceholder": "Ex.: hipertensão, diabetes, cardiopatia",
-    "oncologyLater": "O diagnóstico oncológico será incluído em uma próxima versão.",
     "procedures": {
       "chemotherapy": "Quimioterapia",
       "radiotherapy": "Radioterapia",
@@ -698,6 +697,11 @@
       "other": "Outro"
     },
     "compressionOther": "Qual outro dispositivo?",
-    "compressionOtherPlaceholder": "Descreva o dispositivo em uso"
+    "compressionOtherPlaceholder": "Descreva o dispositivo em uso",
+    "oncologicDiagnosis": "Diagnóstico oncológico",
+    "tnmStaging": "Estadiamento clínico (TNM)",
+    "tnmHint": "Classificação TNM do câncer de mama",
+    "diagnosisNotes": "Outras informações do diagnóstico",
+    "diagnosisNotesPlaceholder": "Campo aberto: tipo histológico, subtipo molecular, estádio clínico ou qualquer outra informação"
   }
 }

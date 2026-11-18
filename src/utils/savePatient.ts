@@ -37,7 +37,10 @@ export async function savePatient(patientData: any): Promise<void> {
     nivelAtividadeFisica: patientData.activityLevel || null,
     estadoCivil: patientData.maritalStatus || null,
     ocupacao: patientData.occupation || null,
-    dataDiagnostiCancer: patientData.cancerDiagnosisDate || null,
+    // "MM/AAAA" só quando mês e ano foram escolhidos
+    dataDiagnostiCancer: /^\d{2}\/\d{4}$/.test(patientData.cancerDiagnosisDate ?? "")
+      ? patientData.cancerDiagnosisDate
+      : null,
     procedimentos: patientData.procedures ?? [],
     alteracoesCutaneas: patientData.skinChanges ?? [],
     queixasMusculoesqueleticas: detailed?.musculoskeletalChanges || null,

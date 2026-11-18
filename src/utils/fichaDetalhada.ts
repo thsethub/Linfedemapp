@@ -9,8 +9,12 @@ export interface ProcedureDetail {
 }
 
 export interface DetailedForm {
-  // Etapa 1: dados da paciente (o diagnóstico oncológico fica para uma próxima versão)
+  // Etapa 1: dados da paciente e diagnóstico oncológico
   comorbidities: string;
+  tnmT: string;
+  tnmN: string;
+  tnmM: string;
+  diagnosisNotes: string;
   // Etapa 2: tratamento
   procedureObservation: string;
   // Etapa 3: sinais e sintomas
@@ -40,6 +44,18 @@ export interface DetailedForm {
   compressionOther: string;
 }
 
+// Categorias TNM do câncer de mama (NCI: cancer.gov/types/breast/stages/tnm-staging-system)
+export const TNM_T = ["TX", "T0", "Tis", "T1mi", "T1a", "T1b", "T1c", "T2", "T3", "T4a", "T4b", "T4c", "T4d"];
+export const TNM_N = ["NX", "N0", "N1mi", "N1a", "N1b", "N1c", "N2a", "N2b", "N3a", "N3b", "N3c"];
+export const TNM_M = ["M0", "M1"];
+
+// Data do diagnóstico guardada como "MM/AAAA" (parcial vira "MM/" ou "/AAAA")
+export const splitMonthYear = (v?: string): [string, string] => {
+  const [m = "", y = ""] = (v ?? "").split("/");
+  return [m, y];
+};
+export const joinMonthYear = (m: string, y: string) => (m || y ? `${m}/${y}` : "");
+
 export const JOINTS = ["shoulder", "elbow", "forearm", "wrist"] as const;
 
 export const ROM_MOVEMENTS: Record<string, string[]> = {
@@ -58,6 +74,10 @@ export const STRENGTH_GROUPS: Record<string, string[]> = {
 
 export const emptyDetailed = (): DetailedForm => ({
   comorbidities: "",
+  tnmT: "",
+  tnmN: "",
+  tnmM: "",
+  diagnosisNotes: "",
   procedureObservation: "",
   painScore: "",
   painNotes: "",

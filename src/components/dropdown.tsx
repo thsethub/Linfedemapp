@@ -12,6 +12,7 @@ import { useTranslation } from "@/context/LanguageContext";
 interface DropdownProps {
   title?: string; // Nome acima do dropdown (omitido se vazio)
   width?: number; // Largura do campo (padrão 300)
+  placeholder?: string; // Texto quando nada foi escolhido (padrão: "Selecionar")
   items: { label: string; value: string }[]; // Itens do dropdown
   selectedValue: string | null; // Valor selecionado
   setSelectedValue: (value: string | null) => void; // Função para atualizar o valor selecionado
@@ -29,6 +30,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   selectedValue,
   setSelectedValue,
   width = 300,
+  placeholder,
 }) => {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
@@ -49,7 +51,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             numberOfLines={1}
             style={selected ? styles.value : styles.placeholder}
           >
-            {selected ? selected.label : t("common.select")}
+            {selected ? selected.label : placeholder ?? t("common.select")}
           </Text>
           <Feather
             name={open ? "chevron-up" : "chevron-down"}

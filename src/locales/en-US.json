@@ -594,7 +594,6 @@
     },
     "comorbidities": "Comorbidities",
     "comorbiditiesPlaceholder": "E.g.: hypertension, diabetes, heart disease",
-    "oncologyLater": "Oncologic diagnosis will be added in a future version.",
     "procedures": {
       "chemotherapy": "Chemotherapy",
       "radiotherapy": "Radiotherapy",
@@ -702,6 +701,11 @@
       "other": "Other"
     },
     "compressionOther": "Which other device?",
-    "compressionOtherPlaceholder": "Describe the device in use"
+    "compressionOtherPlaceholder": "Describe the device in use",
+    "oncologicDiagnosis": "Oncologic diagnosis",
+    "tnmStaging": "Clinical staging (TNM)",
+    "tnmHint": "TNM classification of breast cancer",
+    "diagnosisNotes": "Other diagnosis information",
+    "diagnosisNotesPlaceholder": "Open field: histologic type, molecular subtype, clinical stage or any other information"
   }
 }
